@@ -1,26 +1,14 @@
 {
-  "name": "dagre",
-  "version": "0.3.0-pre",
-  "description": "Directed graph rendering",
-  "main": "index.js",
-  "directories": {
-    "src": "src",
-    "test": "test"
-  },
-  "scripts": {
-    "blanket": {
-      "pattern": "lib",
-      "data-cover-never": [
-        "node_modules",
-        "test"
-      ]
-    }
-  },
+  "name": "dagre-d3",
+  "version": "0.0.1-pre",
+  "description": "A D3-based renderer for Dagre",
   "keywords": [
-    "graph"
+    "graph",
+    "dagre",
+    "graphlib",
+    "renderer"
   ],
   "devDependencies": {
-    "blanket": "1.x.x",
     "browserify": "2.28.x",
     "chai": "1.7.x",
     "graphlib-dot": "0.4.1",
@@ -29,7 +17,8 @@
     "uglify-js": "1.2.3"
   },
   "dependencies": {
-    "graphlib": "0.5.7"
+    "graphlib": "0.5.7",
+    "dagre": "0.3.x"
   },
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {
@@ -39,7 +28,7 @@
   "license": "MIT",
   "testling": {
     "files": [
-      "test/**/*.js"
+      "test/demo-test.js"
     ],
     "browsers": [
       "ie/9..latest",

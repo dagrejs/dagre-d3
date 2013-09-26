@@ -20,4 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-global.dagre = require("./index");
+global.dagreD3 =  {
+  Digraph: require("graphlib").Digraph,
+  Renderer: require("./lib/Renderer"),
+  json: require("graphlib").converter.json,
+  layout: require("dagre").layout,
+  version: require("./lib/version")
+};

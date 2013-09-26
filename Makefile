@@ -6,21 +6,16 @@ MOCHA_OPTS?=
 JS_COMPILER=node_modules/uglify-js/bin/uglifyjs
 JS_COMPILER_OPTS?=--no-seqs
 
-MODULE=dagre
+MODULE=dagre-d3
 
-# There does not appear to be an easy way to define recursive expansion, so
-# we do our own expansion a few levels deep.
-JS_SRC:=$(wildcard lib/*.js lib/*/*.js lib/*/*/*.js)
-JS_TEST:=$(wildcard test/unit/*.js test/unit/*/*.js test/unit/*/*/*.js)
+JS_SRC:=$(wildcard lib/*.js)
 
 DEMO_SRC=$(wildcard demo/*)
 DEMO_OUT=$(addprefix out/dist/, $(DEMO_SRC))
 
-BENCH_FILES?=$(wildcard bench/graphs/*)
-
 OUT_DIRS=out out/dist out/dist/demo
 
-.PHONY: all release dist dist-demo test test-demo test-unit coverage bench clean fullclean
+.PHONY: all release dist dist-demo test clean fullclean
 
 all: dist test coverage
 
@@ -31,18 +26,10 @@ dist: out/dist/$(MODULE).js out/dist/$(MODULE).min.js dist-demo
 
 dist-demo: out/dist/demo $(DEMO_OUT)
 
-test: test-unit test-demo
+test: test-demo
 
-test-unit: out/dist/$(MODULE).js $(JS_TEST)
-	$(NODE) $(MOCHA) $(MOCHA_OPTS) $(JS_TEST)
-
-test-demo: test/demo/demo-test.js out/dist/$(MODULE).min.js dist-demo $(wildcard demo/*)
+test-demo: test/demo-test.js out/dist/$(MODULE).min.js dist-demo $(wildcard demo/*)
 	phantomjs $<
-
-coverage: out/coverage.html
-
-bench: bench/bench.js out/dist/$(MODULE).js
-	@$(NODE) $< $(BENCH_FILES)
 
 clean:
 	rm -f lib/version.js
@@ -61,10 +48,7 @@ out/dist/$(MODULE).min.js: out/dist/$(MODULE).js
 	$(NODE) $(JS_COMPILER) $(JS_COMPILER_OPTS) $< > $@
 
 out/dist/demo/%: demo/%
-	@sed 's|\.\./out/dist/dagre.min.js|../dagre.min.js|' < $< > $@
-
-out/coverage.html: out/dist/$(MODULE).js $(JS_TEST) $(JS_SRC)
-	$(NODE) $(MOCHA) $(JS_TEST) --require blanket -R html-cov > $@
+	@sed 's|\.\./out/dist/dagre-d3.min.js|../dagre-d3.min.js|' < $< > $@
 
 lib/version.js: src/version.js package.json
 	$(NODE) src/version.js > $@
