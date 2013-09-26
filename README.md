@@ -119,7 +119,7 @@ g.addEdge(null, "kspacey",   "swilliams", { label: "K-PAX" });
 g.addEdge(null, "swilliams", "kbacon",    { label: "These Vagabond Shoes" });
 g.addEdge(null, "bpitt",     "kbacon",    { label: "Sleepers" });
 g.addEdge(null, "hford",     "lwilson",   { label: "Anchorman 2" });
-g.addEdge(null, "oplat",     "kbacon",    { label: "Telling Lies in America" });
+g.addEdge(null, "lwilson",   "kbacon",    { label: "Telling Lies in America" });
 ```
 
 This simple graph was derived from [The Oracle of
