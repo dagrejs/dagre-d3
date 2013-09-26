@@ -17,7 +17,7 @@ OUT_DIRS=out out/dist out/dist/demo
 
 .PHONY: all release dist dist-demo test clean fullclean
 
-all: dist test coverage
+all: dist test
 
 release: all
 	src/release/release.sh $(MODULE) out/dist
