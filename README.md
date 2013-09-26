@@ -144,7 +144,7 @@ renderer.run(g, d3.select("svg g"));
 
 This produces the graph:
 
-TBD
+![oracle-of-bacon1.png](http://cpettitt.github.io/project/dagre-d3/static/oracle-of-bacon1.png)
 
 ### Configuring the Layout
 
@@ -161,15 +161,15 @@ Here are a few methods you can call on the layout object to change layout behavi
 For example, to set node separation to 20 pixels and the rank direction to left-to-right:
 
 ```js
-var layout = dagre.layout()
-                  .nodeSep(20)
-                  .rankDir("LR");
+var layout = dagreD3.layout()
+                    .nodeSep(20)
+                    .rankDir("LR");
 render.layout(layout).run(g, d3.select("svg g"));
 ```
 
 This produces the following graph:
 
-TBD
+![oracle-of-bacon2.png](http://cpettitt.github.io/project/dagre-d3/static/oracle-of-bacon2.png)
 
 ## License
 
