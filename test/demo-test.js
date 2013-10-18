@@ -5,7 +5,7 @@ var webpage = require("webpage"),
     stderr = system.stderr,
     // Too bad this replaces the more function fs module from nodejs...
     fs = require("fs"),
-    Set = require("graphlib").data.Set,
+    Set = require("cp-data").Set,
     start = new Date();
 
 var red = "\033[31m";
@@ -15,8 +15,8 @@ var reset = "\033[0m";
 
 function htmlFile(file) { return file.match(/.*\.html/); }
 
-var remaining = Set.unionAll([ls("./demo", htmlFile),
-                              ls("./out/dist/demo", htmlFile)]);
+var remaining = Set.union([ls("./demo", htmlFile),
+                           ls("./out/dist/demo", htmlFile)]);
 var testCount = remaining.size();
 var failures = [];
 
