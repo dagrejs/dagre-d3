@@ -75,7 +75,7 @@ the following snippet:
 
 ```html
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js)"></script>
+<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
 ```
 
 We recommend you use a specific version though, or include your own copy of the
@@ -84,7 +84,7 @@ dagre-d3 v0.0.1:
 
 ```html
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://cpettitt.github.io/project/dagre-d3/v0.0.1/dagre-d3.min.js)"></script>
+<script src="http://cpettitt.github.io/project/dagre-d3/v0.0.1/dagre-d3.min.js"></script>
 ```
 
 This will add a new global `dagreD3`. We show you how to use this below.
@@ -140,6 +140,32 @@ Then we ask the renderer to draw our graph in the SVG element:
 ```js
 var renderer = new dagreD3.Renderer();
 renderer.run(g, d3.select("svg g"));
+```
+
+We also need to add some basic style information to get a usable graph. These values can be tweaked, of course.
+
+```css
+<style>
+rect {
+    fill: #fff;
+}
+
+.node rect {
+    stroke-width: 1.5px;
+    stroke: #333;
+    fill: none;
+}
+
+.edge rect {
+    fill: #fff;
+}
+
+.edge path {
+    fill: none;
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+</style>
 ```
 
 This produces the graph:
