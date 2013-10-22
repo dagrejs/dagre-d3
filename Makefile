@@ -26,10 +26,10 @@ dist: out/dist/$(MODULE).js out/dist/$(MODULE).min.js dist-demo
 
 dist-demo: out/dist/demo $(DEMO_OUT)
 
-#test: test-demo
+test: test-demo
 
-#test-demo: test/demo-test.js out/dist/$(MODULE).min.js dist-demo $(wildcard demo/*)
-#	phantomjs $<
+test-demo: test/demo-test.js out/dist/$(MODULE).min.js dist-demo $(wildcard demo/*)
+	phantomjs $<
 
 clean:
 	rm -f lib/version.js
