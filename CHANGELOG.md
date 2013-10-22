@@ -1,3 +1,9 @@
+v0.0.3
+======
+
+* Ensure dagre-d3 works with non-composite graphs
+* Fixed broken demos
+
 v0.0.2
 ======
 
