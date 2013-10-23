@@ -27,7 +27,7 @@
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cpettitt/dagre.git"
+    "url": "https://github.com/cpettitt/dagre-d3.git"
   },
   "license": "MIT",
   "testling": {
