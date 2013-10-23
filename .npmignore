@@ -1,8 +1,8 @@
 /browser.js
-/bench
+/build
 /demo
+/dist
 /Makefile
 /node_modules
-/out
 /src
 /test

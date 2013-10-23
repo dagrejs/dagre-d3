@@ -12,14 +12,17 @@
     "browserify": "2.28.x",
     "chai": "1.7.x",
     "graphlib-dot": "0.4.8",
+    "jshint": "~2.3.0",
     "mocha": "1.12.x",
+    "phantomjs": "~1.9.2-2",
     "semver": "2.1.x",
     "uglify-js": "1.2.3"
   },
   "dependencies": {
     "cp-data": "1.1.0",
-    "graphlib": "0.7.0",
-    "dagre": "0.3.3"
+    "dagre": "0.3.3",
+    "d3": "~3.3.8",
+    "graphlib": "0.7.0"
   },
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {

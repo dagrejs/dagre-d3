@@ -1,57 +1,79 @@
-NODE?=node
-NPM?=npm
-BROWSERIFY?=node_modules/browserify/bin/cmd.js
-MOCHA?=node_modules/mocha/bin/mocha
-MOCHA_OPTS?=
-JS_COMPILER=node_modules/uglify-js/bin/uglifyjs
-JS_COMPILER_OPTS?=--no-seqs
+# Binaries we use
+NODE = node
+NPM = npm
 
-MODULE=dagre-d3
+BROWSERIFY = ./node_modules/browserify/bin/cmd.js
+JSHINT = ./node_modules/jshint/bin/jshint
+MOCHA = ./node_modules/mocha/bin/_mocha
+PHANTOMJS = ./node_modules/phantomjs/bin/phantomjs
+UGLIFY = ./node_modules/uglify-js/bin/uglifyjs
 
-JS_SRC:=$(wildcard lib/*.js)
+# Module def
+MODULE = dagre-d3
+MODULE_JS = $(MODULE).js
+MODULE_MIN_JS = $(MODULE).min.js
 
-DEMO_SRC=$(wildcard demo/*)
-DEMO_OUT=$(addprefix out/dist/, $(DEMO_SRC))
+# Various files
+SRC_FILES = index.js lib/version.js $(shell find lib -type f -name '*.js')
 
-OUT_DIRS=out out/dist out/dist/demo
+DEMO_FILES = $(wildcard demo/*)
+DEMO_BUILD_FILES = $(addprefix build/, $(DEMO_FILES))
 
-.PHONY: all release dist dist-demo test clean fullclean
+TEST_COV = build/coverage
 
-all: dist test
+# Targets
+.PHONY: = all test demo-test lint release clean fullclean
 
-release: all
-	src/release/release.sh $(MODULE) out/dist
+.DELETE_ON_ERROR:
 
-dist: out/dist/$(MODULE).js out/dist/$(MODULE).min.js dist-demo
+all: build test
 
-dist-demo: out/dist/demo $(DEMO_OUT)
+lib/version.js: package.json
+	$(NODE) src/version.js > $@
 
-test: test-demo
+build: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo
 
-test-demo: test/demo-test.js out/dist/$(MODULE).min.js dist-demo $(wildcard demo/*)
-	phantomjs $<
+build/demo: $(DEMO_BUILD_FILES)
+
+build/demo/%: demo/%
+	mkdir -p $(@D)
+	sed 's|\.\./build/dagre-d3.min.js|../dagre-d3.min.js|' < $< > $@ 
+
+build/$(MODULE_JS): browser.js node_modules $(SRC_FILES)
+	mkdir -p $(@D)
+	$(BROWSERIFY) $(BROWSERIFY_OPTS) -x node_modules/d3/index-browserify.js $< > $@
+
+build/$(MODULE_MIN_JS): build/$(MODULE_JS)
+	$(UGLIFY) $(UGLIFY_OPTS) $< > $@
+
+dist: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo | test
+	rm -rf $@
+	mkdir -p $@
+	cp -r $^ dist
+
+test: build demo-test lint
+
+demo-test: test/demo-test.js $(SRC_FILES) node_modules
+	$(PHANTOMJS) $<
+
+lint: build/lint
+
+build/lint: browser.js $(SRC_FILES) $(TEST_FILES)
+	mkdir -p $(@D)
+	$(JSHINT) $?
+	touch $@
+	@echo
+
+release: dist
+	src/release/release.sh $(MODULE) dist
 
 clean:
-	rm -f lib/version.js
-	rm -rf out
+	rm -rf build dist
 
 fullclean: clean
-	rm -rf node_modules
-
-$(OUT_DIRS):
-	mkdir -p $@
-
-out/dist/$(MODULE).js: browser.js Makefile out/dist node_modules lib/version.js $(JS_SRC)
-	$(NODE) $(BROWSERIFY) $< > $@
-
-out/dist/$(MODULE).min.js: out/dist/$(MODULE).js
-	$(NODE) $(JS_COMPILER) $(JS_COMPILER_OPTS) $< > $@
-
-out/dist/demo/%: demo/%
-	@sed 's|\.\./out/dist/dagre-d3.min.js|../dagre-d3.min.js|' < $< > $@
-
-lib/version.js: src/version.js package.json
-	$(NODE) src/version.js > $@
+	rm -rf ./node_modules
+	rm -f lib/version.js
 
 node_modules: package.json
 	$(NPM) install
+	touch node_modules

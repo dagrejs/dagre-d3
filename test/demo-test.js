@@ -16,7 +16,7 @@ var reset = "\033[0m";
 function htmlFile(file) { return file.match(/.*\.html/); }
 
 var remaining = Set.union([ls("./demo", htmlFile),
-                           ls("./out/dist/demo", htmlFile)]);
+                           ls("./build/demo", htmlFile)]);
 var testCount = remaining.size();
 var failures = [];
 
