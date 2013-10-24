@@ -14,7 +14,7 @@ MODULE_JS = $(MODULE).js
 MODULE_MIN_JS = $(MODULE).min.js
 
 # Various files
-SRC_FILES = lib/version.js $(shell find lib -type f -name '*.js')
+SRC_FILES = index.js lib/version.js $(shell find lib -type f -name '*.js')
 
 DEMO_FILES = $(wildcard demo/*)
 DEMO_BUILD_FILES = $(addprefix build/, $(DEMO_FILES))
