@@ -1,3 +1,8 @@
+v0.0.5
+======
+
+* Pull in dagre v0.3.4, which includes a fix for the demos with IE.
+
 v0.0.4
 ======
 
