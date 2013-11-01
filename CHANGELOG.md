@@ -1,3 +1,10 @@
+v0.0.6
+======
+
+* Pull in dagre v0.3.6, which includes some fixes for edges in the output
+  graph. It removes dummy edges from the output graph and ensures that edge ids
+  are correctly preserved and added to the output graph.
+
 v0.0.5
 ======
 
