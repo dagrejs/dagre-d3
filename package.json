@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.0.7-pre",
+  "version": "0.0.7",
   "description": "A D3-based renderer for Dagre",
   "keywords": [
     "graph",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "cp-data": "1.1.0",
-    "dagre": "0.3.6",
+    "dagre": "0.3.7",
     "d3": "~3.3.8",
     "graphlib": "0.7.0"
   },
