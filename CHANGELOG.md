@@ -1,3 +1,8 @@
+v0.0.8
+======
+
+* Pull in dagre v0.3.8 (bug fix release)
+
 v0.0.7
 ======
 
