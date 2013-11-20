@@ -1,8 +1,6 @@
 # dagre-d3 - A D3-based renderer for Dagre
 
-[![Build Status](https://secure.travis-ci.org/cpettitt/dagre-d3.png)](http://travis-ci.org/cpettitt/dagre-d3)
-
-[![browser support](https://ci.testling.com/cpettitt/dagre-d3.png)](https://ci.testling.com/cpettitt/dagre-d3)
+[![Build Status](https://secure.travis-ci.org/cpettitt/dagre-d3.png?branch=master)](http://travis-ci.org/cpettitt/dagre-d3)
 
 Dagre is a JavaScript library that makes it easy to lay out directed graphs on
 the client-side. The dagre-d3 library acts a front-end to dagre, providing
