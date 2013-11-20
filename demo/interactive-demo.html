@@ -167,7 +167,10 @@ function tryDraw() {
           });
         }
       });
-      renderer.run(result, svg.append("g"));
+      var layout = renderer.run(result, svg.append("g"));
+      d3.select("svg")
+        .attr("width", layout.graph().width + 40)
+        .attr("height", layout.graph().height + 40);
 
       // Add zoom behavior
       d3.select("svg").call(d3.behavior.zoom().on("zoom", function() {

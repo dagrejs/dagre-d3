@@ -82,5 +82,8 @@ rect {
     oldDrawNode(graph, u, svg);
     svg.classed(graph.node(u).nodeclass, true);
   });
-  renderer.run(g, d3.select("svg g"));
+  var layout = renderer.run(g, d3.select("svg g"));
+  d3.select("svg")
+    .attr("width", layout.graph().width + 40)
+    .attr("height", layout.graph().height + 40);
 </script>

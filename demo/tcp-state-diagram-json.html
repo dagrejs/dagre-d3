@@ -87,6 +87,9 @@ function draw() {
     oldDrawNode(graph, u, svg);
     svg.attr("id", "node-" + u);
   });
-  renderer.run(dagreD3.json.decode(states, edges), d3.select("svg g"));
+  var layout = renderer.run(dagreD3.json.decode(states, edges), d3.select("svg g"));
+  d3.select("svg")
+    .attr("width", layout.graph().width + 40)
+    .attr("height", layout.graph().height + 40);
 }
 </script>
