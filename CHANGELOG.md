@@ -1,3 +1,9 @@
+v0.0.9
+======
+
+* Pull in dagre v0.4.0
+* Demos now auto-resize their SVG
+
 v0.0.8
 ======
 
