@@ -5,6 +5,8 @@ v0.0.12
   behind nodes. This has an impact on CSS selectors: edge labels are now
   selectable by '.edgeLabel' and edge paths are selectable by '.edgePath'.
   See the demos for examples of using the new selectors.
+* Added experimental features for setting edge interpolation and tension. See
+  README.md for details.
 
 v0.0.11
 =======

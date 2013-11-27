@@ -165,6 +165,7 @@ function tryDraw() {
           });
         }
       });
+
       var layout = renderer.run(result, svg.append("g"));
       d3.select("svg")
         .attr("width", layout.graph().width + 40)

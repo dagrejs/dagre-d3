@@ -166,6 +166,19 @@ This produces the graph:
 
 ![oracle-of-bacon1.png](http://cpettitt.github.io/project/dagre-d3/static/oracle-of-bacon1.png)
 
+### Configuring the Renderer
+
+This section describes experimental rendering configuration.
+
+* `edgeInterpolate` sets the path interpolation function used with d3. For a list of interpolation optiosn, see the [D3 API](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate).
+* `edgeTension` is used to set the tension for use with d3. See the [D3 API](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_tension) for details.
+
+For example, to set the edge interpolation to 'linear':
+
+```js
+renderer.edgeInterpolate("linear").run(g, d3.select("svg g"));
+```
+
 ### Configuring the Layout
 
 Here are a few methods you can call on the layout object to change layout behavior:
@@ -184,7 +197,7 @@ For example, to set node separation to 20 pixels and the rank direction to left-
 var layout = dagreD3.layout()
                     .nodeSep(20)
                     .rankDir("LR");
-render.layout(layout).run(g, d3.select("svg g"));
+renderer.layout(layout).run(g, d3.select("svg g"));
 ```
 
 This produces the following graph:
