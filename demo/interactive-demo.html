@@ -69,6 +69,7 @@ label {
   <textarea id="inputGraph" rows="5" style="display: block" onKeyUp="tryDraw();">
 /* Example */
 digraph {
+    /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
     A [label="<div style='padding: 10px;'>A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!</div>"];
     C;
     E [label="A sink"];
