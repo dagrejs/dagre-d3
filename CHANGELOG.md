@@ -1,3 +1,11 @@
+v0.0.12
+=======
+
+* Now edge paths are always behind edge labels and edge labels are always
+  behind nodes. This has an impact on CSS selectors: edge labels are now
+  selectable by '.edgeLabel' and edge paths are selectable by '.edgePath'.
+  See the demos for examples of using the new selectors.
+
 v0.0.11
 =======
 

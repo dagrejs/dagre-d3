@@ -10,6 +10,7 @@
 <style>
 svg {
   border: 1px solid #999;
+  background: #fff;
 }
 
 text {
@@ -18,24 +19,20 @@ text {
   font-size: 14px;
 }
 
-rect {
-  fill: #fff;
-}
-
 .node rect {
-  stroke-width: 2px;
   stroke: #333;
-  fill: none;
-}
-
-.edge rect {
+  stroke-width: 2px;
   fill: #fff;
 }
 
-.edge path {
-  fill: none;
+.edgeLabel rect {
+  fill: #fff;
+}
+
+.edgePath path {
   stroke: #333;
   stroke-width: 1.5px;
+  fill: none;
 }
 </style>
 
@@ -171,14 +168,12 @@ function tryDraw() {
       var layout = renderer.run(result, svg.append("g"));
       d3.select("svg")
         .attr("width", layout.graph().width + 40)
-        .attr("height", layout.graph().height + 40);
-
-      // Add zoom behavior
-      d3.select("svg").call(d3.behavior.zoom().on("zoom", function() {
-        var ev = d3.event;
-        svg.select("g")
-          .attr("transform", "translate(" + ev.translate + ") scale(" + ev.scale + ")");
-      }));
+        .attr("height", layout.graph().height + 40)
+        .call(d3.behavior.zoom().on("zoom", function() {
+          var ev = d3.event;
+          svg.select("g")
+            .attr("transform", "translate(" + ev.translate + ") scale(" + ev.scale + ")");
+        }));
     }
   }
 }

@@ -144,24 +144,20 @@ We also need to add some basic style information to get a usable graph. These va
 
 ```css
 <style>
-rect {
-    fill: #fff;
-}
-
 .node rect {
-    stroke-width: 1.5px;
     stroke: #333;
-    fill: none;
+    stroke-width: 1.5px;
+    fill: #ff;
 }
 
-.edge rect {
+.edgeLabel rect {
     fill: #fff;
 }
 
 .edge path {
-    fill: none;
     stroke: #333;
     stroke-width: 1.5px;
+    fill: none;
 }
 </style>
 ```
