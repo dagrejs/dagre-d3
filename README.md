@@ -170,7 +170,7 @@ This produces the graph:
 
 This section describes experimental rendering configuration.
 
-* `edgeInterpolate` sets the path interpolation function used with d3. For a list of interpolation optiosn, see the [D3 API](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate).
+* `edgeInterpolate` sets the path interpolation function used with d3. For a list of interpolation options, see the [D3 API](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate).
 * `edgeTension` is used to set the tension for use with d3. See the [D3 API](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_tension) for details.
 
 For example, to set the edge interpolation to 'linear':
