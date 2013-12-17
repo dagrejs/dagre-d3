@@ -144,6 +144,10 @@ We also need to add some basic style information to get a usable graph. These va
 
 ```css
 <style>
+svg {
+    overflow: hidden;
+}
+
 .node rect {
     stroke: #333;
     stroke-width: 1.5px;
