@@ -5,6 +5,9 @@ v0.0.12
   behind nodes. This has an impact on CSS selectors: edge labels are now
   selectable by '.edgeLabel' and edge paths are selectable by '.edgePath'.
   See the demos for examples of using the new selectors.
+* Now draw functions are for all objects (e.g. drawNodes, instead of drawNode).
+  Probably best to look at the demos to understand the change. This opens up
+  the possibility for transitions across all objects, amonst other possibilities.
 * Added experimental features for setting edge interpolation and tension. See
   README.md for details.
 

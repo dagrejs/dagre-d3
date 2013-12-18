@@ -37,7 +37,7 @@ build/demo: $(DEMO_BUILD_FILES)
 
 build/demo/%: demo/%
 	mkdir -p $(@D)
-	sed 's|\.\./build/dagre-d3.min.js|../dagre-d3.min.js|' < $< > $@ 
+	sed 's|\.\./build/dagre-d3.js|../dagre-d3.js|' < $< > $@ 
 
 build/$(MODULE_JS): browser.js node_modules $(SRC_FILES)
 	mkdir -p $(@D)

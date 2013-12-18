@@ -1,8 +1,8 @@
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="../build/dagre-d3.min.js"></script>
+<script type="text/javascript" src="../build/dagre-d3.js"></script>
 
 <style>
-.type-TK > .label > rect {
+g.type-TK > rect {
   fill: #00ffd0;
 }
 
@@ -16,6 +16,7 @@ text {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
   font-size: 14px;
 }
+
 .node rect {
   stroke: #999;
   stroke-width: 1px;
@@ -73,10 +74,11 @@ text {
   g.addEdge(null, 0, 1)
 
   var renderer = new dagreD3.Renderer();
-  var oldDrawNode = renderer.drawNode();
-  renderer.drawNode(function(graph, u, svg) {
-    oldDrawNode(graph, u, svg);
-    svg.classed(graph.node(u).nodeclass, true);
+  var oldDrawNodes = renderer.drawNodes();
+  renderer.drawNodes(function(graph, root) {
+    var svgNodes = oldDrawNodes(graph, root);
+    svgNodes.attr('class', function(u) { return graph.node(u).nodeclass + ' node'; });
+    return svgNodes;
   });
   var layout = renderer.run(g, d3.select("svg g"));
   d3.select("svg")
