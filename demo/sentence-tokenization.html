@@ -77,7 +77,7 @@ text {
   var oldDrawNodes = renderer.drawNodes();
   renderer.drawNodes(function(graph, root) {
     var svgNodes = oldDrawNodes(graph, root);
-    svgNodes.attr('class', function(u) { return graph.node(u).nodeclass + ' node'; });
+    svgNodes.each(function(u) { d3.select(this).classed(graph.node(u).nodeclass, true); });
     return svgNodes;
   });
   var layout = renderer.run(g, d3.select("svg g"));

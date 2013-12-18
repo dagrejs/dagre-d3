@@ -138,8 +138,7 @@ function tryDraw() {
       graphLink.attr("href", graphToURL());
 
       // Cleanup old graph
-      var svg = d3.select("svg > g");
-      svg.selectAll("*").remove();
+      var svg = d3.select("svg");
 
       var renderer = new dagreD3.Renderer();
 
@@ -169,7 +168,7 @@ function tryDraw() {
       // Uncomment the following line to get straight edges
       //renderer.drawEdge().interpolate('linear');
 
-      var layout = renderer.run(result, svg.append("g"));
+      var layout = renderer.run(result, svg.select("g"));
       d3.select("svg")
         .attr("width", layout.graph().width + 40)
         .attr("height", layout.graph().height + 40)
