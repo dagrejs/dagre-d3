@@ -166,6 +166,9 @@ function tryDraw() {
         }
       });
 
+      // Uncomment the following line to get straight edges
+      //renderer.drawEdge().interpolate('linear');
+
       var layout = renderer.run(result, svg.append("g"));
       d3.select("svg")
         .attr("width", layout.graph().width + 40)
