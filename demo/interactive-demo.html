@@ -168,8 +168,15 @@ function tryDraw() {
       // Uncomment the following line to get straight edges
       //renderer.drawEdge().interpolate('linear');
 
+      // Custom transition function
+      function transition(selection) {
+        return selection.transition().duration(500);
+      }
+
+      renderer.transition(transition);
+
       var layout = renderer.run(result, svg.select("g"));
-      d3.select("svg")
+      transition(d3.select("svg"))
         .attr("width", layout.graph().width + 40)
         .attr("height", layout.graph().height + 40)
         .call(d3.behavior.zoom().on("zoom", function() {
