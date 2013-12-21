@@ -1,6 +1,8 @@
 v0.1.0
 ======
 
+* Added support for D3 transitions. See interactive-demo.html for an example of
+  how to set up transitions.
 * Now edge paths are always behind edge labels and edge labels are always
   behind nodes. This has an impact on CSS selectors: edge labels are now
   selectable by '.edgeLabel' and edge paths are selectable by '.edgePath'.
