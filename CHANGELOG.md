@@ -1,3 +1,9 @@
+v0.1.1
+======
+
+* drawEdgePaths now gets the input graph as its first argument, not the layout
+  graph. This makes it consistent with drawNodes and drawEdgeLabels.
+
 v0.1.0
 ======
 
