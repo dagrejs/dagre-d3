@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.1.2-pre",
+  "version": "0.1.2",
   "description": "A D3-based renderer for Dagre",
   "keywords": [
     "graph",
@@ -19,10 +19,10 @@
     "uglify-js": "1.2.3"
   },
   "dependencies": {
-    "cp-data": "1.1.0",
-    "dagre": "0.4.2",
+    "cp-data": "1.1.2",
+    "dagre": "0.4.3",
     "d3": "~3.3.8",
-    "graphlib": "0.7.0"
+    "graphlib": "0.7.2"
   },
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {

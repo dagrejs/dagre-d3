@@ -1,3 +1,8 @@
+v0.1.2
+======
+
+* Pull in dagre v0.4.3 / graphlib v0.7.2 / cp-data v1.1.2
+
 v0.1.1
 ======
 
