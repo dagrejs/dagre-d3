@@ -2,6 +2,7 @@ v0.1.3
 ======
 
 * Add support wordwrap for text labels (thanks @mmcgrath).
+* Pull in latest cp-data, graphlib, and dagre.
 
 v0.1.2
 ======
