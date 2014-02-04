@@ -1,3 +1,8 @@
+v0.1.3
+======
+
+* Add support wordwrap for text labels (thanks @mmcgrath).
+
 v0.1.2
 ======
 
