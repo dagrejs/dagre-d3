@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "cp-data": "1.1.3",
-    "dagre": "0.4.4",
+    "dagre": "0.4.5",
     "d3": "~3.3.8",
     "graphlib": "0.7.4"
   },
