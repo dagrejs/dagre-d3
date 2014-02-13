@@ -151,14 +151,14 @@ svg {
 .node rect {
     stroke: #333;
     stroke-width: 1.5px;
-    fill: #ff;
+    fill: #fff;
 }
 
 .edgeLabel rect {
     fill: #fff;
 }
 
-.edge path {
+.edgePath {
     stroke: #333;
     stroke-width: 1.5px;
     fill: none;
