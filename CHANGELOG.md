@@ -1,3 +1,11 @@
+v0.1.5
+======
+
+* Fixes to transitions:
+    * Avoid overlapping transitions
+    * Remove hack for adding an artificial control point because it breaks if
+      edge interpolation changes.
+
 v0.1.4
 ======
 
