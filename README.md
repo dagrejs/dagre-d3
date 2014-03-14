@@ -78,11 +78,11 @@ the following snippet:
 
 We recommend you use a specific version though, or include your own copy of the
 library, because the API may change across releases. Here's an example of using
-dagre-d3 v0.0.1:
+dagre-d3 vX.Y.Z (where vX.Y.Z is a version of dagre, such as v0.1.5):
 
 ```html
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://cpettitt.github.io/project/dagre-d3/v0.0.1/dagre-d3.min.js"></script>
+<script src="http://cpettitt.github.io/project/dagre-d3/vX.Y.Z/dagre-d3.min.js"></script>
 ```
 
 This will add a new global `dagreD3`. We show you how to use this below.
