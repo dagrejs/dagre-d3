@@ -78,7 +78,7 @@ the following snippet:
 
 We recommend you use a specific version though, or include your own copy of the
 library, because the API may change across releases. Here's an example of using
-dagre-d3 vX.Y.Z (where vX.Y.Z is a version of dagre, such as v0.1.5):
+dagre-d3 vX.Y.Z, where vX.Y.Z is a version of dagre, such as v0.1.5 (see [Releases](https://github.com/cpettitt/dagre-d3/releases) for a list of releases):
 
 ```html
 <script src="http://d3js.org/d3.v3.min.js"></script>
