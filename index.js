@@ -25,5 +25,6 @@ module.exports =  {
   Renderer: require('./lib/Renderer'),
   json: require('graphlib').converter.json,
   layout: require('dagre').layout,
-  version: require('./lib/version')
+  version: require('./lib/version'),
+  debug: require('dagre').debug
 };
