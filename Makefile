@@ -22,7 +22,7 @@ DEMO_BUILD_FILES = $(addprefix build/, $(DEMO_FILES))
 TEST_COV = build/coverage
 
 # Targets
-.PHONY: = all test demo-test lint release clean fullclean
+.PHONY: all test demo-test lint release clean fullclean
 
 .DELETE_ON_ERROR:
 
