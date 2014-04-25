@@ -80,6 +80,10 @@ text {
     svgNodes.each(function(u) { d3.select(this).classed(graph.node(u).nodeclass, true); });
     return svgNodes;
   });
+  
+  // Disable pan and zoom
+  renderer.zoom(false);
+
   var layout = renderer.run(g, d3.select("svg g"));
   d3.select("svg")
     .attr("width", layout.graph().width + 40)
