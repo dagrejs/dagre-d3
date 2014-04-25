@@ -179,12 +179,6 @@ function tryDraw() {
       transition(d3.select("svg"))
         .attr("width", layout.graph().width + 40)
         .attr("height", layout.graph().height + 40)
-      d3.select("svg")
-        .call(d3.behavior.zoom().on("zoom", function() {
-          var ev = d3.event;
-          svg.select("g")
-            .attr("transform", "translate(" + ev.translate + ") scale(" + ev.scale + ")");
-        }));
     }
   }
 }
