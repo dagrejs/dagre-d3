@@ -180,7 +180,7 @@ This section describes experimental rendering configuration.
 For example, to set the edge interpolation to 'linear':
 
 ```js
-renderer.edgeTension('linear');
+renderer.edgeInterpolate('linear');
 renderer.run(g, d3.select('svg g'));
 ```
 
