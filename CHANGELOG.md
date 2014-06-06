@@ -1,6 +1,7 @@
 v0.2.0
 ======
 
+* Misc bug fixes
 * Added zoom behavior by default. Thanks to @kennib and @eightyeight for this
   feature. If zoom behavior is not desired, use `renderer.zoom(false)` (see
   `demo/sentence-tokenization.html` for an example).
