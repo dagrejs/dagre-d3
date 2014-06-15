@@ -184,6 +184,13 @@ renderer.edgeInterpolate('linear');
 renderer.run(g, d3.select('svg g'));
 ```
 
+Or for example, to disable drag and zoom:
+
+```js
+renderer.zoom(false);
+renderer.run(g, d3.select("svg g"));
+```
+
 ### Configuring the Layout
 
 Here are a few methods you can call on the layout object to change layout behavior:
