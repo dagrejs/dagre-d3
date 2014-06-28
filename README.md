@@ -123,6 +123,11 @@ g.addEdge(null, "lwilson",   "kbacon",    { label: "Telling Lies in America" });
 This simple graph was derived from [The Oracle of
 Bacon](http://oracleofbacon.org/).
 
+### Embedding HTML in the SVG Graph
+If the label starts with an HTML tag, it is interpreted as HTML and is embeded as an foreignobject SVG element.
+But note that the IE does not support this SVG element.
+
+
 ### Rendering the Graph
 
 To render the graph, we first need to create an SVG element on our page:
