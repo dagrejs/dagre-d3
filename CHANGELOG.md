@@ -1,3 +1,9 @@
+v0.2.1
+======
+
+* Now dagre-d3 will use user-supplied width and height if they are set as
+  attributes on nodes and edges.
+
 v0.2.0
 ======
 
