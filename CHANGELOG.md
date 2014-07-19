@@ -1,3 +1,8 @@
+v0.2.3
+======
+
+* Fix to allow fill to be set via CSS
+
 v0.2.2
 ======
 
