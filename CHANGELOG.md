@@ -1,3 +1,13 @@
+v0.2.2
+======
+
+* PaulKlint added support for node style attributes:
+    * width and height (this replaces the bbox strategy in v0.2.1)
+    * stroke
+    * stroke-width
+    * stroke-dasharray
+    * rx and ry
+
 v0.2.1
 ======
 
