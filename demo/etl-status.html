@@ -1,0 +1,273 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 Renderer Demo</title>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://cpettitt.github.io/project/graphlib/latest/graphlib.min.js"></script>
+<script src="../build/dagre-d3.js"></script>
+
+<style>
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+    background: #333;
+  }
+
+
+  @-webkit-keyframes flash {
+    0%, 50%, 100% {
+      opacity: 1;
+    }
+
+    25%, 75% {
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes flash {
+    0%, 50%, 100% {
+      opacity: 1;
+    }
+
+    25%, 75% {
+      opacity: 0.2;
+    }
+  }
+
+  .warn {
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+  }
+
+  .live.map {
+    width: 100%;
+    height: 100%;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .live.map text {
+    font-weight: 300;
+    font-size: 14px;
+  }
+
+  .live.map .node rect {
+    stroke-width: 1px;
+    stroke: #bbb;
+    fill: #666;
+  }
+
+  .live.map .status {
+    height: 100%;
+    width: 15px;
+    display: block;
+    float: left;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-right: 4px;
+  }
+
+  .live.map .running .status {
+    background-color: #7f7;
+  }
+
+  .live.map .running.warn .status {
+    background-color: #ffed68;
+  }
+
+  .live.map .stopped .status {
+    background-color: #f77;
+  }
+
+  .live.map .warn .queue {
+    color: #f77;
+  }
+
+  .warn {
+    -webkit-animation-name: flash;
+    animation-name: flash;
+  }
+
+  .live.map .consumers {
+    margin-right: 2px;
+  }
+
+  .live.map .consumers,
+  .live.map .name {
+    margin-top: 4px;
+  } 
+
+  .live.map .consumers:after {
+    content: "x";
+  }
+
+  .live.map .queue {
+    display: block;
+    float: left;
+    width: 130px;
+    height: 20px;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .live.map .node g div {
+    width: 200px;
+    height: 40px;
+    color: #fff;
+  }
+
+  .live.map .node g div span.consumers {
+    display: inline-block;
+    width: 20px;
+  }
+
+  .live.map .edgeLabel rect {
+    fill: none;
+  }
+
+  .live.map .edgeLabel div {
+    width: 50px;
+    color: #fff;
+  }
+
+  .live.map .edgePath path {
+    stroke: #999;
+    stroke-width: 1.5px;
+    fill: none;
+  }
+
+  /* Override path marker color */
+  #arrowhead {
+    fill: #999 !important;
+  }
+
+</style>
+
+<body onLoad="draw();">
+<div class="live map">
+  <svg>
+    <g class="diagram" transform="translate(20,20)"/>
+  </svg>
+</div>
+
+<script>
+
+  var workers = {
+    'identifier': {
+      'consumers': 2,
+      'count': 20
+    },
+    'lost-and-found': {
+      'consumers': 1,
+      'count': 1,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },
+    'monitor': {
+      'consumers': 1,
+      'count': 0,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },
+    'meta-enricher': {
+      'consumers': 4,
+      'count': 9900,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },
+    'geo-enricher': {
+      'consumers': 2,
+      'count': 1,
+      'inputQueue': 'meta-enricher',
+      'inputThroughput': 50
+    },
+    'elasticsearch-writer': {
+      'consumers': 0,
+      'count': 9900,
+      'inputQueue': 'geo-enricher',
+      'inputThroughput': 50
+    }
+  };
+
+  function draw() {
+    var nodes = [];
+    var edges = [];
+    for (var id in workers) {
+      var worker = workers[id];
+      var className = '';
+      className += worker.consumers ? 'running' : 'stopped';
+      if (worker.count > 10000) {
+        className += ' warn';
+      }
+      var html = '<div>';
+      html += '<span class="status"></span>';
+      html += '<span class="consumers">'+worker.consumers+'</span>';
+      html += '<span class="name">'+id+'</span>';
+      html += '<span class="queue"><span class="counter">'+worker.count+'</span></span>';
+      html += '</div>';
+      nodes.push({
+        id: id,
+        value: {
+          label: html,
+          className: className
+        }
+      });
+
+      if (worker.inputQueue) {
+        var label = worker.inputThroughput + '/s';
+        edges.push({ u: worker.inputQueue, v: id, value: { label: '<span>'+label+'</span>' } });
+      }
+    }
+
+    var renderer = new dagreD3.Renderer();
+    var svg = d3.select("svg");
+
+    // Extend drawNodes function to set custom ID and class on nodes
+    var oldDrawNodes = renderer.drawNodes();
+    renderer.drawNodes(function(graph, root) {
+      var svgNodes = oldDrawNodes(graph, root);
+      svgNodes.attr("id", function(u) { return "node-" + u; });
+      svgNodes.attr("class", function(u) { return "node " + graph.node(u).className; });
+      return svgNodes;
+    });
+
+    // Custom transition function
+    function transition(selection) {
+      return selection.transition().duration(500);
+    }
+    renderer.transition(transition);
+
+    // Left-to-right layout
+    var layout = dagreD3.layout()
+      .nodeSep(70)
+      .rankSep(120)
+      .rankDir("LR");
+    var renderedLayout = renderer
+      .layout(layout)
+      .run(dagreD3.json.decode(nodes, edges), d3.select("svg g"));
+  }
+
+  setInterval(function() {
+
+    var stoppedWorker1Count = workers['elasticsearch-writer'].count;
+    var stoppedWorker2Count = workers['meta-enricher'].count;
+    for (var id in workers) {
+      workers[id].count = Math.ceil(Math.random() * 3);
+      if (workers[id].inputThroughput) workers[id].inputThroughput = Math.ceil(Math.random() * 250);
+    }
+    workers['elasticsearch-writer'].count = stoppedWorker1Count + Math.ceil(Math.random() * 100);
+    workers['meta-enricher'].count = stoppedWorker2Count + Math.ceil(Math.random() * 100);
+    draw();
+  }, 2000);
+</script>
