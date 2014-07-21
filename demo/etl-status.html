@@ -173,7 +173,31 @@
       'count': 1,
       'inputQueue': 'identifier',
       'inputThroughput': 50
+    },/*
+    'lost-and-found-2': {
+      'consumers': 1,
+      'count': 1,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
     },
+    'lost-and-found-3': {
+      'consumers': 1,
+      'count': 1,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },
+    'lost-and-found-4': {
+      'consumers': 1,
+      'count': 1,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },
+    'lost-and-found-5': {
+      'consumers': 1,
+      'count': 1,
+      'inputQueue': 'identifier',
+      'inputThroughput': 50
+    },*/
     'monitor': {
       'consumers': 1,
       'count': 0,
@@ -200,7 +224,7 @@
     }
   };
 
-  function draw() {
+  function draw(isUpdate) {
     var nodes = [];
     var edges = [];
     for (var id in workers) {
@@ -246,7 +270,15 @@
     function transition(selection) {
       return selection.transition().duration(500);
     }
-    renderer.transition(transition);
+    isUpdate && renderer.transition(transition);
+
+    var zoom = d3.behavior.zoom();
+
+    renderer.zoom(function (graph, svg) {
+      return zoom.on('zoom', function() {
+        svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+      });
+    });
 
     // Left-to-right layout
     var layout = dagreD3.layout()
@@ -256,6 +288,19 @@
     var renderedLayout = renderer
       .layout(layout)
       .run(dagreD3.json.decode(nodes, edges), d3.select("svg g"));
+
+    var zoomScale = zoom.scale();
+    var graphWidth = renderedLayout.graph().width + 80;
+    var graphHeight = renderedLayout.graph().height + 40;
+    var width = parseInt(svg.style('width').replace(/px/, ''));
+    var height = parseInt(svg.style('height').replace(/px/, ''));
+
+    zoomScale = Math.min(width / graphWidth, height / graphHeight);
+
+    var translate = [(width/2) - ((graphWidth*zoomScale)/2), (height/2) - ((graphHeight*zoomScale)/2)];
+    zoom.translate(translate);
+    zoom.scale(zoomScale);
+    zoom.event(svg.transition().duration(0));
   }
 
   setInterval(function() {
@@ -268,6 +313,6 @@
     }
     workers['elasticsearch-writer'].count = stoppedWorker1Count + Math.ceil(Math.random() * 100);
     workers['meta-enricher'].count = stoppedWorker2Count + Math.ceil(Math.random() * 100);
-    draw();
+    draw(true);
   }, 2000);
 </script>
