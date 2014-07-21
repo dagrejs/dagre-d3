@@ -200,6 +200,8 @@
     }
   };
 
+  var zoom = d3.behavior.zoom();
+
   function draw(isUpdate) {
     var nodes = [];
     var edges = [];
@@ -248,8 +250,6 @@
     }
     isUpdate && renderer.transition(transition);
 
-    var zoom = d3.behavior.zoom();
-
     renderer.zoom(function (graph, svg) {
       return zoom.on('zoom', function() {
         svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
@@ -275,11 +275,11 @@
     var translate = [(width/2) - ((graphWidth*zoomScale)/2), (height/2) - ((graphHeight*zoomScale)/2)];
     zoom.translate(translate);
     zoom.scale(zoomScale);
-    zoom.event(svg.transition().duration(0));
+    zoom.event(isUpdate ? svg.transition().duration(500) : d3.select('svg'));
   }
 
+  // Do some mock queue status updates
   setInterval(function() {
-
     var stoppedWorker1Count = workers['elasticsearch-writer'].count;
     var stoppedWorker2Count = workers['meta-enricher'].count;
     for (var id in workers) {
@@ -289,5 +289,15 @@
     workers['elasticsearch-writer'].count = stoppedWorker1Count + Math.ceil(Math.random() * 100);
     workers['meta-enricher'].count = stoppedWorker2Count + Math.ceil(Math.random() * 100);
     draw(true);
-  }, 2000);
+  }, 1000);
+
+  // Do a mock change of worker configuration
+  setInterval(function() {
+    workers['elasticsearch-monitor'] = {
+      'consumers': 0,
+      'count': 0,
+      'inputQueue': 'elasticsearch-writer',
+      'inputThroughput': 50
+    }
+  }, 5000);
 </script>
