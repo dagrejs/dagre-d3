@@ -5,6 +5,7 @@ NPM = npm
 BROWSERIFY = ./node_modules/browserify/bin/cmd.js
 JSHINT = ./node_modules/jshint/bin/jshint
 MOCHA = ./node_modules/mocha/bin/_mocha
+MOCHA_PHANTOMJS = ./node_modules/mocha-phantomjs/bin/mocha-phantomjs
 PHANTOMJS = ./node_modules/phantomjs/bin/phantomjs
 UGLIFY = ./node_modules/uglify-js/bin/uglifyjs
 
@@ -22,7 +23,7 @@ DEMO_BUILD_FILES = $(addprefix build/, $(DEMO_FILES))
 TEST_COV = build/coverage
 
 # Targets
-.PHONY: all test demo-test lint release clean fullclean
+.PHONY: all test mocha-test demo-test lint release clean fullclean
 
 .DELETE_ON_ERROR:
 
@@ -51,7 +52,10 @@ dist: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo | test
 	mkdir -p $@
 	cp -r $^ dist
 
-test: build demo-test lint
+test: build mocha-test demo-test lint
+
+mocha-test: test/index.html
+	$(MOCHA_PHANTOMJS) $?
 
 demo-test: test/demo-test.js $(SRC_FILES) node_modules
 	$(PHANTOMJS) $<
