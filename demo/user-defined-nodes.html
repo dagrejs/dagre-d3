@@ -37,30 +37,46 @@ text {
 
 <body onLoad="draw();">
 
-<svg x="0" y="0" width=269 height=391>
-<g transform="translate(20,20)"/>
+<svg x="0" y="0" width=350 height=800>
+
+<g transform="translate(20,20)">
 
 <defs>
-	<g id="N0" width="30" height="30" transform="translate(-15,-15)"><polygon points="0,16.01017916333157 15.22658522033938,4.947417444457132 9.410547198766546,-12.952507026122916 -9.410547198766542,-12.952507026122918 -15.22658522033938,4.94741744445713 -3.921362932176701e-15,16.01017916333157 " transform="translate(15.726585388183594,13.452507019042969)" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); stroke-width: 1px;"></polygon><text x="6.276585388183593" y="17.82555389404297" width="18.900000000000002" height="16.81640625" style="text-anchor: start; font-family: 'Helvetica Neue Light', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 300; font-size: 14px; stroke: rgb(0, 0, 0); stroke-width: 1px; fill: rgb(0, 0, 0);">N0</text></g>
-	<g id="N1" width="119" height="113" transform="translate(-59.5,-56.5)"><g transform="scale(0.5,0.5)"><polygon points="350,75,379,161,469,161,397,215,423,301,350,250,277,301,303,215,231,161,321,161" transform="translate(-229,-73)" style="stroke: rgb(0, 0, 0); fill-rule: evenodd; fill: rgb(0, 0, 255); stroke-width: 4px;"></polygon></g></g>
-	<g id="N2" width="80" height="80" transform="translate(-40,-40)"><ellipse cx="40.5" cy="40.5" rx="40" ry="40" style="stroke: rgb(0, 0, 0); fill: rgb(173, 216, 230); stroke-width: 1px;"></ellipse><text x="31.049999999999997" y="44.873046875" width="18.900000000000002" height="16.81640625" style="text-anchor: start; font-family: 'Helvetica Neue Light', Helvetica, Arial, sans-serif; font-style: normal; font-weight: 300; font-size: 14px; stroke: rgb(0, 0, 0); stroke-width: 1px; fill: rgb(0, 0, 0);">N2</text></g>
+	<g id="def-N0" ><rect x=-25 y =-25 width=50 height=50 fill="steelblue"/><circle cx=0 cy=0 r=20 fill="yellow"/><text x=-7 y=5 fill="#000000">N0</text></g>
+	<g id="def-N1" transform="translate(-40,-20)"><polygon points="0,20 20,0 35,0 35,10, 20,10, 20,20 60,20 60,10 45,10 45,0 60,0 80,20 60,50 40,35 20,50" style="fill:lightgreen;stroke:black;stroke-width:2;"/><text x=35 y=33 fill="#FF">N1</text></g>
+	<g id="def-N2" ><ellipse cx=0 cy=0 rx=50 ry=30 fill="#FFC0C0"/><text x=-7 y=5 fill="#FFFFFF">N2</text></g>
+	<g id="def-N3" transform="translate(-40,-20)"><polygon points="0,20 20,0 35,0 35,10, 20,10, 20,20 60,20 60,10 45,10 45,0 60,0 80,20 60,50 40,35 20,50" style="fill:lightgray;stroke:black;stroke-width:2;"/><text x=35 y=33 fill="#FF">N3</text></g>
+	<g id="def-N4" ><circle cx=0 cy=0 r=30 fill="#F0B3FF"/><text x=-7 y=5 fill="#FFFFFF">N4</text></g>
+	<g id="def-N5" transform="translate(-98,-98)"><polygon points= "100,10 40,198 190,78 10,78 160,198" fill-rule="evenodd" style="fill:silver;"/>
+	
 </defs>
 
+</g>
 </svg>
 
 <script>
 function draw() {
   var g = new dagreD3.Digraph();
-  g.addNode("N0", {label: "N0", use: "N0"});
-  g.addNode("N1", {label: "N1", use: "N1"});
-  g.addNode("N2", {label: "N2", use: "N2"});
+  g.addNode("N0", {label: "N0", use: "def-N0"});
+  g.addNode("N1", {label: "N1", use: "def-N1"});
+  g.addNode("N2", {label: "N2", use: "def-N2"});
+  g.addNode("N3", {label: "N3", use: "def-N3"});
+  g.addNode("N4", {label: "N4", use: "def-N4"});
+  g.addNode("N5", {label: "N5", use: "def-N5"});
   
   g.addEdge(null, "N0",     "N1",     { label: "N0-N1" });
-  g.addEdge(null, "N1",     "N2",     { label: "N1-N2" });
-  g.addEdge(null, "N2",     "N0",     { label: "N2-N0" });
   g.addEdge(null, "N0",     "N2",     { label: "N0-N2" });
+  g.addEdge(null, "N1",     "N2",     { label: "N1-N2" });
+  g.addEdge(null, "N2",     "N3",     { label: "N2-N3" });
+  g.addEdge(null, "N3",     "N0",     { label: "N3-N0" });
+  g.addEdge(null, "N3",     "N4",     { label: "N3-N4" });
+  g.addEdge(null, "N4",     "N5",     { label: "N4-N5" });
+  g.addEdge(null, "N5",     "N0",     { label: "N5-N0" });
+ 
   
   var renderer = new dagreD3.Renderer();
+  var layout = dagreD3.layout()
+                    .rankSep(70);
   var oldDrawNodes = renderer.drawNodes();
   renderer.drawNodes(function(graph, root) {
     var svgNodes = oldDrawNodes(graph, root);
@@ -69,6 +85,6 @@ function draw() {
   });
  
   
-  renderer.run(g, d3.select("svg g"));
+  renderer.layout(layout).run(g, d3.select("svg g"));
 }
 </script>
