@@ -1,3 +1,11 @@
+v0.2.4
+======
+
+* Fix bug that would cause nodes to get larger each time an input graph was
+  re-renderer.
+* @dominiek added a new demo (`demo/etl-status.html`) showing how dagre-d3
+  can be used to visualize an ETL pipeline.
+
 v0.2.3
 ======
 
