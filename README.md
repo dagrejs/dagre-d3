@@ -20,6 +20,7 @@ Or some of our other examples:
 * [Sentence Tokenization](http://cpettitt.github.com/project/dagre-d3/latest/demo/sentence-tokenization.html)
 * [TCP State Diagram](http://cpettitt.github.com/project/dagre-d3/latest/demo/tcp-state-diagram.html)
     * [TCP State Diagram](http://cpettitt.github.com/project/dagre-d3/latest/demo/tcp-state-diagram-json.html) using JSON as input.
+* [ETL Visualization](http://cpettitt.github.io/project/dagre-d3/latest/demo/etl-status.html)
 
 These demos and more can be found in the `demo` folder of the project. Simply
 open them in your browser - there is no need to start a web server.
