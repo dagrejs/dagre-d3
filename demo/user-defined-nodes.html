@@ -57,12 +57,12 @@ text {
 <script>
 function draw() {
   var g = new dagreD3.Digraph();
-  g.addNode("N0", {label: "N0", use: "def-N0"});
-  g.addNode("N1", {label: "N1", use: "def-N1"});
-  g.addNode("N2", {label: "N2", use: "def-N2"});
-  g.addNode("N3", {label: "N3", use: "def-N3"});
-  g.addNode("N4", {label: "N4", use: "def-N4"});
-  g.addNode("N5", {label: "N5", use: "def-N5"});
+  g.addNode("N0", {label: "N0", useDef: "def-N0"});
+  g.addNode("N1", {label: "N1", useDef: "def-N1"});
+  g.addNode("N2", {label: "N2", useDef: "def-N2"});
+  g.addNode("N3", {label: "N3", useDef: "def-N3"});
+  g.addNode("N4", {label: "N4", useDef: "def-N4"});
+  g.addNode("N5", {label: "N5", useDef: "def-N5"});
   
   g.addEdge(null, "N0",     "N1",     { label: "N0-N1" });
   g.addEdge(null, "N0",     "N2",     { label: "N0-N2" });
