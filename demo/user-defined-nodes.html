@@ -37,7 +37,7 @@ text {
 
 <body onLoad="draw();">
 
-<svg x="0" y="0" width=350 height=800>
+<svg x="0" y="0" width=350 height=670>
 
 <g transform="translate(20,20)">
 
@@ -83,8 +83,15 @@ function draw() {
     svgNodes.attr("id", function(u) { return "node-" + u; });
     return svgNodes;
   });
+
+  var oldZoom = renderer.zoom();
+  renderer.zoom(function(graph, svg) {
+    var zoom = oldZoom(graph, svg);
+    zoom.scale(0.70);
+    zoom.event(svg);
+    return zoom;
+  });
  
-  
   renderer.layout(layout).run(g, d3.select("svg g"));
 }
 </script>
