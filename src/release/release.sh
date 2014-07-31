@@ -1,6 +1,3 @@
-# Note: this does not work if the release script is kicked off in parallel, for
-# example when using multiple version of node in travis ci.
-
 # Fail on error
 set -e
 [ -n "$DEBUG"] && set -x
@@ -30,9 +27,9 @@ echo Attemping to publish version: $VERSION
 
 # Pull remote repos
 rm -rf $DOC_DIR
-git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/cpettitt.github.com.git $DOC_DIR
+git clone git@github.com:cpettitt/cpettitt.github.com.git $DOC_DIR
 rm -rf $BOWER_DIR
-git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/dagre-d3-bower.git $BOWER_DIR
+git clone git@github.com:cpettitt/dagre-d3-bower.git $BOWER_DIR
 
 # Publish docs
 echo Preparing to publish docs
