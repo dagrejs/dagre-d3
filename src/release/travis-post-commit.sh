@@ -47,7 +47,7 @@ TARGET=project/$PROJECT/v$VERSION
 cp -r $PROJECT_ROOT/$DIST_DIR $TARGET
 git add $TARGET
 
-git ci -m "Publish docs for $PROJECT v$VERSION"
+git commit -m "Publish docs for $PROJECT v$VERSION"
 git push origin
 
 cd $PROJECT_ROOT
@@ -84,7 +84,7 @@ echo Published to npm
 # Update patch level version + commit
 node src/release/bump-version.js
 make lib/version.js
-git ci package.json lib/version.js -m "Bump version and set as pre-release"
+git commit package.json lib/version.js -m "Bump version and set as pre-release"
 git push origin
 echo Updated patch version
 
