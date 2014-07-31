@@ -37,6 +37,17 @@ You can get the latest browser-ready scripts:
 These scripts include everything you need to use dagre-d3. See Using Dagre
 below for details.
 
+### Bower
+
+We publish releases of dagre-d3 to bower. To get a list of the current releases
+available, use:
+
+    $ bower info dagre-d3
+
+You can then install a version of dagre-d3 with this command:
+
+    $ bower install dagre-d3#version
+
 ### NPM Install
 
 Before installing this library you need to install the [npm package manager].
