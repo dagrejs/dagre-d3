@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.2.5-pre",
+  "version": "0.2.5",
   "description": "A D3-based renderer for Dagre",
   "keywords": [
     "graph",

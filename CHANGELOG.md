@@ -1,3 +1,9 @@
+v0.2.5
+======
+
+* Added support for arbitrary shapes. See https://github.com/cpettitt/dagre-d3/pull/69 for details.
+* Added support for publishing to bower.
+
 v0.2.4
 ======
 
