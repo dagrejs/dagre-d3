@@ -21,7 +21,7 @@ VERSION=$(node src/release/check-version.js || true)
 echo Attemping to publish version: $VERSION
 
 # Preflight checks
-[ -z "`git tag -l v$VERSION`"] || echo "Version already published. Skipping publish." && exit 0
+[ -z "`git tag -l v$VERSION`"] || (echo "Version already published. Skipping publish." && exit 0)
 [ -n "`grep v$VERSION CHANGELOG.md`" ] || bail "ERROR: No entry for v$VERSION in CHANGELOG.md"
 [ "`git symbolic-ref --short HEAD`" = "master" ] || bail "ERROR: You must release from the master branch"
 [ -z "`git status --porcelain`" ] || bail "ERROR: Dirty index on working tree. Use git status to check"
