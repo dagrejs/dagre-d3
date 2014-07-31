@@ -27,7 +27,7 @@ open them in your browser - there is no need to start a web server.
 
 ## Getting dagre-d3
 
-### Browser Scrips
+### Browser Scripts
 
 You can get the latest browser-ready scripts:
 
