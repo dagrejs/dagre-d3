@@ -1,11 +1,5 @@
 language: node_js
 node_js:
+  - "0.8"
   - "0.10"
 script: make dist
-before_script:
-  - git config --global user.email "cpettitt@gmail.com"
-  - git config --global user.name "Chris Pettitt"
-after_success: ./src/release/travis-post-commit.sh
-env:
-  global:
-    secure: "PYL+YW9TdWJbBjsywpr16CsL5zkBzE6UdPhvItJKd7ln/SHa1exAf83aW4bOfei0JRrjY+xtaFWMtjGewaSYHK/P4BWypCK5MQTsBsACwoCk7hR8mgBUj275Jf6NyLz51Kw+fZhEgapHYjpI04RjMB9r6o54IyNCI6yjN/jO40k="

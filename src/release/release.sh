@@ -13,28 +13,25 @@ bail() {
 # Initial config
 PROJECT=dagre-d3
 PROJECT_ROOT=`pwd`
-BOWER_DIR=bower
-DOC_DIR=doc
+BOWER_DIR=/tmp/dagre-d3-bower
+DOC_DIR=/tmp/dagre-d3-doc
 DIST_DIR=dist
 
-# Check version. Is this a release? If not, finish immediately.
-VERSION=$(node src/release/check-version.js || true)
-[ -z "$VERSION" ] && echo "Not a release, skipping release process" && exit 0
+# Check version. Is this a release? If not abort
+VERSION=$(node src/release/check-version.js)
 
 echo Attemping to publish version: $VERSION
 
 # Preflight checks
-[ -z "`git tag -l v$VERSION`"] || (echo "Version already published. Skipping publish." && exit 0)
+[ -z "`git tag -l v$VERSION`"] || bail "Version already published. Skipping publish."
 [ -n "`grep v$VERSION CHANGELOG.md`" ] || bail "ERROR: No entry for v$VERSION in CHANGELOG.md"
 [ "`git rev-parse HEAD`" = "`git rev-parse master`" ] || bail "ERROR: You must release from the master branch"
 [ -z "`git status --porcelain`" ] || bail "ERROR: Dirty index on working tree. Use git status to check"
 
-# Set up git
-git config --global user.email "cpettitt@gmail.com"
-git config --global user.name "Chris Pettitt"
-git remote rm origin
-git remote add origin http://cpettitt:${GH_AUTH}@github.com/cpettitt/dagre-d3.git
+# Pull remote repos
+rm -rf $DOC_DIR
 git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/cpettitt.github.com.git $DOC_DIR
+rm -rf $BOWER_DIR
 git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/dagre-d3-bower.git $BOWER_DIR
 
 # Publish docs
