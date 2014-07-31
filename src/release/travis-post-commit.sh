@@ -54,22 +54,22 @@ cd $PROJECT_ROOT
 echo Done with docs
 
 # Publish bower
-rm dagre-d3-bower/bower.json
-rm -rf dagre-d3-bower/js
+rm $BOWER_DIR/bower.json
+rm -rf $BOWER_DIR/js
 
-mkdir dagre-d3-bower/js
+mkdir $BOWER_DIR/js
 
-cp $DIST_DIR/bower.json dagre-d3-bower
-cp $DIST_DIR/dagre-d3*.js dagre-d3-bower/js
+cp $DIST_DIR/bower.json $BOWER_DIR
+cp $DIST_DIR/dagre-d3*.js $BOWER_DIR/js
 
-cd dagre-d3-bower
+cd $BOWER_DIR
 git add -A
 git commit -m "Publishing bower for $PROJECT v$VERSION"
 git push -f origin master
 git tag v$VERSION
 git push origin v$VERSION
-echo "Published dagre-d3 to dagre-d3-bower"
 cd $PROJECT_ROOT
+echo "Published dagre-d3 to dagre-d3-bower"
 
 # Publish tag
 git tag v$VERSION
