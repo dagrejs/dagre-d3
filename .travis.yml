@@ -2,15 +2,16 @@ language: node_js
 node_js:
   - "0.10"
   - "0.8"
-script: make test
+script: make dist
 before_install: npm update -g npm
 before_script:
   - git config --global user.email "cpettitt@gmail.com"
   - git config --global user.name "Chris Pettitt"
 after_success:
   - git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/dagre-d3-bower.git
-  - rm -rf dagre-d3-bower/*
+  - rm dagre-d3-bower/bower.json
   - cp dist/bower.json dagre-d3-bower
+  - rm -rf dagre-d3-bower/js
   - mkdir dagre-d3-bower/js
   - cp dist/dagre-d3*.js dagre-d3-bower/js
   - cd dagre-d3-bower
