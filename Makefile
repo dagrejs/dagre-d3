@@ -29,16 +29,19 @@ TEST_COV = build/coverage
 
 all: build test
 
-lib/version.js: package.json
-	$(NODE) src/version.js > $@
+lib/version.js: package.json src/release/make-version.js
+	$(NODE) src/release/make-version.js > $@
 
-build: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo
+build: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/bower.json build/demo
 
 build/demo: $(DEMO_BUILD_FILES)
 
 build/demo/%: demo/%
 	mkdir -p $(@D)
 	sed 's|\.\./build/dagre-d3.js|../dagre-d3.js|' < $< > $@ 
+
+build/bower.json: package.json src/release/make-bower.json.js
+	$(NODE) src/release/make-bower.json.js > $@
 
 build/$(MODULE_JS): browser.js node_modules $(SRC_FILES)
 	mkdir -p $(@D)
@@ -47,7 +50,7 @@ build/$(MODULE_JS): browser.js node_modules $(SRC_FILES)
 build/$(MODULE_MIN_JS): build/$(MODULE_JS)
 	$(UGLIFY) $(UGLIFY_OPTS) $< > $@
 
-dist: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo | test
+dist: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo build/bower.json | test
 	rm -rf $@
 	mkdir -p $@
 	cp -r $^ dist
@@ -77,6 +80,7 @@ clean:
 fullclean: clean
 	rm -rf ./node_modules
 	rm -f lib/version.js
+	rm -f bower.json
 
 node_modules: package.json
 	$(NPM) install
