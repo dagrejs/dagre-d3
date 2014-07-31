@@ -7,18 +7,7 @@ before_install: npm update -g npm
 before_script:
   - git config --global user.email "cpettitt@gmail.com"
   - git config --global user.name "Chris Pettitt"
-after_success:
-  - git clone http://cpettitt:${GH_AUTH}@github.com/cpettitt/dagre-d3-bower.git
-  - rm dagre-d3-bower/bower.json
-  - cp dist/bower.json dagre-d3-bower
-  - rm -rf dagre-d3-bower/js
-  - mkdir dagre-d3-bower/js
-  - cp dist/dagre-d3*.js dagre-d3-bower/js
-  - cd dagre-d3-bower
-  - git add -A
-  - git commit -m "Saving dist from dagre-d3"
-  - git push -f origin master
-  - echo "Published dagre-d3 to dagre-d3-bower"
+after_success: ./src/release/travis-post-commit.sh
 env:
   global:
     secure: "PYL+YW9TdWJbBjsywpr16CsL5zkBzE6UdPhvItJKd7ln/SHa1exAf83aW4bOfei0JRrjY+xtaFWMtjGewaSYHK/P4BWypCK5MQTsBsACwoCk7hR8mgBUj275Jf6NyLz51Kw+fZhEgapHYjpI04RjMB9r6o54IyNCI6yjN/jO40k="
