@@ -1,3 +1,8 @@
+v0.2.6
+======
+
+* Testing new release script, no functional changes.
+
 v0.2.5
 ======
 
