@@ -1,3 +1,6 @@
+# Note: this does not work if the release script is kicked off in parallel, for
+# example when using multiple version of node in travis ci.
+
 # Fail on error
 set -e
 [ -n "$DEBUG"] && set -x

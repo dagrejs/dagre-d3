@@ -1,9 +1,7 @@
 language: node_js
 node_js:
   - "0.10"
-  - "0.8"
 script: make dist
-before_install: npm update -g npm
 before_script:
   - git config --global user.email "cpettitt@gmail.com"
   - git config --global user.name "Chris Pettitt"
