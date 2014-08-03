@@ -1,3 +1,8 @@
+v0.2.7
+======
+
+* Add support for styling nodes, node labels, edges, and paths.
+
 v0.2.6
 ======
 
