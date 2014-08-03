@@ -21,7 +21,6 @@ text {
 
 .node rect {
   stroke: #333;
-  stroke-width: 2px;
   fill: #fff;
 }
 
@@ -31,7 +30,6 @@ text {
 
 .edgePath path {
   stroke: #333;
-  stroke-width: 1.5px;
   fill: none;
 }
 </style>
@@ -69,9 +67,10 @@ digraph {
     /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
     A [label="<div style='padding: 10px;'>A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!</div>"];
     C;
-    E [label="A sink"];
+    E [label="Bold Red Sink", style="fill: #f77" labelStyle="font-weight: bold"];
     A -&gt; B -&gt; C;
-    B -&gt; D -&gt; E;
+    B -&gt; D [label="A blue label" labelStyle="fill: #55f; font-weight: bold;"];
+    D -&gt; E [label="A thick edge" style="stroke-width: 3px"];
     C -&gt; E;
     A -&gt; D [label="<div>A multi-rank <span style='color:blue;'>HTML</span> edge!</div>"];
 }

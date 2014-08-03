@@ -20,26 +20,12 @@ text {
 }
 
 .node rect {
-  stroke-width: 2px;
   stroke: #333;
-  fill: #fff;
-}
-
-#node-CLOSED rect {
-  fill: #f77;
-}
-
-#node-ESTAB rect {
-  fill: #7f7;
-}
-
-.edgeLabel rect {
   fill: #fff;
 }
 
 .edgePath path {
   stroke: #333;
-  stroke-width: 1.5px;
   fill: none;
 }
 </style>
@@ -51,12 +37,17 @@ text {
 <script>
 function draw() {
   // States and transitions from RFC 793
-  var states = [ "CLOSED", "LISTEN", "SYN RCVD", "SYN SENT",
-                 "ESTAB", "FINWAIT-1", "CLOSE WAIT", "FINWAIT-2",
+  var states = [ "LISTEN", "SYN RCVD", "SYN SENT",
+                 "FINWAIT-1", "CLOSE WAIT", "FINWAIT-2",
                  "CLOSING", "LAST-ACK", "TIME WAIT" ]
            .map(function(s) {
               return { id: s, value: { label: s } };       
            });
+
+  // Push a couple of states with custom styles
+  states.unshift({ id: 'CLOSED', value: { label: 'CLOSED', style: 'fill: #f77' } });
+  states.push({ id: 'ESTAB', value: { label: 'ESTAB', style: 'fill: #7f7' } });
+
   var edges = [
     { u: "CLOSED",     v: "LISTEN",     value: { label: "open" } },
     { u: "LISTEN",     v: "SYN RCVD",   value: { label: "rcv SYN" } },

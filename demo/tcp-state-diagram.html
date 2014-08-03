@@ -19,25 +19,11 @@ text {
 }
 
 .node rect {
-  stroke-width: 2px;
   stroke: #333;
-}
-
-#node-CLOSED rect {
-  fill: #f77;
-}
-
-#node-ESTAB rect {
-  fill: #7f7;
-}
-
-.edgeLabel rect {
-  fill: #fff;
 }
 
 .edgePath path {
   stroke: #333;
-  stroke-width: 1.5px;
   fill: none;
 }
 </style>
@@ -54,6 +40,11 @@ function draw() {
                  "ESTAB", "FINWAIT-1", "CLOSE WAIT", "FINWAIT-2",
                  "CLOSING", "LAST-ACK", "TIME WAIT" ];
   states.forEach(function(state) { g.addNode(state, { label: state }); });
+
+  // Set custom colors based on state
+  g.node('CLOSED').style = 'fill: #f77';
+  g.node('ESTAB').style  = 'fill: #7f7';
+
   g.addEdge(null, "CLOSED",     "LISTEN",     { label: "open" });
   g.addEdge(null, "LISTEN",     "SYN RCVD",   { label: "rcv SYN" });
   g.addEdge(null, "LISTEN",     "SYN SENT",   { label: "send" });
