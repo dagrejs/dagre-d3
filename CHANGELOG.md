@@ -2,6 +2,8 @@ v0.2.7
 ======
 
 * Add support for styling nodes, node labels, edges, and paths.
+* Add support for matching arrowhead fill to path stroke.
+    * To disable this (revert to previous behavior), set the graph attribute arrowheadFix = false.
 
 v0.2.6
 ======

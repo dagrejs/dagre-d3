@@ -69,6 +69,8 @@ describe('Renderer', function() {
     renderer.run(input, svg);
 
     expect(d3.select('#node-1').empty()).to.be.false;
+    expect(d3.select('#node-1 rect').empty()).to.be.false;
+    expect(d3.select('#node-1 text').empty()).to.be.false;
     expect(d3.select('#node-2').empty()).to.be.false;
   });
 
@@ -81,6 +83,7 @@ describe('Renderer', function() {
     renderer.run(input, svg);
 
     expect(d3.select('#edgePath-A').empty()).to.be.false;
+    expect(d3.select('#edgePath-A path').empty()).to.be.false;
   });
 
   it('creates DOM nodes for each edge label in the graph', function() {
@@ -92,6 +95,7 @@ describe('Renderer', function() {
     renderer.run(input, svg);
 
     expect(d3.select('#edgeLabel-A').empty()).to.be.false;
+    expect(d3.select('#edgeLabel-A text').empty()).to.be.false;
   });
 
   describe('styling', function() {
@@ -101,7 +105,6 @@ describe('Renderer', function() {
 
       renderer.run(input, svg);
 
-      expect(d3.select('#node-1 rect').empty()).to.be.false;
       expect(d3.select('#node-1 rect').style('fill')).to.equal(toDOMColor('#ff0000'));
     });
 
@@ -111,7 +114,6 @@ describe('Renderer', function() {
 
       renderer.run(input, svg);
 
-      expect(d3.select('#node-1 text').empty()).to.be.false;
       expect(d3.select('#node-1 text').style('fill')).to.equal(toDOMColor('#ff0000'));
     });
 
@@ -123,7 +125,6 @@ describe('Renderer', function() {
 
       renderer.run(input, svg);
 
-      expect(d3.select('#edgePath-A path').empty()).to.be.false;
       expect(d3.select('#edgePath-A path').style('stroke')).to.equal(toDOMColor('#ff0000'));
     });
 
@@ -135,10 +136,48 @@ describe('Renderer', function() {
 
       renderer.run(input, svg);
 
-      expect(d3.select('#edgeLabel-A text').empty()).to.be.false;
       expect(d3.select('#edgeLabel-A text').style('fill')).to.equal(toDOMColor('#ff0000'));
     });
   });
 
+  describe('marker-end', function() {
+    it('is not used when the graph is undirected', function() {
+      var input = new Graph();
+      input.addNode(1, {});
+      input.addNode(2, {});
+      input.addEdge('A', 1, 2, {});
+
+      renderer.run(input, svg);
+
+      expect(d3.select('#edgePath-A path').attr('marker-end')).to.be.null;
+    });
+
+    it('defaults the marker\'s fill to the path\'s stroke color', function() {
+      var input = new Digraph();
+      input.addNode(1, {});
+      input.addNode(2, {});
+      input.addEdge('A', 1, 2, { style: 'stroke: #ff0000' });
+
+      renderer.run(input, svg);
+
+      var markerEnd = d3.select('#edgePath-A path').attr('marker-end'),
+          pattern = /url\((#[A-Za-z0-9-_]+)\)$/;
+      expect(markerEnd).to.match(pattern);
+      var id = markerEnd.match(pattern)[1];
+      expect(d3.select(id).style('fill')).to.equal(toDOMColor('#ff0000'));
+    });
+
+    it('is set to #arrowhead when the arrowheadFix attribute is false for the graph', function() {
+      var input = new Digraph();
+      input.graph({ arrowheadFix: false });
+      input.addNode(1, {});
+      input.addNode(2, {});
+      input.addEdge('A', 1, 2, {});
+
+      renderer.run(input, svg);
+
+      expect(d3.select('#edgePath-A path').attr('marker-end')).to.equal('url(#arrowhead)');
+    });
+  });
 });
 
