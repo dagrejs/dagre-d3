@@ -3,6 +3,7 @@ NODE = node
 NPM = npm
 
 BROWSERIFY = ./node_modules/browserify/bin/cmd.js
+JSCS = ./node_modules/jscs/bin/jscs
 JSHINT = ./node_modules/jshint/bin/jshint
 MOCHA = ./node_modules/mocha/bin/_mocha
 MOCHA_PHANTOMJS = ./node_modules/mocha-phantomjs/bin/mocha-phantomjs
@@ -68,6 +69,7 @@ lint: build/lint
 build/lint: browser.js $(SRC_FILES) $(TEST_FILES)
 	mkdir -p $(@D)
 	$(JSHINT) $?
+	$(JSCS) $?
 	touch $@
 	@echo
 

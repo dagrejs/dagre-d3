@@ -1,0 +1,5 @@
+{
+  "preset": "google",
+  "disallowSpaceAfterPrefixUnaryOperators": true,
+  "maximumLineLength": 100
+}

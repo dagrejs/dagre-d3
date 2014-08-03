@@ -12,10 +12,11 @@
     "browserify": "2.28.x",
     "chai": "1.7.x",
     "graphlib-dot": "0.4.8",
-    "jshint": "~2.3.0",
+    "jscs": "1.5.x",
+    "jshint": "2.3.x",
     "mocha": "1.12.x",
     "mocha-phantomjs": "3.5.0",
-    "phantomjs": "~1.9.2-2",
+    "phantomjs": "1.9.x",
     "semver": "2.1.x",
     "uglify-js": "1.2.3"
   },
