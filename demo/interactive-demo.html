@@ -55,7 +55,7 @@ label {
 }
 </style>
 
-<body onLoad="tryDraw();">
+<body onLoad="tryDraw(true);">
 
 <h1>Dagre Interactive Demo</h1>
 
@@ -121,7 +121,7 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
-function tryDraw() {
+function tryDraw(firstRun) {
   var result;
   if (oldInputGraphValue !== inputGraph.value) {
     inputGraph.setAttribute("class", "");
@@ -176,7 +176,8 @@ function tryDraw() {
       renderer.transition(transition);
 
       var layout = renderer.run(result, svg.select("g"));
-      transition(d3.select("svg"))
+
+      (firstRun ? svg : transition(svg))
         .attr("width", layout.graph().width + 40)
         .attr("height", layout.graph().height + 40)
     }
