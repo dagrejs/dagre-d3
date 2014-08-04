@@ -1,0 +1,78 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 Demo: Style Attributes</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dagre-d3.js"></script>
+
+<h1>Dagre D3 Demo: Style Attributes</h1>
+
+<style id="css">
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #333;
+}
+
+.edgePath path {
+  stroke: #333;
+  fill: none;
+}
+</style>
+
+<svg id="svg" width=960 height=600></svg>
+
+<section>
+<p>An example showing how styles that are set in the input graph can be applied
+to nodes, node labels, edges, and edge labels in the rendered graph.
+</section>
+
+<script id="js">
+// Create the input graph
+var g = new dagreD3.Digraph();
+
+// Fill node 'A' with the color green
+g.addNode('A', { label: 'A', style: 'fill: #afa;' });
+
+// Make the label for node 'B' bold
+g.addNode('B', { label: 'B', labelStyle: 'font-weight: bold;'});
+
+// Double the size of the font for node 'C'
+g.addNode('C', { label: 'C', labelStyle: 'font-size: 2em;' });
+
+// Make the edge from 'A' to 'B' red and thick
+g.addEdge(null, 'A', 'B', { style: 'stroke: #f66; stroke-width: 3px;' });
+
+// Make the label for the edge from 'C' to 'B' italic and underlined
+g.addEdge(null, 'C', 'B', {
+    label: 'A to C',
+      style: 'stroke-width: 1.5px',
+        labelStyle: 'font-style: italic; text-decoration: underline;'
+});
+
+// Create the renderer
+var renderer = new dagreD3.Renderer();
+
+// Disable pan / zoom for this demo
+renderer.zoom(false);
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select('svg'),
+    svgGroup = svg.append('g');
+
+// Run the renderer. This is what draws the final graph.
+var layout = renderer.run(g, svgGroup);
+
+// Center the graph
+var xCenterOffset = (svg.attr('width') - layout.graph().width) / 2;
+svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+svg.attr('height', layout.graph().height + 40);
+</script>
+
+<script src="demo.js"></script>

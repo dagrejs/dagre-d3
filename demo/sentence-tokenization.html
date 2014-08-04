@@ -1,14 +1,18 @@
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="../build/dagre-d3.js"></script>
+<!doctype html>
 
-<style>
+<meta charset="utf-8">
+<title>Dagre D3 Demo: Sentence Tokenization</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dagre-d3.js"></script>
+
+<h1>Dagre D3 Demo: Sentence Tokenization</h1>
+
+<style id="css">
+/* This sets the color for 'TK' nodes to a light blue green. */
 g.type-TK > rect {
   fill: #00ffd0;
-}
-
-svg {
-  border: 1px solid #999;
-  overflow: hidden;
 }
 
 text {
@@ -19,8 +23,6 @@ text {
 
 .node rect {
   stroke: #999;
-  stroke-width: 1px;
-  fill: #fff;
 }
 
 .edgePath path {
@@ -30,58 +32,77 @@ text {
 }
 </style>
 
-<div id="attach">
-  <svg id="svg-canvas" width=800 height=600>
-    <g transform="translate(20, 20)"/>
-  </svg>
-</div>
+<svg id="svg-canvas" width=960 height=600></svg>
 
-<script>
-  var g = new dagreD3.Digraph();
-  g.addNode(0,  { label: "TOP",       nodeclass: "type-TOP" });
-  g.addNode(1,  { label: "S",         nodeclass: "type-S" });
-  g.addNode(2,  { label: "NP",        nodeclass: "type-NP" });
-  g.addNode(3,  { label: "DT",        nodeclass: "type-DT" });
-  g.addNode(4,  { label: "This",      nodeclass: "type-TK" });
-  g.addNode(5,  { label: "VP",        nodeclass: "type-VP" });
-  g.addNode(6,  { label: "VBZ",       nodeclass: "type-VBZ" });
-  g.addNode(7,  { label: "is",        nodeclass: "type-TK" });
-  g.addNode(8,  { label: "NP",        nodeclass: "type-NP" });
-  g.addNode(9,  { label: "DT",        nodeclass: "type-DT" });
-  g.addNode(10, { label: "an",        nodeclass: "type-TK" });
-  g.addNode(11, { label: "NN",        nodeclass: "type-NN" });
-  g.addNode(12, { label: "example",   nodeclass: "type-TK" });
-  g.addNode(13, { label: ".",         nodeclass: "type-." });
-  g.addNode(14, { label: "sentence",  nodeclass: "type-TK" });
+<section>
+<p>An example of visualizing the tokenization of a sentence. This example shows
+how CSS classes can be applied to a rendered graph.
+</section>
 
-  g.addEdge(null, 3, 4);
-  g.addEdge(null, 2, 3);
-  g.addEdge(null, 1, 2);
-  g.addEdge(null, 6, 7);
-  g.addEdge(null, 5, 6);
-  g.addEdge(null, 9, 10);
-  g.addEdge(null, 8, 9);
-  g.addEdge(null, 11,12);
-  g.addEdge(null, 8, 11);
-  g.addEdge(null, 5, 8);
-  g.addEdge(null, 1, 5);
-  g.addEdge(null, 13,14);
-  g.addEdge(null, 1, 13);
-  g.addEdge(null, 0, 1)
+<script id="js">
+// Create the input graph
+var g = new dagreD3.Digraph();
 
-  var renderer = new dagreD3.Renderer();
-  var oldDrawNodes = renderer.drawNodes();
-  renderer.drawNodes(function(graph, root) {
-    var svgNodes = oldDrawNodes(graph, root);
-    svgNodes.each(function(u) { d3.select(this).classed(graph.node(u).nodeclass, true); });
-    return svgNodes;
-  });
-  
-  // Disable pan and zoom
-  renderer.zoom(false);
+// Here we're setting nodeclass, which is used by our custom drawNodes function
+// below.
+g.addNode(0,  { label: 'TOP',       nodeclass: 'type-TOP' });
+g.addNode(1,  { label: 'S',         nodeclass: 'type-S' });
+g.addNode(2,  { label: 'NP',        nodeclass: 'type-NP' });
+g.addNode(3,  { label: 'DT',        nodeclass: 'type-DT' });
+g.addNode(4,  { label: 'This',      nodeclass: 'type-TK' });
+g.addNode(5,  { label: 'VP',        nodeclass: 'type-VP' });
+g.addNode(6,  { label: 'VBZ',       nodeclass: 'type-VBZ' });
+g.addNode(7,  { label: 'is',        nodeclass: 'type-TK' });
+g.addNode(8,  { label: 'NP',        nodeclass: 'type-NP' });
+g.addNode(9,  { label: 'DT',        nodeclass: 'type-DT' });
+g.addNode(10, { label: 'an',        nodeclass: 'type-TK' });
+g.addNode(11, { label: 'NN',        nodeclass: 'type-NN' });
+g.addNode(12, { label: 'example',   nodeclass: 'type-TK' });
+g.addNode(13, { label: '.',         nodeclass: 'type-.' });
+g.addNode(14, { label: 'sentence',  nodeclass: 'type-TK' });
 
-  var layout = renderer.run(g, d3.select("svg g"));
-  d3.select("svg")
-    .attr("width", layout.graph().width + 40)
-    .attr("height", layout.graph().height + 40);
+// Set up edges, no special attributes.
+g.addEdge(null, 3, 4);
+g.addEdge(null, 2, 3);
+g.addEdge(null, 1, 2);
+g.addEdge(null, 6, 7);
+g.addEdge(null, 5, 6);
+g.addEdge(null, 9, 10);
+g.addEdge(null, 8, 9);
+g.addEdge(null, 11,12);
+g.addEdge(null, 8, 11);
+g.addEdge(null, 5, 8);
+g.addEdge(null, 1, 5);
+g.addEdge(null, 13,14);
+g.addEdge(null, 1, 13);
+g.addEdge(null, 0, 1)
+
+// Create the renderer
+var renderer = new dagreD3.Renderer();
+
+// Override drawNodes to add nodeclass as a class to each node in the output
+// graph.
+var oldDrawNodes = renderer.drawNodes();
+renderer.drawNodes(function(graph, root) {
+  var svgNodes = oldDrawNodes(graph, root);
+  svgNodes.each(function(u) { d3.select(this).classed(graph.node(u).nodeclass, true); });
+  return svgNodes;
+});
+
+// Disable pan and zoom
+renderer.zoom(false);
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select('svg'),
+    svgGroup = svg.append('g');
+
+// Run the renderer. This is what draws the final graph.
+var layout = renderer.run(g, d3.select('svg g'));
+
+// Center the graph
+var xCenterOffset = (svg.attr('width') - layout.graph().width) / 2;
+svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+svg.attr('height', layout.graph().height + 40);
 </script>
+
+<script src="demo.js"></script>
