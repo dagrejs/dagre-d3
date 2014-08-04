@@ -1,3 +1,9 @@
+v0.2.8
+======
+
+* Improved zoom handling.
+* Improved demos.
+
 v0.2.7
 ======
 
