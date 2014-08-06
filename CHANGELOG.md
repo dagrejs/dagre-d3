@@ -1,3 +1,9 @@
+v0.2.9
+======
+
+* More tweaks to zoom handling.
+* Added an example with a tooltip on hover.
+
 v0.2.8
 ======
 
