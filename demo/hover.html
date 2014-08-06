@@ -1,0 +1,187 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 Demo: Tooltip on Hover</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dagre-d3.js"></script>
+
+<!-- Pull in JQuery dependencies -->
+<link rel="stylesheet" href="tipsy.css">
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="tipsy.js"></script>
+
+<h1>Dagre D3 Demo: Tooltip on Hover</h1>
+
+<style id="css">
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #333;
+}
+
+.edgePath path {
+  stroke: #333;
+  fill: none;
+}
+
+.node text {
+  pointer-events: none;
+}
+</style>
+
+<svg width=960 height=600></svg>
+
+<section>
+<p>The TCP state diagram
+(<a href="http://www.rfc-editor.org/rfc/rfc793.txt">source: RFC 793</a>) with
+hover support. Uses <a href="http://bl.ocks.org/ilyabo/1373263">tipsy JS and CSS</a>
+for the tooltip.
+</section>
+
+<script id="js">
+// Create a new directed graph
+var g = new dagreD3.Digraph();
+
+// States and transitions from RFC 793
+var states = {
+  CLOSED: {
+    description: 'CLOSED - represents no connection state at all.',
+    style: 'fill: #f77'
+  },
+
+  LISTEN: {
+    description: 'LISTEN - represents waiting for a connection request from any ' +
+                 'remote TCP and port.'
+  },
+
+  'SYN SENT': {
+    description: 'SYN-SENT - represents waiting for a matching connection ' +
+                 'request after having sent a connection request.'
+  },
+
+  'SYN RCVD': {
+    description: 'SYN-RECEIVED - represents waiting for a confirming connection ' +
+                 'request acknowledgment after having both received and sent a ' +
+                 'connection request.'
+  },
+
+
+  ESTAB: {
+    description: 'ESTABLISHED - represents an open connection, data received ' +
+                 'can be delivered to the user.  The normal state for the data ' +
+                 'transfer phase of the connection.',
+    style: 'fill: #7f7'
+  },
+
+  'FINWAIT-1': {
+    description: 'FIN-WAIT-1 - represents waiting for a connection termination ' +
+                 'request from the remote TCP, or an acknowledgment of the ' +
+                 'connection termination request previously sent.'
+
+  },
+
+  'FINWAIT-2': {
+    description: 'FIN-WAIT-2 - represents waiting for a connection termination ' +
+                 'request from the remote TCP.'
+  },
+
+
+  'CLOSE WAIT': {
+    description: 'CLOSE-WAIT - represents waiting for a connection termination ' +
+                 'request from the local user.'
+  },
+
+  CLOSING: {
+    description: 'CLOSING - represents waiting for a connection termination ' +
+                 'request acknowledgment from the remote TCP.'
+  },
+
+  'LAST-ACK': {
+    description: 'LAST-ACK - represents waiting for an acknowledgment of the ' +
+                 'connection termination request previously sent to the remote ' +
+                 'TCP (which includes an acknowledgment of its connection ' +
+                 'termination request).'
+  },
+
+  'TIME WAIT': {
+    description: 'TIME-WAIT - represents waiting for enough time to pass to be ' +
+                 'sure the remote TCP received the acknowledgment of its ' +
+                 'connection termination request.'
+  }
+};
+
+// Add states to the graph and set labels
+Object.keys(states).forEach(function(state) {
+  var value = states[state];
+  value.label = state;
+  if (!value.style) { value.style = ''; }
+  g.addNode(state, value);
+});
+
+// Set up the edges
+g.addEdge(null, "CLOSED",     "LISTEN",     { label: "open" });
+g.addEdge(null, "LISTEN",     "SYN RCVD",   { label: "rcv SYN" });
+g.addEdge(null, "LISTEN",     "SYN SENT",   { label: "send" });
+g.addEdge(null, "LISTEN",     "CLOSED",     { label: "close" });
+g.addEdge(null, "SYN RCVD",   "FINWAIT-1",  { label: "close" });
+g.addEdge(null, "SYN RCVD",   "ESTAB",      { label: "rcv ACK of SYN" });
+g.addEdge(null, "SYN SENT",   "SYN RCVD",   { label: "rcv SYN" });
+g.addEdge(null, "SYN SENT",   "ESTAB",      { label: "rcv SYN, ACK" });
+g.addEdge(null, "SYN SENT",   "CLOSED",     { label: "close" });
+g.addEdge(null, "ESTAB",      "FINWAIT-1",  { label: "close" });
+g.addEdge(null, "ESTAB",      "CLOSE WAIT", { label: "rcv FIN" });
+g.addEdge(null, "FINWAIT-1",  "FINWAIT-2",  { label: "rcv ACK of FIN" });
+g.addEdge(null, "FINWAIT-1",  "CLOSING",    { label: "rcv FIN" });
+g.addEdge(null, "CLOSE WAIT", "LAST-ACK",   { label: "close" });
+g.addEdge(null, "FINWAIT-2",  "TIME WAIT",  { label: "rcv FIN" });
+g.addEdge(null, "CLOSING",    "TIME WAIT",  { label: "rcv ACK of FIN" });
+g.addEdge(null, "LAST-ACK",   "CLOSED",     { label: "rcv ACK of FIN" });
+g.addEdge(null, "TIME WAIT",  "CLOSED",     { label: "timeout=2MSL" });
+
+// Create the renderer
+var renderer = new dagreD3.Renderer();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select('svg'),
+    svgGroup = svg.append('g');
+
+// Set initial zoom to 75%
+var initialScale = 0.75;
+var oldZoom = renderer.zoom();
+renderer.zoom(function(graph, svg) {
+  var zoom = oldZoom(graph, svg);
+
+  // We must set the zoom and then trigger the zoom event to synchronize
+  // D3 and the DOM.
+  zoom.scale(initialScale).event(svg);
+  return zoom;
+});
+
+// Override drawNodes to set up the hover.
+var oldDrawNodes = renderer.drawNodes();
+renderer.drawNodes(function(g, svg) {
+  var svgNodes = oldDrawNodes(g, svg);
+
+  // Set the title on each of the nodes and use tipsy to display the tooltip on hover
+  svgNodes.attr('title', function(d) { return g.node(d).description })
+          .each(function(d) { $(this).tipsy({ gravity: 'w', opacity: 1 }); });
+
+  return svgNodes;
+});
+
+// Run the renderer. This is what draws the final graph.
+var layout = renderer.run(g, svgGroup);
+
+// Center the graph
+var xCenterOffset = (svg.attr('width') - layout.graph().width * initialScale) / 2;
+svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+svg.attr('height', layout.graph().height * initialScale + 40);
+</script>
+
+<script src="demo.js"></script>

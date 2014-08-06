@@ -23,6 +23,7 @@ Or some of our other examples:
 * [ETL Visualization](http://cpettitt.github.io/project/dagre-d3/latest/demo/etl-status.html)
 * [Style Attributes](http://cpettitt.github.io/project/dagre-d3/latest/demo/style-attrs.html)
 * [User-defined Node Shapes](http://cpettitt.github.io/project/dagre-d3/latest/demo/user-defined-nodes.html)
+* [Tooltip on Hover](http://cpettitt.github.io/project/dagre-d3/latest/demo/hover.html)
 
 These demos and more can be found in the `demo` folder of the project. Simply
 open them in your browser - there is no need to start a web server.
