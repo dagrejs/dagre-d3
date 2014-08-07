@@ -33,6 +33,19 @@ text {
 .node text {
   pointer-events: none;
 }
+
+/* This styles the title of the tooltip */
+.tipsy .name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #60b1fc;
+  margin: 0;
+}
+
+/* This styles the body of the tooltip */
+.tipsy .description {
+  font-size: 1.2em;
+}
 </style>
 
 <svg width=960 height=600></svg>
@@ -51,66 +64,66 @@ var g = new dagreD3.Digraph();
 // States and transitions from RFC 793
 var states = {
   CLOSED: {
-    description: 'CLOSED - represents no connection state at all.',
+    description: 'represents no connection state at all.',
     style: 'fill: #f77'
   },
 
   LISTEN: {
-    description: 'LISTEN - represents waiting for a connection request from any ' +
+    description: 'represents waiting for a connection request from any ' +
                  'remote TCP and port.'
   },
 
   'SYN SENT': {
-    description: 'SYN-SENT - represents waiting for a matching connection ' +
+    description: 'represents waiting for a matching connection ' +
                  'request after having sent a connection request.'
   },
 
   'SYN RCVD': {
-    description: 'SYN-RECEIVED - represents waiting for a confirming connection ' +
+    description: 'represents waiting for a confirming connection ' +
                  'request acknowledgment after having both received and sent a ' +
                  'connection request.'
   },
 
 
   ESTAB: {
-    description: 'ESTABLISHED - represents an open connection, data received ' +
+    description: 'represents an open connection, data received ' +
                  'can be delivered to the user.  The normal state for the data ' +
                  'transfer phase of the connection.',
     style: 'fill: #7f7'
   },
 
   'FINWAIT-1': {
-    description: 'FIN-WAIT-1 - represents waiting for a connection termination ' +
+    description: 'represents waiting for a connection termination ' +
                  'request from the remote TCP, or an acknowledgment of the ' +
                  'connection termination request previously sent.'
 
   },
 
   'FINWAIT-2': {
-    description: 'FIN-WAIT-2 - represents waiting for a connection termination ' +
+    description: 'represents waiting for a connection termination ' +
                  'request from the remote TCP.'
   },
 
 
   'CLOSE WAIT': {
-    description: 'CLOSE-WAIT - represents waiting for a connection termination ' +
+    description: 'represents waiting for a connection termination ' +
                  'request from the local user.'
   },
 
   CLOSING: {
-    description: 'CLOSING - represents waiting for a connection termination ' +
+    description: 'represents waiting for a connection termination ' +
                  'request acknowledgment from the remote TCP.'
   },
 
   'LAST-ACK': {
-    description: 'LAST-ACK - represents waiting for an acknowledgment of the ' +
+    description: 'represents waiting for an acknowledgment of the ' +
                  'connection termination request previously sent to the remote ' +
                  'TCP (which includes an acknowledgment of its connection ' +
                  'termination request).'
   },
 
   'TIME WAIT': {
-    description: 'TIME-WAIT - represents waiting for enough time to pass to be ' +
+    description: 'represents waiting for enough time to pass to be ' +
                  'sure the remote TCP received the acknowledgment of its ' +
                  'connection termination request.'
   }
@@ -163,14 +176,19 @@ renderer.zoom(function(graph, svg) {
   return zoom;
 });
 
+// Simple function to style the tooltip for the given node.
+var styleTooltip = function(name, description) {
+  return '<p class="name">' + name + '</p><p class="description">' + description + "</p>";
+};
+
 // Override drawNodes to set up the hover.
 var oldDrawNodes = renderer.drawNodes();
 renderer.drawNodes(function(g, svg) {
   var svgNodes = oldDrawNodes(g, svg);
 
   // Set the title on each of the nodes and use tipsy to display the tooltip on hover
-  svgNodes.attr('title', function(d) { return g.node(d).description })
-          .each(function(d) { $(this).tipsy({ gravity: 'w', opacity: 1 }); });
+  svgNodes.attr('title', function(d) { return styleTooltip(d, g.node(d).description) })
+          .each(function(d) { $(this).tipsy({ gravity: 'w', opacity: 1, html: true }); });
 
   return svgNodes;
 });
