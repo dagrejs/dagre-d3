@@ -116,6 +116,24 @@ describe('Renderer', function() {
     expect(d3.select('#node-2 #bar').empty()).to.be.false;
   });
 
+  it('adds the result of a function when passed as a label', function() {
+    var elem1 = document.createElement('div');
+    elem1.id = 'foo';
+
+    var elem2 = document.createElement('div');
+    elem2.id = 'bar';
+
+    var input = new Digraph();
+    input.addNode(1, { label: function() { return elem1; } });
+    input.addNode(2, { label: function() { return elem2; } });
+    input.addEdge('A', 1, 2, {});
+
+    renderer.run(input, svg);
+
+    expect(d3.select('#node-1 #foo').empty()).to.be.false;
+    expect(d3.select('#node-2 #bar').empty()).to.be.false;
+  });
+
   describe('styling', function() {
     it('styles nodes with the "style" attribute', function() {
       var input = new Digraph();
