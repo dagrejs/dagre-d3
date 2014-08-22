@@ -100,10 +100,10 @@ describe('Renderer', function() {
 
   it('adds DOM elements to the svg when passed as a label', function() {
     var elem1 = document.createElement('div');
-    elem.id = 'foo';
+    elem1.id = 'foo';
 
     var elem2 = document.createElement('div');
-    elem.id = 'bar';
+    elem2.id = 'bar';
 
     var input = new Digraph();
     input.addNode(1, { label: elem1 });
