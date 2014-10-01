@@ -221,6 +221,7 @@
       nodes.push({
         id: id,
         value: {
+          labelType: 'html',
           label: html,
           className: className
         }
@@ -228,7 +229,11 @@
 
       if (worker.inputQueue) {
         var label = worker.inputThroughput + '/s';
-        edges.push({ u: worker.inputQueue, v: id, value: { label: '<span>'+label+'</span>' } });
+        edges.push({
+          u: worker.inputQueue,
+          v: id,
+          value: { labelType: 'html', label: '<span>'+label+'</span>' }
+        });
       }
     }
 
