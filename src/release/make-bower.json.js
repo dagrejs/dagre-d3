@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Renders the bower.json template and prints it to stdout
 
 var template = {

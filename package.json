@@ -14,6 +14,7 @@
     "graphlib-dot": "0.4.8",
     "jscs": "1.5.x",
     "jshint": "2.3.x",
+    "jshint-stylish": "^1.0.0",
     "mocha": "1.12.x",
     "mocha-phantomjs": "3.5.0",
     "phantomjs": "1.9.x",
