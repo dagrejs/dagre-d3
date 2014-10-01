@@ -65,7 +65,9 @@ label {
 /* Example */
 digraph {
     /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
-    A [labelType="html" label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"];
+    A [labelType="html"
+       label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"
+       labelStyle="padding: 10px;"];
     C;
     E [label="Bold Red Sink", style="fill: #f77" labelStyle="font-weight: bold"];
     A -&gt; B -&gt; C;
