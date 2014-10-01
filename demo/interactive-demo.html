@@ -65,14 +65,14 @@ label {
 /* Example */
 digraph {
     /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
-    A [label="<div style='padding: 10px;'>A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!</div>"];
+    A [labelType="html" label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"];
     C;
     E [label="Bold Red Sink", style="fill: #f77" labelStyle="font-weight: bold"];
     A -&gt; B -&gt; C;
     B -&gt; D [label="A blue label" labelStyle="fill: #55f; font-weight: bold;"];
     D -&gt; E [label="A thick red edge" style="stroke-width: 3px; stroke: #f77;"];
     C -&gt; E;
-    A -&gt; D [label="<div>A multi-rank <span style='color:blue;'>HTML</span> edge!</div>"];
+    A -&gt; D [labelType="html" label="A multi-rank <span style='color:blue;'>HTML</span> edge!"];
 }
   </textarea>
 
