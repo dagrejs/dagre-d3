@@ -157,7 +157,9 @@
 <body onLoad="draw();">
 <div class="live map">
   <svg>
-    <g class="diagram" transform="translate(20,20)"/>
+    <g class="diagram" transform="translate(20,20)">
+      <g/>
+    </g>
   </svg>
 </div>
 
@@ -199,8 +201,6 @@
       'inputThroughput': 50
     }
   };
-
-  var zoom = d3.behavior.zoom();
 
   function draw(isUpdate) {
     var nodes = [];
@@ -250,11 +250,7 @@
     }
     isUpdate && renderer.transition(transition);
 
-    renderer.zoom(function (graph, svg) {
-      return zoom.on('zoom', function() {
-        svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
-      });
-    });
+    var zoom = dagreD3.zoom.panAndZoom(d3.select("svg g g"));
 
     // Left-to-right layout
     var layout = dagreD3.layout()
@@ -263,7 +259,7 @@
       .rankDir("LR");
     var renderedLayout = renderer
       .layout(layout)
-      .run(dagreD3.json.decode(nodes, edges), d3.select("svg g"));
+      .run(dagreD3.json.decode(nodes, edges), d3.select("svg g g"));
 
     // Zoom and scale to fit
     var zoomScale = zoom.scale();

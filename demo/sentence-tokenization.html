@@ -89,9 +89,6 @@ renderer.drawNodes(function(graph, root) {
   return svgNodes;
 });
 
-// Disable pan and zoom
-renderer.zoom(false);
-
 // Set up an SVG group so that we can translate the final graph.
 var svg = d3.select('svg'),
     svgGroup = svg.append('g');

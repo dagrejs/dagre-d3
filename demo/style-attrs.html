@@ -59,9 +59,6 @@ g.addEdge(null, 'C', 'B', {
 // Create the renderer
 var renderer = new dagreD3.Renderer();
 
-// Disable pan / zoom for this demo
-renderer.zoom(false);
-
 // Set up an SVG group so that we can translate the final graph.
 var svg = d3.select('svg'),
     svgGroup = svg.append('g');

@@ -162,19 +162,16 @@ var renderer = new dagreD3.Renderer();
 
 // Set up an SVG group so that we can translate the final graph.
 var svg = d3.select('svg'),
-    svgGroup = svg.append('g');
+    centerG = svg.append('g'),
+    zoomG = centerG.append('g');
 
-// Set initial zoom to 75%
-var initialScale = 0.75;
-var oldZoom = renderer.zoom();
-renderer.zoom(function(graph, svg) {
-  var zoom = oldZoom(graph, svg);
-
-  // We must set the zoom and then trigger the zoom event to synchronize
-  // D3 and the DOM.
-  zoom.scale(initialScale).event(svg);
-  return zoom;
-});
+// Set initial zoom to 75%.
+var initialScale = 0.75
+var zoom = dagreD3.zoom.panAndZoom(zoomG);
+dagreD3.zoom(svg, zoom);
+// We must set the zoom and then trigger the zoom event to synchronize D3 and
+// the DOM.
+zoom.scale(initialScale).event(svg);
 
 // Simple function to style the tooltip for the given node.
 var styleTooltip = function(name, description) {
@@ -194,11 +191,11 @@ renderer.drawNodes(function(g, svg) {
 });
 
 // Run the renderer. This is what draws the final graph.
-var layout = renderer.run(g, svgGroup);
+var layout = renderer.run(g, zoomG);
 
 // Center the graph
 var xCenterOffset = (svg.attr('width') - layout.graph().width * initialScale) / 2;
-svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+centerG.attr('transform', 'translate(' + xCenterOffset + ', 20)');
 svg.attr('height', layout.graph().height * initialScale + 40);
 </script>
 
