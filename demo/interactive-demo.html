@@ -84,7 +84,9 @@ digraph {
 <h2>Graph Visualization</h2>
 
 <svg width=800 height=600>
-  <g transform="translate(20, 20)"/>
+  <g transform="translate(20, 20)">
+    <g/>
+  </g>
 </svg>
 
 <script>
@@ -121,6 +123,8 @@ var debugAlignmentRE = /[?&]alignment=([^&]+)/;
 var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
+
+dagreD3.zoom(d3.select("svg"), dagreD3.zoom.panAndZoom(d3.select("svg g g")));
 
 function tryDraw(firstRun) {
   var result;
@@ -176,11 +180,7 @@ function tryDraw(firstRun) {
 
       renderer.transition(transition);
 
-      var layout = renderer.run(result, svg.select("g"));
-
-      (firstRun ? svg : transition(svg))
-        .attr("width", layout.graph().width + 40)
-        .attr("height", layout.graph().height + 40)
+      var layout = renderer.run(result, svg.select("g g"));
     }
   }
 }
