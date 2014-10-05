@@ -24,7 +24,6 @@ module.exports =  {
   Digraph: require('graphlib').Digraph,
   Graph: require('graphlib').Graph,
   Renderer: require('./lib/Renderer'),
-  json: require('graphlib').converter.json,
   layout: require('dagre').layout,
   zoom: require('./lib/zoom'),
   version: require('./lib/version'),
