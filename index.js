@@ -21,11 +21,5 @@
  * THE SOFTWARE.
  */
 module.exports =  {
-  Digraph: require('graphlib').Digraph,
-  Graph: require('graphlib').Graph,
-  Renderer: require('./lib/Renderer'),
-  layout: require('dagre').layout,
-  zoom: require('./lib/zoom'),
-  version: require('./lib/version'),
-  debug: require('dagre').debug
+  render: require("./lib/render")
 };

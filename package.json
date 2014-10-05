@@ -11,7 +11,6 @@
   "devDependencies": {
     "browserify": "2.28.x",
     "chai": "1.7.x",
-    "graphlib-dot": "0.4.8",
     "jscs": "1.5.x",
     "jshint": "2.3.x",
     "jshint-stylish": "^1.0.0",
@@ -24,7 +23,8 @@
   "dependencies": {
     "dagre": "0.5.0",
     "d3": "~3.3.8",
-    "graphlib": "0.8.0"
+    "graphlib": "0.8.0",
+    "graphlib-dot": "0.5.0"
   },
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {

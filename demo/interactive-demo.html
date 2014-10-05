@@ -5,7 +5,6 @@
 
 <script src="http://d3js.org/d3.v3.js"></script>
 <script src="../build/dagre-d3.js"></script>
-<script src="http://cpettitt.github.io/project/graphlib-dot/latest/graphlib-dot.min.js"></script>
 
 <style>
 svg {
@@ -28,7 +27,7 @@ text {
   fill: #fff;
 }
 
-.edgePath path {
+path.edgePath {
   stroke: #333;
   fill: none;
 }
@@ -124,64 +123,25 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
-dagreD3.zoom(d3.select("svg"), dagreD3.zoom.panAndZoom(d3.select("svg g g")));
+//dagreD3.zoom(d3.select("svg"), dagreD3.zoom.panAndZoom(d3.select("svg g g")));
 
 function tryDraw(firstRun) {
-  var result;
+  var g;
   if (oldInputGraphValue !== inputGraph.value) {
     inputGraph.setAttribute("class", "");
     oldInputGraphValue = inputGraph.value;
     try {
-      result = graphlibDot.parse(inputGraph.value);
+      g = graphlibDot.read(inputGraph.value);
     } catch (e) {
       inputGraph.setAttribute("class", "error");
       throw e;
     }
 
-    if (result) {
-      // Save link to new graph
-      graphLink.attr("href", graphToURL());
+    // Save link to new graph
+    graphLink.attr("href", graphToURL());
 
-      // Cleanup old graph
-      var svg = d3.select("svg");
-
-      var renderer = new dagreD3.Renderer();
-
-      // Handle debugAlignment
-      renderer.postLayout(function(graph) {
-        if (debugAlignment) {
-          // First find necessary delta...
-          var minX = Math.min.apply(null, graph.nodes().map(function(u) {
-            var value = graph.node(u);
-            return value[debugAlignment] - value.width / 2;
-          }));
-
-          // Update node positions
-          graph.eachNode(function(u, value) {
-            value.x = value[debugAlignment] - minX;
-          });
-
-          // Update edge positions
-          graph.eachEdge(function(e, u, v, value) {
-            value.points.forEach(function(p) {
-              p.x = p[debugAlignment] - minX;
-            });
-          });
-        }
-      });
-
-      // Uncomment the following line to get straight edges
-      //renderer.edgeInterpolate('linear');
-
-      // Custom transition function
-      function transition(selection) {
-        return selection.transition().duration(500);
-      }
-
-      renderer.transition(transition);
-
-      var layout = renderer.run(result, svg.select("g g"));
-    }
+    var render = dagreD3.render();
+    d3.select("svg g g").datum(g).call(render);
   }
 }
 </script>
