@@ -141,6 +141,7 @@ function tryDraw(firstRun) {
     graphLink.attr("href", graphToURL());
 
     var render = dagreD3.render();
+    render.drawEdgePaths().line().interpolate("basis");
     d3.select("svg g g").datum(g).call(render);
   }
 }
