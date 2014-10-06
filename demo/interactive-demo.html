@@ -123,7 +123,8 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
-//dagreD3.zoom(d3.select("svg"), dagreD3.zoom.panAndZoom(d3.select("svg g g")));
+var zoomOverlay = dagreD3.util.appendRectOverlay(d3.select("svg"));
+zoomOverlay.call(dagreD3.util.panAndZoom(d3.select("svg g g")));
 
 function tryDraw(firstRun) {
   var g;

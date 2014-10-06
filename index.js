@@ -21,5 +21,6 @@
  * THE SOFTWARE.
  */
 module.exports =  {
-  render: require("./lib/render")
+  render: require("./lib/render"),
+  util: require("./lib/util")
 };
