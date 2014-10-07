@@ -88,6 +88,7 @@ digraph {
 <h2>Graph Visualization</h2>
 
 <svg width=800 height=600>
+  <defs></defs>
   <g transform="translate(20, 20)">
     <g/>
   </g>
@@ -130,6 +131,9 @@ if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
 var zoomOverlay = dagreD3.util.appendRectOverlay(d3.select("svg"));
 zoomOverlay.call(dagreD3.util.panAndZoom(d3.select("svg g g")));
+
+var defs = d3.select("svg defs");
+dagreD3.util.appendArrowTypes(defs);
 
 function tryDraw(firstRun) {
   var g;
