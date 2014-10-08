@@ -151,8 +151,8 @@ function tryDraw(firstRun) {
     // Save link to new graph
     graphLink.attr("href", graphToURL());
 
-    var render = dagreD3.render();
-    d3.select("svg g g").datum(g).call(render);
+    // Render the graph into svg g g
+    d3.select("svg g g").call(dagreD3.render(), g);
   }
 }
 </script>
