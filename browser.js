@@ -21,4 +21,3 @@
  * THE SOFTWARE.
  */
 global.dagreD3 = require("./index");
-global.graphlibDot = require("graphlib-dot");
