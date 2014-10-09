@@ -90,9 +90,7 @@ digraph {
 
 <svg width=800 height=600>
   <defs></defs>
-  <g transform="translate(20, 20)">
-    <g/>
-  </g>
+  <g/>
 </svg>
 
 <script>
@@ -131,7 +129,7 @@ var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
 var zoomOverlay = dagreD3.util.appendRectOverlay(d3.select("svg"));
-zoomOverlay.call(dagreD3.util.panAndZoom(d3.select("svg g g")));
+zoomOverlay.call(dagreD3.util.panAndZoom(d3.select("svg g")));
 
 var defs = d3.select("svg defs");
 dagreD3.util.appendArrowTypes(defs);
@@ -151,8 +149,15 @@ function tryDraw(firstRun) {
     // Save link to new graph
     graphLink.attr("href", graphToURL());
 
+    // Set margins, if not present
+    if (!g.graph().hasOwnProperty("marginx") &&
+        !g.graph().hasOwnProperty("marginy")) {
+      g.graph().marginx = 20;
+      g.graph().marginy = 20;
+    }
+
     // Render the graph into svg g g
-    d3.select("svg g g").call(dagreD3.render(), g);
+    d3.select("svg g").call(dagreD3.render(), g);
   }
 }
 </script>
