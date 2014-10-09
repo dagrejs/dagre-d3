@@ -58,7 +58,7 @@ label {
 }
 </style>
 
-<body onLoad="tryDraw(true);">
+<body onLoad="tryDraw();">
 
 <h1>Dagre Interactive Demo</h1>
 
@@ -128,13 +128,14 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
-var zoomOverlay = dagreD3.util.appendRectOverlay(d3.select("svg"));
-zoomOverlay.call(dagreD3.util.panAndZoom(d3.select("svg g")));
-
 var defs = d3.select("svg defs");
 dagreD3.util.appendArrowTypes(defs);
 
-function tryDraw(firstRun) {
+// Create and configure the renderer
+var render = dagreD3.render();
+render.createZoomPanel().zoom(dagreD3.util.panAndZoom);
+
+function tryDraw() {
   var g;
   if (oldInputGraphValue !== inputGraph.value) {
     inputGraph.setAttribute("class", "");
@@ -157,7 +158,7 @@ function tryDraw(firstRun) {
     }
 
     // Render the graph into svg g g
-    d3.select("svg g").call(dagreD3.render(), g);
+    d3.select("svg").call(render, g);
   }
 }
 </script>
