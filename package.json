@@ -21,9 +21,10 @@
     "uglify-js": "1.2.3"
   },
   "dependencies": {
-    "dagre": "^0.5.1",
     "d3": "~3.3.8",
-    "graphlib": "^0.8.1"
+    "dagre": "^0.5.1",
+    "graphlib": "^0.8.1",
+    "lodash": "^2.4.1"
   },
   "author": "Chris Pettitt <chris@samsarin.com>",
   "repository": {

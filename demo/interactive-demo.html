@@ -70,14 +70,15 @@ label {
 /* Example */
 digraph {
     /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
+    node [rx=5]
     A [labelType="html"
        label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"
        labelStyle="padding: 10px;"];
     C;
-    E [label="Bold Red Sink", style="fill: #f77" labelStyle="font-weight: bold"];
+    E [label="Bold Red Sink" fill="#f77" labelStyle="font-weight: bold"];
     A -&gt; B -&gt; C;
     B -&gt; D [label="A blue label" labelStyle="fill: #55f; font-weight: bold;"];
-    D -&gt; E [label="A thick red edge" style="stroke-width: 3px; stroke: #f77;"];
+    D -&gt; E [label="A thick red edge" strokeWidth="3" stroke="#f77"];
     C -&gt; E;
     A -&gt; D [labelType="html" label="A multi-rank <span style='color:blue;'>HTML</span> edge!"];
 }
@@ -127,9 +128,6 @@ var debugAlignmentRE = /[?&]alignment=([^&]+)/;
 var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
-
-var defs = d3.select("svg defs");
-dagreD3.util.appendArrowTypes(defs);
 
 // Create and configure the renderer
 var render = dagreD3.render();
