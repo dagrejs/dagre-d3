@@ -54,7 +54,7 @@ g.setEdge("TIME WAIT",  "CLOSED",     { label: "timeout=2MSL" });
 g.nodes().forEach(function(v) {
   var node = g.node(v);
   node.labelStyleFont = "300 14px 'Helvetica Neue', Helvetica";
-  node.rx = 4;
+  node.rx = node.ry = 5;
 });
 
 g.edges().forEach(function(e) {
