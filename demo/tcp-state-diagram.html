@@ -7,6 +7,23 @@
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="../build/dagre-d3.js"></script>
 
+<style id="css">
+body {
+  font: 300 14px 'Helvetica Neue', Helvetica;
+}
+
+.node rect {
+  stroke: #333;
+  fill: #fff;
+}
+
+.edgePath path {
+  stroke: #333;
+  fill: #333;
+  stroke-width: 1.5px;
+}
+</style>
+
 <h1>Dagre D3 Demo: TCP State Diagram</h1>
 
 <svg width=960 height=600><g/></svg>
@@ -53,13 +70,7 @@ g.setEdge("TIME WAIT",  "CLOSED",     { label: "timeout=2MSL" });
 // Set some general styles
 g.nodes().forEach(function(v) {
   var node = g.node(v);
-  node.labelStyleFont = "300 14px 'Helvetica Neue', Helvetica";
   node.rx = node.ry = 5;
-});
-
-g.edges().forEach(function(e) {
-  var edge = g.edge(e);
-  edge.labelStyleFont = "300 14px 'Helvetica Neue', Helvetica";
 });
 
 // Add some custom colors based on state
