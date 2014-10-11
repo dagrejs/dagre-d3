@@ -9,23 +9,6 @@
 
 <h1>Dagre D3 Demo: TCP State Diagram</h1>
 
-<style id="css">
-text {
-  font-weight: 300;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
-  font-size: 14px;
-}
-
-.node rect {
-  stroke: #333;
-}
-
-.edgePath path {
-  stroke: #333;
-  fill: none;
-}
-</style>
-
 <svg width=960 height=600></svg>
 
 <section>
@@ -37,7 +20,7 @@ initial zoom.
 
 <script id="js">
 // Create a new directed graph
-var g = new dagreD3.Digraph();
+var g = new dagreD3.graphlib.Graph().setGraph({});
 
 // States and transitions from RFC 793
 var states = [ "CLOSED", "LISTEN", "SYN RCVD", "SYN SENT",
@@ -45,55 +28,63 @@ var states = [ "CLOSED", "LISTEN", "SYN RCVD", "SYN SENT",
                "CLOSING", "LAST-ACK", "TIME WAIT" ];
 
 // Automatically label each of the nodes
-states.forEach(function(state) { g.addNode(state, { label: state }); });
-
-// Add some custom colors based on state
-g.node('CLOSED').style = 'fill: #f77';
-g.node('ESTAB').style  = 'fill: #7f7';
+states.forEach(function(state) { g.setNode(state, { label: state }); });
 
 // Set up the edges
-g.addEdge(null, "CLOSED",     "LISTEN",     { label: "open" });
-g.addEdge(null, "LISTEN",     "SYN RCVD",   { label: "rcv SYN" });
-g.addEdge(null, "LISTEN",     "SYN SENT",   { label: "send" });
-g.addEdge(null, "LISTEN",     "CLOSED",     { label: "close" });
-g.addEdge(null, "SYN RCVD",   "FINWAIT-1",  { label: "close" });
-g.addEdge(null, "SYN RCVD",   "ESTAB",      { label: "rcv ACK of SYN" });
-g.addEdge(null, "SYN SENT",   "SYN RCVD",   { label: "rcv SYN" });
-g.addEdge(null, "SYN SENT",   "ESTAB",      { label: "rcv SYN, ACK" });
-g.addEdge(null, "SYN SENT",   "CLOSED",     { label: "close" });
-g.addEdge(null, "ESTAB",      "FINWAIT-1",  { label: "close" });
-g.addEdge(null, "ESTAB",      "CLOSE WAIT", { label: "rcv FIN" });
-g.addEdge(null, "FINWAIT-1",  "FINWAIT-2",  { label: "rcv ACK of FIN" });
-g.addEdge(null, "FINWAIT-1",  "CLOSING",    { label: "rcv FIN" });
-g.addEdge(null, "CLOSE WAIT", "LAST-ACK",   { label: "close" });
-g.addEdge(null, "FINWAIT-2",  "TIME WAIT",  { label: "rcv FIN" });
-g.addEdge(null, "CLOSING",    "TIME WAIT",  { label: "rcv ACK of FIN" });
-g.addEdge(null, "LAST-ACK",   "CLOSED",     { label: "rcv ACK of FIN" });
-g.addEdge(null, "TIME WAIT",  "CLOSED",     { label: "timeout=2MSL" });
+g.setEdge("CLOSED",     "LISTEN",     { label: "open" });
+g.setEdge("LISTEN",     "SYN RCVD",   { label: "rcv SYN" });
+g.setEdge("LISTEN",     "SYN SENT",   { label: "send" });
+g.setEdge("LISTEN",     "CLOSED",     { label: "close" });
+g.setEdge("SYN RCVD",   "FINWAIT-1",  { label: "close" });
+g.setEdge("SYN RCVD",   "ESTAB",      { label: "rcv ACK of SYN" });
+g.setEdge("SYN SENT",   "SYN RCVD",   { label: "rcv SYN" });
+g.setEdge("SYN SENT",   "ESTAB",      { label: "rcv SYN, ACK" });
+g.setEdge("SYN SENT",   "CLOSED",     { label: "close" });
+g.setEdge("ESTAB",      "FINWAIT-1",  { label: "close" });
+g.setEdge("ESTAB",      "CLOSE WAIT", { label: "rcv FIN" });
+g.setEdge("FINWAIT-1",  "FINWAIT-2",  { label: "rcv ACK of FIN" });
+g.setEdge("FINWAIT-1",  "CLOSING",    { label: "rcv FIN" });
+g.setEdge("CLOSE WAIT", "LAST-ACK",   { label: "close" });
+g.setEdge("FINWAIT-2",  "TIME WAIT",  { label: "rcv FIN" });
+g.setEdge("CLOSING",    "TIME WAIT",  { label: "rcv ACK of FIN" });
+g.setEdge("LAST-ACK",   "CLOSED",     { label: "rcv ACK of FIN" });
+g.setEdge("TIME WAIT",  "CLOSED",     { label: "timeout=2MSL" });
+
+// Set some general styles
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  node.labelStyleFont = "300 14px 'Helvetica Neue', Helvetica";
+  node.rx = 4;
+});
+
+g.edges().forEach(function(e) {
+  var edge = g.edge(e);
+  edge.labelStyleFont = "300 14px 'Helvetica Neue', Helvetica";
+});
+
+// Add some custom colors based on state
+g.node('CLOSED').styleFill = "#f77";
+g.node('ESTAB').styleFill  = "#7f7";
 
 // Create the renderer
-var renderer = new dagreD3.Renderer();
+var render = new dagreD3.render();
 
 // Set up an SVG group so that we can translate the final graph.
-var svg = d3.select('svg'),
-    centerG = svg.append('g'),
-    zoomG = centerG.append('g');
+var svg = d3.select("svg");
 
-// Set initial zoom to 75%.
-var initialScale = 0.75
-var zoom = dagreD3.zoom.panAndZoom(zoomG);
-dagreD3.zoom(svg, zoom);
-// We must set the zoom and then trigger the zoom event to synchronize D3 and
-// the DOM.
-zoom.scale(initialScale).event(svg);
+// Set up zoom
+render.createZoomPanel().zoom(dagreD3.util.panAndZoom);
 
 // Run the renderer. This is what draws the final graph.
-var layout = renderer.run(g, zoomG);
+render(svg, g);
 
 // Center the graph
-var xCenterOffset = (svg.attr('width') - layout.graph().width * initialScale) / 2;
-centerG.attr('transform', 'translate(' + xCenterOffset + ', 20)');
-svg.attr('height', layout.graph().height * initialScale + 40);
+var initialScale = 0.75;
+g.graph().zoom
+  .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
+  .scale(initialScale)
+  .event(svg);
+svg.attr('height', g.graph().height * initialScale + 40);
 </script>
 
 <script src="demo.js"></script>
