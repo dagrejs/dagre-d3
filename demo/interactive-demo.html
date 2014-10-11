@@ -66,7 +66,6 @@ digraph {
 <h2>Graph Visualization</h2>
 
 <svg width=800 height=600>
-  <defs></defs>
   <g/>
 </svg>
 
@@ -105,9 +104,11 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
+// Set up zoom support
+d3.select("svg").call(dagreD3.util.panAndZoom(d3.select("svg g")));
+
 // Create and configure the renderer
 var render = dagreD3.render();
-render.createZoomPanel().zoom(dagreD3.util.panAndZoom);
 
 function tryDraw() {
   var g;
@@ -131,8 +132,8 @@ function tryDraw() {
       g.graph().marginy = 20;
     }
 
-    // Render the graph into svg g g
-    d3.select("svg").call(render, g);
+    // Render the graph into svg g
+    d3.select("svg g").call(render, g);
   }
 }
 </script>

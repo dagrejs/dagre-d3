@@ -9,7 +9,7 @@
 
 <h1>Dagre D3 Demo: TCP State Diagram</h1>
 
-<svg width=960 height=600></svg>
+<svg width=960 height=600><g/></svg>
 
 <section>
 <p>A sample rendering of a TCP state diagram
@@ -66,21 +66,23 @@ g.edges().forEach(function(e) {
 g.node('CLOSED').styleFill = "#f77";
 g.node('ESTAB').styleFill  = "#7f7";
 
+var svg = d3.select("svg"),
+    inner = svg.select("g");
+
+// Set up zoom support
+var zoom = dagreD3.util.panAndZoom(inner); 
+svg.call(zoom);
+
 // Create the renderer
 var render = new dagreD3.render();
 
-// Set up an SVG group so that we can translate the final graph.
-var svg = d3.select("svg");
-
-// Set up zoom
-render.createZoomPanel().zoom(dagreD3.util.panAndZoom);
 
 // Run the renderer. This is what draws the final graph.
-render(svg, g);
+render(inner, g);
 
 // Center the graph
 var initialScale = 0.75;
-g.graph().zoom
+zoom
   .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
   .scale(initialScale)
   .event(svg);
