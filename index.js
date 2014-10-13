@@ -23,6 +23,7 @@
 module.exports =  {
   graphlib: require("graphlib"),
   dagre: require("dagre"),
+  intersect: require("./lib/intersect"),
   render: require("./lib/render"),
   util: require("./lib/util")
 };
