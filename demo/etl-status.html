@@ -218,7 +218,8 @@
 
       if (worker.inputQueue) {
         g.setEdge(worker.inputQueue, id, {
-          label: worker.inputThroughput + "/s"
+          label: worker.inputThroughput + "/s",
+          width: 100
         });
       }
     }
@@ -228,7 +229,7 @@
     // Left-to-right layout
     var graph = g.graph();
     graph.nodesep = 70;
-    graph.ranksep = 120;
+    graph.ranksep = 50;
     graph.rankdir = "LR";
     graph.marginx = graph.marginy = 20;
 
