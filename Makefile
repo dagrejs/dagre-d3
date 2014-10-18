@@ -1,68 +1,65 @@
-# Binaries we use
+MOD = dagre-d3
+
 NPM = npm
 BROWSERIFY = ./node_modules/browserify/bin/cmd.js
+ISTANBUL = ./node_modules/istanbul/lib/cli.js
 JSCS = ./node_modules/jscs/bin/jscs
 JSHINT = ./node_modules/jshint/bin/jshint
+KARMA = ./node_modules/karma/bin/karma
 MOCHA = ./node_modules/mocha/bin/_mocha
-MOCHA_PHANTOMJS = ./node_modules/mocha-phantomjs/bin/mocha-phantomjs
-PHANTOMJS = ./node_modules/phantomjs/bin/phantomjs
 UGLIFY = ./node_modules/uglify-js/bin/uglifyjs
 
 JSHINT_OPTS = --reporter node_modules/jshint-stylish/stylish.js
 
-# Module def
-MODULE = dagre-d3
-MODULE_JS = $(MODULE).js
-MODULE_MIN_JS = $(MODULE).min.js
+BUILD_DIR = build
+COVERAGE_DIR = $(BUILD_DIR)/cov
 
-# Various files
 SRC_FILES = index.js lib/version.js $(shell find lib -type f -name '*.js')
-
 DEMO_FILES = $(wildcard demo/*)
 DEMO_BUILD_FILES = $(addprefix build/, $(DEMO_FILES))
 
-TEST_COV = build/coverage
+DIRS = $(BUILD_DIR)
 
 # Targets
-.PHONY: all test mocha-test demo-test lint release clean
+.PHONY: all test karma unit-test demo-test lint release clean
 
 .DELETE_ON_ERROR:
 
-all: build test
+all: dist
 
 lib/version.js: package.json src/release/make-version.js
 	src/release/make-version.js > $@
 
-build: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/bower.json build/demo
+$(DIRS):
+	@mkdir -p $@
 
-build/demo: $(DEMO_BUILD_FILES)
+$(BUILD_DIR)/demo: $(DEMO_BUILD_FILES) $(BUILD_DIR)
 
-build/demo/%: demo/%
+$(BUILD_DIR)/demo/%: demo/%
 	@mkdir -p $(@D)
 	sed 's|\.\./build/dagre-d3.js|../dagre-d3.js|' < $< > $@ 
 
-build/bower.json: package.json src/release/make-bower.json.js
+$(BUILD_DIR)/bower.json: package.json src/release/make-bower.json.js $(BUILD_DIR)
 	src/release/make-bower.json.js > $@
 
-build/$(MODULE_JS): browser.js node_modules $(SRC_FILES)
-	@mkdir -p $(@D)
+$(BUILD_DIR)/$(MOD).js: browser.js node_modules $(SRC_FILES) $(BUILD_DIR)
 	$(BROWSERIFY) $(BROWSERIFY_OPTS) -x node_modules/d3/index-browserify.js $< > $@
 
-build/$(MODULE_MIN_JS): build/$(MODULE_JS)
+$(BUILD_DIR)/$(MOD).min.js: build/$(MOD).js $(BUILD_DIR)
 	$(UGLIFY) $(UGLIFY_OPTS) $< > $@
 
-dist: build/$(MODULE_JS) build/$(MODULE_MIN_JS) build/demo build/bower.json | test
+dist: $(BUILD_DIR)/$(MOD).js $(BUILD_DIR)/$(MOD).min.js $(BUILD_DIR)/demo $(BUILD_DIR)/bower.json | test
 	rm -rf $@
 	mkdir -p $@
 	cp -r $^ dist
 
-test: build mocha-test demo-test lint
+karma:
+	$(KARMA) start
 
-mocha-test: test/index.html
-	$(MOCHA_PHANTOMJS) $?
+test: build unit-test demo-test lint
 
-demo-test: test/demo-test.js $(SRC_FILES) node_modules
-	$(PHANTOMJS) $<
+unit-test: $(BUILD_DIR)/$(MOD).js
+	$(KARMA) start --single-run --browsers Firefox
 
 lint: browser.js $(SRC_FILES) $(TEST_FILES)
 	@$(JSHINT) $(JSHINT_OPTS) $?
