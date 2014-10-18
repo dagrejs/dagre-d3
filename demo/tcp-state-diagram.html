@@ -74,8 +74,8 @@ g.nodes().forEach(function(v) {
 });
 
 // Add some custom colors based on state
-g.node('CLOSED').styleFill = "#f77";
-g.node('ESTAB').styleFill  = "#7f7";
+g.node('CLOSED').style = "fill: #f77";
+g.node('ESTAB').style = "fill: #7f7";
 
 var svg = d3.select("svg"),
     inner = svg.select("g");

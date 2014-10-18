@@ -22,9 +22,9 @@ text {
   stroke-width: 1.5px;
 }
 
-.edgePath path {
+.edgePath path.path {
   stroke: #333;
-  fill: #333;
+  fill: none;
   stroke-width: 1.5px;
 }
 </style>
@@ -34,11 +34,6 @@ text {
 <section>
 <p>An example showing how styles that are set in the input graph can be applied
 to nodes, node labels, edges, and edge labels in the rendered graph.
-<p>Node attributes prefixed with "style" (e.g. "styleStrokeWidth") are
-uncamelized (e.g. "stroke-width") and applied to the node shape. The same
-applied for "style" prefixed attributes on edges and their associated paths.
-Nodes or edge attributes with the prefix "labelStyle" are similarly applied to
-the labels for the nodes or edges.
 </section>
 
 <script id="js">
@@ -46,28 +41,24 @@ the labels for the nodes or edges.
 var g = new dagreD3.graphlib.Graph().setGraph({});
 
 // Fill node "A" with the color green
-g.setNode("A", { styleFill: "#afa" });
+g.setNode("A", { style: "fill: #afa" });
 
 // Make the label for node "B" bold
-g.setNode("B", { labelStyleFontWeight: "bold" });
+g.setNode("B", { labelStyle: "font-weight: bold" });
 
 // Double the size of the font for node "C"
-g.setNode("C", { labelStyleFontSize: "2em" });
+g.setNode("C", { labelStyle: "font-size: 2em" });
 
 // Make the edge from "A" to "B" red, thick, and dashed
 g.setEdge("A", "B", {
-  styleFill: "#f66",
-  styleStroke: "#f66",
-  styleStrokeWidth: "3px",
-  styleStrokeDasharray: "5, 5"
+  style: "stroke: #f66; stroke-width: 3px; stroke-dash-array: 5, 5",
+  arrowheadStyle: "fill: #f66"
 });
 
 // Make the label for the edge from "C" to "B" italic and underlined
 g.setEdge("C", "B", {
   label: "A to C",
-  styleStrokeWidth: "1.5px",
-  labelStyleFontStyle: "italic",
-  labelStyleTextDecoration: "underline"
+  labelStyle: "font-style: italic; text-decoration: underline;"
 });
 
 // Create the renderer

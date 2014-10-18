@@ -21,9 +21,9 @@ body {
   stroke-width: 1.5px;
 }
 
-.edgePath path {
+.edgePath path.path {
   stroke: #333;
-  fill: #333;
+  fill: none;
   stroke-width: 1.5px;
 }
 </style>
@@ -77,7 +77,7 @@ render.shapes().house = function(parent, bbox, node) {
 };
 
 // Add our custom arrow (a hollow-point)
-render.arrows().hollowPoint = function normal(parent, id, edge) {
+render.arrows().hollowPoint = function normal(parent, id, edge, type) {
   var marker = parent.append("marker")
     .attr("id", id)
     .attr("viewBox", "0 0 10 10")
@@ -88,11 +88,11 @@ render.arrows().hollowPoint = function normal(parent, id, edge) {
     .attr("markerHeight", 6)
     .attr("orient", "auto");
 
-  var path = marker.append("path").attr("d", "M 0 0 L 10 5 L 0 10 z");
-  dagreD3.util.applyStyles(path, edge, "style");
-  path.style("fill", "#fff");
-  path.style("stroke-width", 1);
-  path.style("stroke-dasharray", "1,0");
+  var path = marker.append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z")
+    .style("stroke-width", 1)
+    .style("stroke-dasharray", "1,0");
+  dagreD3.util.applyStyle(path, edge[type + "Style"]);
 };
 
 // Run the renderer. This is what draws the final graph.

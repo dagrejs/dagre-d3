@@ -67,7 +67,7 @@ var g = new dagreD3.graphlib.Graph().setGraph({});
 var states = {
   CLOSED: {
     description: "represents no connection state at all.",
-    styleFill: "#f77"
+    style: "fill: #f77"
   },
 
   LISTEN: {
@@ -91,7 +91,7 @@ var states = {
     description: "represents an open connection, data received " +
                  "can be delivered to the user.  The normal state for the data " +
                  "transfer phase of the connection.",
-    styleFill: "#7f7"
+    style: "fill: #7f7"
   },
 
   "FINWAIT-1": {
