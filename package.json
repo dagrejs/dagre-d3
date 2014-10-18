@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "d3": "~3.3.8",
-    "dagre": "^0.5.2",
+    "dagre": "^0.5.4",
     "graphlib": "^0.8.3",
     "lodash": "^2.4.1"
   },
