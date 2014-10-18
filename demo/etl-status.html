@@ -148,7 +148,7 @@
   }
 </style>
 
-<body onLoad="draw();">
+<body>
 <div class="live map">
   <svg><g/></svg>
 </div>
@@ -198,8 +198,19 @@
       zoom = dagreD3.util.panAndZoom(inner);
   svg.call(zoom);
 
+  var render = new dagreD3.render();
+
+  // Left-to-right layout
+  var g = new dagreD3.graphlib.Graph();
+  g.setGraph({
+    nodesep: 70,
+    ranksep: 50,
+    rankdir: "LR",
+    marginx: 20,
+    marginy: 20
+  });
+
   function draw(isUpdate) {
-    var g = new dagreD3.graphlib.Graph().setGraph({});
     for (var id in workers) {
       var worker = workers[id];
       var className = worker.consumers ? "running" : "stopped";
@@ -228,15 +239,6 @@
         });
       }
     }
-
-    var render = new dagreD3.render();
-
-    // Left-to-right layout
-    var graph = g.graph();
-    graph.nodesep = 70;
-    graph.ranksep = 50;
-    graph.rankdir = "LR";
-    graph.marginx = graph.marginy = 20;
 
     inner.call(render, g);
 
@@ -275,4 +277,6 @@
       "inputThroughput": 50
     }
   }, 5000);
+
+  draw();
 </script>
