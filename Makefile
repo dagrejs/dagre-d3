@@ -58,7 +58,7 @@ $(BUILD_DIR)/$(MOD).js: browser.js $(SRC_FILES) $(BUILD_DIR) | lint
 $(BUILD_DIR)/$(MOD).min.js: $(BUILD_DIR)/$(MOD).js
 	@$(UGLIFY) $< --comments '@license' > $@
 
-$(BUILD_DIR)/$(MOD).core.js: browser.js $(BUILD_DIR)
+$(BUILD_DIR)/$(MOD).core.js: browser.js $(SRC_FILES) $(BUILD_DIR) | lint
 	@$(BROWSERIFY) $< > $@ --no-bundle-external
 
 $(BUILD_DIR)/$(MOD).core.min.js: $(BUILD_DIR)/$(MOD).core.js
