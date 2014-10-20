@@ -167,7 +167,10 @@ var svg = d3.select("svg"),
     inner = svg.append("g");
 
 // Set up zoom support
-var zoom = dagreD3.util.panAndZoom(inner); 
+var zoom = d3.behavior.zoom().on("zoom", function() {
+    inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                "scale(" + d3.event.scale + ")");
+  });
 svg.call(zoom);
 
 // Simple function to style the tooltip for the given node.

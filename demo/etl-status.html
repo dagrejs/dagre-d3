@@ -195,7 +195,10 @@
   // Set up zoom support
   var svg = d3.select("svg"),
       inner = svg.select("g"),
-      zoom = dagreD3.util.panAndZoom(inner);
+      zoom = d3.behavior.zoom().on("zoom", function() {
+        inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                    "scale(" + d3.event.scale + ")");
+      });
   svg.call(zoom);
 
   var render = new dagreD3.render();

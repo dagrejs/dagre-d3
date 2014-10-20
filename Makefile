@@ -53,7 +53,9 @@ bower.json: package.json src/release/make-bower.json.js
 	src/release/make-bower.json.js > $@
 
 $(BUILD_DIR)/$(MOD).js: browser.js $(SRC_FILES) $(BUILD_DIR) | lint
-	$(BROWSERIFY) $(BROWSERIFY_OPTS) -x node_modules/d3/index-browserify.js $< > $@
+	$(BROWSERIFY) $(BROWSERIFY_OPTS) $< > $@ \
+		-x node_modules/d3/index.js \
+		-x node_modules/d3/d3.js
 
 $(BUILD_DIR)/$(MOD).min.js: $(BUILD_DIR)/$(MOD).js
 	@$(UGLIFY) $< --comments '@license' > $@
