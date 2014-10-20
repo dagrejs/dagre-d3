@@ -5,7 +5,6 @@ var webpage = require("webpage"),
     stderr = system.stderr,
     // Too bad this replaces the more function fs module from nodejs...
     fs = require("fs"),
-    Set = require("cp-data").Set,
     start = new Date();
 
 var red = "\033[31m";
@@ -15,15 +14,16 @@ var reset = "\033[0m";
 
 function htmlFile(file) { return file.match(/.*\.html/); }
 
-var remaining = Set.union([ls("./demo", htmlFile),
-                           ls("./build/demo", htmlFile)]);
-var testCount = remaining.size();
+var remaining =  {};
+ls("./demo", htmlFile).forEach(function(f) { remaining[f] = true; });
+ls("./build/demo", htmlFile).forEach(function(f) { remaining[f] = true; });
+var testCount = Object.keys(remaining).length;
 var failures = [];
 
 stdout.write("\n");
 stdout.write(grey + "  ");
 
-remaining.keys().forEach(function(url) {
+Object.keys(remaining).forEach(function(url) {
   stdout.write(".");
   var page = webpage.create();
   page.onError = function(msg, trace) {
@@ -40,18 +40,18 @@ remaining.keys().forEach(function(url) {
 });
 
 function ls(dir, filter) {
-  var set = new Set();
+  var set = [];
   fs.list(dir).forEach(function(file) {
     if (filter(file)) {
-      set.add(dir + "/" + file);
+      set.push(dir + "/" + file);
     }
   });
   return set;
 }
 
 function testDone(url) {
-  remaining.remove(url);
-  if (remaining.size() === 0) {
+  delete remaining[url];
+  if (!Object.keys(remaining).length) {
     stdout.write(reset + "\n");
     stdout.write("\n");
     failures.forEach(function(failure) {
