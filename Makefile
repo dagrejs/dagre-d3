@@ -42,7 +42,7 @@ lint: browser.js $(SRC_FILES) $(TEST_FILES)
 	@$(JSHINT) $(JSHINT_OPTS) $?
 	@$(JSCS) $?
 
-browser-test: $(BUILD_DIR)/$(MOD).js
+browser-test: $(BUILD_DIR)/$(MOD).js $(BUILD_DIR)/$(MOD).core.js
 	$(KARMA) start --single-run $(KARMA_OPTS)
 	$(KARMA) start karma.core.conf.js --single-run $(KARMA_OPTS)
 
