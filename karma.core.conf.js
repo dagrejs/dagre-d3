@@ -17,7 +17,9 @@ module.exports = function(config) {
     files: [
       'node_modules/lodash/lodash.js',
       'node_modules/d3/d3.js',
-      'build/dagre-d3.js',
+      'node_modules/graphlib/dist/graphlib.core.js',
+      'node_modules/dagre/dist/dagre.core.js',
+      'build/dagre-d3.core.js',
 
       'node_modules/chai/chai.js',
       'test/bundle-test.js'
@@ -32,13 +34,19 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'build/dagre-d3.core.js': 'coverage'
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+
+    coverageReporter: {
+      type: 'html',
+      dir: 'build/cov'
+    },
 
     // web server port
     port: 9876,
