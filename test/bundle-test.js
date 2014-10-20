@@ -122,14 +122,26 @@ describe("dagreD3", function() {
     });
   });
 
-  it("breaks labels on '\\n'", function() {
-    g.setNode("a", { id: "a", label: "multi\nline" });
-    dagreD3.render()(svg, g);
+  describe("breaks label lines", function() {
+    it("on '\\n'", function() {
+      g.setNode("a", { id: "a", label: "multi\nline" });
+      dagreD3.render()(svg, g);
 
-    var text = d3.select("#a text");
-    expect(text.empty()).to.be.false;
-    expect(d3.select(text.selectAll("tspan")[0][0]).text()).equals("multi");
-    expect(d3.select(text.selectAll("tspan")[0][1]).text()).equals("line");
+      var text = d3.select("#a text");
+      expect(text.empty()).to.be.false;
+      expect(d3.select(text.selectAll("tspan")[0][0]).text()).equals("multi");
+      expect(d3.select(text.selectAll("tspan")[0][1]).text()).equals("line");
+    });
+
+    it("on '\\\\n'", function() {
+      g.setNode("a", { id: "a", label: "multi\\nline" });
+      dagreD3.render()(svg, g);
+
+      var text = d3.select("#a text");
+      expect(text.empty()).to.be.false;
+      expect(d3.select(text.selectAll("tspan")[0][0]).text()).equals("multi");
+      expect(d3.select(text.selectAll("tspan")[0][1]).text()).equals("line");
+    });
   });
 
   describe("styles", function() {
@@ -204,6 +216,17 @@ describe("dagreD3", function() {
       expect(ellipse.empty()).to.be.false;
       expect(ellipse.attr("rx") * 2).to.equal(100);
       expect(ellipse.attr("ry") * 2).to.equal(250);
+    });
+  });
+
+  describe("class", function() {
+    it("can be set for nodes", function() {
+      g.setNode("a", { id: "a", class: function(d) { return d + "-class"; } });
+      g.setNode("b", { id: "b", class: "b-class" });
+      dagreD3.render()(svg, g);
+
+      expect(d3.select("#a").classed("a-class")).to.be.true;
+      expect(d3.select("#b").classed("b-class")).to.be.true;
     });
   });
 });
