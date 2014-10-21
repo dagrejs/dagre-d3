@@ -1,3 +1,10 @@
+v0.3.0
+======
+
+* Pick up new dagre and graphlib, which yields improved performance
+* Experimental support for clusters
+* See demos for examples of how to use the new APIs (dagre-d3, dagre, graphlib)
+
 v0.2.9
 ======
 
