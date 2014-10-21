@@ -4,12 +4,16 @@
 <title>Dagre D3 Renderer Demo</title>
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="http://cpettitt.github.io/project/graphlib/latest/graphlib.min.js"></script>
 <script src="../build/dagre-d3.js"></script>
 
 <style>
 
   body {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     margin: 0;
     padding: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
@@ -63,7 +67,7 @@
   }
 
   .live.map .node rect {
-    stroke-width: 1px;
+    stroke-width: 1.5px;
     stroke: #bbb;
     fill: #666;
   }
@@ -106,7 +110,7 @@
   .live.map .consumers,
   .live.map .name {
     margin-top: 4px;
-  } 
+  }
 
   .live.map .consumers:after {
     content: "x";
@@ -132,173 +136,150 @@
     width: 20px;
   }
 
-  .live.map .edgeLabel rect {
-    fill: none;
-  }
-
-  .live.map .edgeLabel div {
+  .live.map .edgeLabel text {
     width: 50px;
-    color: #fff;
+    fill: #fff;
   }
 
   .live.map .edgePath path {
     stroke: #999;
     stroke-width: 1.5px;
-    fill: none;
+    fill: #999;
   }
-
-  /* Override path marker color */
-  #arrowhead {
-    fill: #999 !important;
-  }
-
 </style>
 
-<body onLoad="draw();">
+<body>
 <div class="live map">
-  <svg>
-    <g class="diagram" transform="translate(20,20)">
-      <g/>
-    </g>
-  </svg>
+  <svg><g/></svg>
 </div>
 
 <script>
 
   var workers = {
-    'identifier': {
-      'consumers': 2,
-      'count': 20
+    "identifier": {
+      "consumers": 2,
+      "count": 20
     },
-    'lost-and-found': {
-      'consumers': 1,
-      'count': 1,
-      'inputQueue': 'identifier',
-      'inputThroughput': 50
+    "lost-and-found": {
+      "consumers": 1,
+      "count": 1,
+      "inputQueue": "identifier",
+      "inputThroughput": 50
     },
-    'monitor': {
-      'consumers': 1,
-      'count': 0,
-      'inputQueue': 'identifier',
-      'inputThroughput': 50
+    "monitor": {
+      "consumers": 1,
+      "count": 0,
+      "inputQueue": "identifier",
+      "inputThroughput": 50
     },
-    'meta-enricher': {
-      'consumers': 4,
-      'count': 9900,
-      'inputQueue': 'identifier',
-      'inputThroughput': 50
+    "meta-enricher": {
+      "consumers": 4,
+      "count": 9900,
+      "inputQueue": "identifier",
+      "inputThroughput": 50
     },
-    'geo-enricher': {
-      'consumers': 2,
-      'count': 1,
-      'inputQueue': 'meta-enricher',
-      'inputThroughput': 50
+    "geo-enricher": {
+      "consumers": 2,
+      "count": 1,
+      "inputQueue": "meta-enricher",
+      "inputThroughput": 50
     },
-    'elasticsearch-writer': {
-      'consumers': 0,
-      'count': 9900,
-      'inputQueue': 'geo-enricher',
-      'inputThroughput': 50
+    "elasticsearch-writer": {
+      "consumers": 0,
+      "count": 9900,
+      "inputQueue": "geo-enricher",
+      "inputThroughput": 50
     }
   };
 
+  // Set up zoom support
+  var svg = d3.select("svg"),
+      inner = svg.select("g"),
+      zoom = d3.behavior.zoom().on("zoom", function() {
+        inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                    "scale(" + d3.event.scale + ")");
+      });
+  svg.call(zoom);
+
+  var render = new dagreD3.render();
+
+  // Left-to-right layout
+  var g = new dagreD3.graphlib.Graph();
+  g.setGraph({
+    nodesep: 70,
+    ranksep: 50,
+    rankdir: "LR",
+    marginx: 20,
+    marginy: 20
+  });
+
   function draw(isUpdate) {
-    var nodes = [];
-    var edges = [];
     for (var id in workers) {
       var worker = workers[id];
-      var className = '';
-      className += worker.consumers ? 'running' : 'stopped';
+      var className = worker.consumers ? "running" : "stopped";
       if (worker.count > 10000) {
-        className += ' warn';
+        className += " warn";
       }
-      var html = '<div>';
-      html += '<span class="status"></span>';
-      html += '<span class="consumers">'+worker.consumers+'</span>';
-      html += '<span class="name">'+id+'</span>';
-      html += '<span class="queue"><span class="counter">'+worker.count+'</span></span>';
-      html += '</div>';
-      nodes.push({
-        id: id,
-        value: {
-          labelType: 'html',
-          label: html,
-          className: className
-        }
+      var html = "<div>";
+      html += "<span class=status></span>";
+      html += "<span class=consumers>"+worker.consumers+"</span>";
+      html += "<span class=name>"+id+"</span>";
+      html += "<span class=queue><span class=counter>"+worker.count+"</span></span>";
+      html += "</div>";
+      g.setNode(id, {
+        labelType: "html",
+        label: html,
+        rx: 5,
+        ry: 5,
+        padding: 0,
+        class: className
       });
 
       if (worker.inputQueue) {
-        var label = worker.inputThroughput + '/s';
-        edges.push({
-          u: worker.inputQueue,
-          v: id,
-          value: { labelType: 'html', label: '<span>'+label+'</span>' }
+        g.setEdge(worker.inputQueue, id, {
+          label: worker.inputThroughput + "/s",
+          width: 100
         });
       }
     }
 
-    var renderer = new dagreD3.Renderer();
-    var svg = d3.select("svg");
-
-    // Extend drawNodes function to set custom ID and class on nodes
-    var oldDrawNodes = renderer.drawNodes();
-    renderer.drawNodes(function(graph, root) {
-      var svgNodes = oldDrawNodes(graph, root);
-      svgNodes.attr("id", function(u) { return "node-" + u; });
-      svgNodes.attr("class", function(u) { return "node " + graph.node(u).className; });
-      return svgNodes;
-    });
-
-    // Custom transition function
-    function transition(selection) {
-      return selection.transition().duration(500);
-    }
-    isUpdate && renderer.transition(transition);
-
-    var zoom = dagreD3.zoom.panAndZoom(d3.select("svg g g"));
-
-    // Left-to-right layout
-    var layout = dagreD3.layout()
-      .nodeSep(70)
-      .rankSep(120)
-      .rankDir("LR");
-    var renderedLayout = renderer
-      .layout(layout)
-      .run(dagreD3.json.decode(nodes, edges), d3.select("svg g g"));
+    inner.call(render, g);
 
     // Zoom and scale to fit
     var zoomScale = zoom.scale();
-    var graphWidth = renderedLayout.graph().width + 80;
-    var graphHeight = renderedLayout.graph().height + 40;
-    var width = parseInt(svg.style('width').replace(/px/, ''));
-    var height = parseInt(svg.style('height').replace(/px/, ''));
+    var graphWidth = g.graph().width + 80;
+    var graphHeight = g.graph().height + 40;
+    var width = parseInt(svg.style("width").replace(/px/, ""));
+    var height = parseInt(svg.style("height").replace(/px/, ""));
     zoomScale = Math.min(width / graphWidth, height / graphHeight);
     var translate = [(width/2) - ((graphWidth*zoomScale)/2), (height/2) - ((graphHeight*zoomScale)/2)];
     zoom.translate(translate);
     zoom.scale(zoomScale);
-    zoom.event(isUpdate ? svg.transition().duration(500) : d3.select('svg'));
+    zoom.event(isUpdate ? svg.transition().duration(500) : d3.select("svg"));
   }
 
   // Do some mock queue status updates
   setInterval(function() {
-    var stoppedWorker1Count = workers['elasticsearch-writer'].count;
-    var stoppedWorker2Count = workers['meta-enricher'].count;
+    var stoppedWorker1Count = workers["elasticsearch-writer"].count;
+    var stoppedWorker2Count = workers["meta-enricher"].count;
     for (var id in workers) {
       workers[id].count = Math.ceil(Math.random() * 3);
       if (workers[id].inputThroughput) workers[id].inputThroughput = Math.ceil(Math.random() * 250);
     }
-    workers['elasticsearch-writer'].count = stoppedWorker1Count + Math.ceil(Math.random() * 100);
-    workers['meta-enricher'].count = stoppedWorker2Count + Math.ceil(Math.random() * 100);
+    workers["elasticsearch-writer"].count = stoppedWorker1Count + Math.ceil(Math.random() * 100);
+    workers["meta-enricher"].count = stoppedWorker2Count + Math.ceil(Math.random() * 100);
     draw(true);
   }, 1000);
 
   // Do a mock change of worker configuration
   setInterval(function() {
-    workers['elasticsearch-monitor'] = {
-      'consumers': 0,
-      'count': 0,
-      'inputQueue': 'elasticsearch-writer',
-      'inputThroughput': 50
+    workers["elasticsearch-monitor"] = {
+      "consumers": 0,
+      "count": 0,
+      "inputQueue": "elasticsearch-writer",
+      "inputThroughput": 50
     }
   }, 5000);
+
+  draw();
 </script>

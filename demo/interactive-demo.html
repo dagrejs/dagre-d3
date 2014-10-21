@@ -4,8 +4,8 @@
 <title>Dagre Interactive Demo</title>
 
 <script src="http://d3js.org/d3.v3.js"></script>
+<script src="http://cpettitt.github.io/project/graphlib-dot/v0.5.2/graphlib-dot.js"></script>
 <script src="../build/dagre-d3.js"></script>
-<script src="http://cpettitt.github.io/project/graphlib-dot/v0.4.10/graphlib-dot.min.js"></script>
 
 <style>
 svg {
@@ -13,23 +13,26 @@ svg {
   overflow: hidden;
 }
 
-text {
-  font-weight: 300;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
-  font-size: 14px;
+.node {
+  white-space: nowrap;
 }
 
 .node rect {
   stroke: #333;
   fill: #fff;
+  stroke-width: 1.5px;
 }
 
-.edgeLabel rect {
-  fill: #fff;
-}
-
-.edgePath path {
+.cluster rect {
   stroke: #333;
+  fill: #000;
+  fill-opacity: 0.1;
+  stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+  stroke: #333;
+  stroke-width: 1.5px;
   fill: none;
 }
 </style>
@@ -53,7 +56,7 @@ label {
 }
 </style>
 
-<body onLoad="tryDraw(true);">
+<body onLoad="tryDraw();">
 
 <h1>Dagre Interactive Demo</h1>
 
@@ -65,14 +68,15 @@ label {
 /* Example */
 digraph {
     /* Note: HTML labels do not work in IE, which lacks support for &lt;foreignObject&gt; tags. */
+    node [rx=5 ry=5 labelStyle="font: 300 14px 'Helvetica Neue', Helvetica"]
+    edge [labelStyle="font: 300 14px 'Helvetica Neue', Helvetica"]
     A [labelType="html"
-       label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"
-       labelStyle="padding: 10px;"];
+       label="A <span style='font-size:32px'>Big</span> <span style='color:red;'>HTML</span> Source!"];
     C;
-    E [label="Bold Red Sink", style="fill: #f77" labelStyle="font-weight: bold"];
+    E [label="Bold Red Sink" style="fill: #f77; font-weight: bold"];
     A -&gt; B -&gt; C;
     B -&gt; D [label="A blue label" labelStyle="fill: #55f; font-weight: bold;"];
-    D -&gt; E [label="A thick red edge" style="stroke-width: 3px; stroke: #f77;"];
+    D -&gt; E [label="A thick red edge" style="stroke: #f77; stroke-width: 2px;" arrowheadStyle="fill: #f77"];
     C -&gt; E;
     A -&gt; D [labelType="html" label="A multi-rank <span style='color:blue;'>HTML</span> edge!"];
 }
@@ -84,9 +88,7 @@ digraph {
 <h2>Graph Visualization</h2>
 
 <svg width=800 height=600>
-  <g transform="translate(20, 20)">
-    <g/>
-  </g>
+  <g/>
 </svg>
 
 <script>
@@ -124,64 +126,42 @@ var debugAlignmentMatch = window.location.search.match(debugAlignmentRE);
 var debugAlignment;
 if (debugAlignmentMatch) debugAlignment = debugAlignmentMatch[1];
 
-dagreD3.zoom(d3.select("svg"), dagreD3.zoom.panAndZoom(d3.select("svg g g")));
+// Set up zoom support
+var svg = d3.select("svg"),
+    inner = d3.select("svg g"),
+    zoom = d3.behavior.zoom().on("zoom", function() {
+      inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                  "scale(" + d3.event.scale + ")");
+    });
+svg.call(zoom);
 
-function tryDraw(firstRun) {
-  var result;
+// Create and configure the renderer
+var render = dagreD3.render();
+
+function tryDraw() {
+  var g;
   if (oldInputGraphValue !== inputGraph.value) {
     inputGraph.setAttribute("class", "");
     oldInputGraphValue = inputGraph.value;
     try {
-      result = graphlibDot.parse(inputGraph.value);
+      g = graphlibDot.read(inputGraph.value);
     } catch (e) {
       inputGraph.setAttribute("class", "error");
       throw e;
     }
 
-    if (result) {
-      // Save link to new graph
-      graphLink.attr("href", graphToURL());
+    // Save link to new graph
+    graphLink.attr("href", graphToURL());
 
-      // Cleanup old graph
-      var svg = d3.select("svg");
-
-      var renderer = new dagreD3.Renderer();
-
-      // Handle debugAlignment
-      renderer.postLayout(function(graph) {
-        if (debugAlignment) {
-          // First find necessary delta...
-          var minX = Math.min.apply(null, graph.nodes().map(function(u) {
-            var value = graph.node(u);
-            return value[debugAlignment] - value.width / 2;
-          }));
-
-          // Update node positions
-          graph.eachNode(function(u, value) {
-            value.x = value[debugAlignment] - minX;
-          });
-
-          // Update edge positions
-          graph.eachEdge(function(e, u, v, value) {
-            value.points.forEach(function(p) {
-              p.x = p[debugAlignment] - minX;
-            });
-          });
-        }
-      });
-
-      // Uncomment the following line to get straight edges
-      //renderer.edgeInterpolate('linear');
-
-      // Custom transition function
-      function transition(selection) {
-        return selection.transition().duration(500);
-      }
-
-      renderer.transition(transition);
-
-      var layout = renderer.run(result, svg.select("g g"));
+    // Set margins, if not present
+    if (!g.graph().hasOwnProperty("marginx") &&
+        !g.graph().hasOwnProperty("marginy")) {
+      g.graph().marginx = 20;
+      g.graph().marginy = 20;
     }
+
+    // Render the graph into svg g
+    d3.select("svg g").call(render, g);
   }
 }
 </script>

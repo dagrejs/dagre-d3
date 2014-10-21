@@ -21,12 +21,10 @@
  * THE SOFTWARE.
  */
 module.exports =  {
-  Digraph: require('graphlib').Digraph,
-  Graph: require('graphlib').Graph,
-  Renderer: require('./lib/Renderer'),
-  json: require('graphlib').converter.json,
-  layout: require('dagre').layout,
-  zoom: require('./lib/zoom'),
-  version: require('./lib/version'),
-  debug: require('dagre').debug
+  graphlib: require("./lib/graphlib"),
+  dagre: require("./lib/dagre"),
+  intersect: require("./lib/intersect"),
+  render: require("./lib/render"),
+  util: require("./lib/util"),
+  version: require("./lib/version")
 };

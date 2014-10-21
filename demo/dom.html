@@ -18,11 +18,13 @@ text {
 
 .node rect {
   stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
 }
 
 .edgePath path {
   stroke: #333;
-  fill: none;
+  stroke-width: 1.5px;
 }
 
 table {
@@ -59,36 +61,39 @@ support this technique.
 
 <script id="js">
 // Create a new directed graph
-var g = new dagreD3.Digraph();
+var g = new dagreD3.graphlib.Graph().setGraph({});
 
-g.addNode("root", {
+g.setNode("root", {
   label: function() {
     var table = document.createElement("table"),
         tr = d3.select(table).append("tr");
     tr.append("td").text("A");
     tr.append("td").text("B");
     return table;
-  }
+  },
+  padding: 0,
+  rx: 5,
+  ry: 5
 });
-g.addNode("A", { label: "A", fill: "#afa" });
-g.addNode("B", { label: "B", fill: "#faa" });
-g.addEdge(null, "root", "A");
-g.addEdge(null, "root", "B");
+g.setNode("A", { label: "A", fill: "#afa" });
+g.setNode("B", { label: "B", fill: "#faa" });
+g.setEdge("root", "A", {});
+g.setEdge("root", "B", {});
 
 // Create the renderer
-var renderer = new dagreD3.Renderer();
+var render = new dagreD3.render();
 
 // Set up an SVG group so that we can translate the final graph.
 var svg = d3.select('svg'),
     svgGroup = svg.append('g');
 
 // Run the renderer. This is what draws the final graph.
-var layout = renderer.run(g, svgGroup);
+render(svgGroup, g);
 
 // Center the graph
-var xCenterOffset = (svg.attr('width') - layout.graph().width) / 2;
+var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
 svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
-svg.attr('height', layout.graph().height + 40);
+svg.attr('height', g.graph().height + 40);
 </script>
 
 <script src="demo.js"></script>

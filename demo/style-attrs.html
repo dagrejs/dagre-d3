@@ -18,11 +18,14 @@ text {
 
 .node rect {
   stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
 }
 
-.edgePath path {
+.edgePath path.path {
   stroke: #333;
   fill: none;
+  stroke-width: 1.5px;
 }
 </style>
 
@@ -35,41 +38,43 @@ to nodes, node labels, edges, and edge labels in the rendered graph.
 
 <script id="js">
 // Create the input graph
-var g = new dagreD3.Digraph();
+var g = new dagreD3.graphlib.Graph().setGraph({});
 
-// Fill node 'A' with the color green
-g.addNode('A', { label: 'A', style: 'fill: #afa;' });
+// Fill node "A" with the color green
+g.setNode("A", { style: "fill: #afa" });
 
-// Make the label for node 'B' bold
-g.addNode('B', { label: 'B', labelStyle: 'font-weight: bold;'});
+// Make the label for node "B" bold
+g.setNode("B", { labelStyle: "font-weight: bold" });
 
-// Double the size of the font for node 'C'
-g.addNode('C', { label: 'C', labelStyle: 'font-size: 2em;' });
+// Double the size of the font for node "C"
+g.setNode("C", { labelStyle: "font-size: 2em" });
 
-// Make the edge from 'A' to 'B' red and thick
-g.addEdge(null, 'A', 'B', { style: 'stroke: #f66; stroke-width: 3px;' });
+// Make the edge from "A" to "B" red, thick, and dashed
+g.setEdge("A", "B", {
+  style: "stroke: #f66; stroke-width: 3px; stroke-dasharray: 5, 5;",
+  arrowheadStyle: "fill: #f66"
+});
 
-// Make the label for the edge from 'C' to 'B' italic and underlined
-g.addEdge(null, 'C', 'B', {
-    label: 'A to C',
-      style: 'stroke-width: 1.5px',
-        labelStyle: 'font-style: italic; text-decoration: underline;'
+// Make the label for the edge from "C" to "B" italic and underlined
+g.setEdge("C", "B", {
+  label: "A to C",
+  labelStyle: "font-style: italic; text-decoration: underline;"
 });
 
 // Create the renderer
-var renderer = new dagreD3.Renderer();
+var render = new dagreD3.render();
 
 // Set up an SVG group so that we can translate the final graph.
-var svg = d3.select('svg'),
-    svgGroup = svg.append('g');
+var svg = d3.select("svg"),
+    inner = svg.append("g");
 
 // Run the renderer. This is what draws the final graph.
-var layout = renderer.run(g, svgGroup);
+render(inner, g);
 
 // Center the graph
-var xCenterOffset = (svg.attr('width') - layout.graph().width) / 2;
-svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
-svg.attr('height', layout.graph().height + 40);
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+inner.attr("transform", "translate(" + xCenterOffset + ", 20)");
+svg.attr("height", g.graph().height + 40);
 </script>
 
 <script src="demo.js"></script>
