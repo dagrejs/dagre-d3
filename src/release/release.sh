@@ -10,7 +10,6 @@ bail() {
 # Initial config
 PROJECT=dagre-d3
 PROJECT_ROOT=`pwd`
-BOWER_DIR=/tmp/dagre-d3-bower
 DOC_DIR=/tmp/dagre-d3-doc
 DIST_DIR=dist
 
@@ -28,8 +27,6 @@ echo Attemping to publish version: $VERSION
 # Pull remote repos
 rm -rf $DOC_DIR
 git clone git@github.com:cpettitt/cpettitt.github.com.git $DOC_DIR
-rm -rf $BOWER_DIR
-git clone git@github.com:cpettitt/dagre-d3-bower.git $BOWER_DIR
 
 # Publish docs
 echo Preparing to publish docs
@@ -49,24 +46,6 @@ git push origin
 
 cd $PROJECT_ROOT
 echo Done with docs
-
-# Publish bower
-rm $BOWER_DIR/bower.json
-rm -rf $BOWER_DIR/js
-
-mkdir $BOWER_DIR/js
-
-cp $DIST_DIR/bower.json $BOWER_DIR
-cp $DIST_DIR/dagre-d3*.js $BOWER_DIR/js
-
-cd $BOWER_DIR
-git add -A
-git commit -m "Publishing bower for $PROJECT v$VERSION"
-git push -f origin master
-git tag v$VERSION
-git push origin v$VERSION
-cd $PROJECT_ROOT
-echo "Published dagre-d3 to dagre-d3-bower"
 
 # Publish tag
 git tag v$VERSION
