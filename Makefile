@@ -72,10 +72,10 @@ $(BUILD_DIR)/demo/%: demo/%
 	@mkdir -p $(@D)
 	sed 's|\.\./build/dagre-d3.js|../dagre-d3.js|' < $< > $@
 
-dist: $(BUILD_FILES) | bower.json test
+dist: $(BUILD_FILES) $(BUILD_DIR)/demo | bower.json test
 	@rm -rf $@
 	@mkdir -p $@
-	@cp $^ dist
+	@cp -r $^ dist
 
 release: dist
 	@echo
