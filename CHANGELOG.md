@@ -1,9 +1,17 @@
+v0.3.1
+======
+
+* Fix a bug that caused nodes to grow in size when they were re-rendered.
+
 v0.3.0
 ======
 
+* This version is a significant, *backwards incompatible* departure from v0.2.9.
+  It is a step towards a more stable 1.0 release. See demos for examples of how
+  to use the new APIs (dagre-d3, dagre, graphlib)
 * Pick up new dagre and graphlib, which yields improved performance
 * Experimental support for clusters
-* See demos for examples of how to use the new APIs (dagre-d3, dagre, graphlib)
+* Note that this version does not currently support transitions.
 
 v0.2.9
 ======

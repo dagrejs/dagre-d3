@@ -729,6 +729,8 @@ function render() {
     positionEdgeLabels(edgeLabels, g);
     createEdgePaths(edgePathsGroup, g, arrows);
     createClusters(clustersGroup, g);
+
+    postProcessGraph(g);
   };
 
   fn.createNodes = function(value) {
@@ -819,12 +821,37 @@ function preProcessGraph(g) {
       node[k] = Number(node[k]);
     });
 
+    // Save dimensions for restore during post-processing
+    if (_.has(node, "width")) { node._prevWidth = node.width; }
+    if (_.has(node, "height")) { node._prevHeight = node.height; }
   });
 
   g.edges().forEach(function(e) {
     var edge = g.edge(e);
     if (!_.has(edge, "label")) { edge.label = ""; }
     _.defaults(edge, EDGE_DEFAULT_ATTRS);
+  });
+}
+
+function postProcessGraph(g) {
+  _.each(g.nodes(), function(v) {
+    var node = g.node(v);
+
+    // Restore original dimensions
+    if (_.has(node, "_prevWidth")) {
+      node.width = node._prevWidth;
+    } else {
+      delete node.width;
+    }
+
+    if (_.has(node, "_prevHeight")) {
+      node.height = node._prevHeight;
+    } else {
+      delete node.height;
+    }
+
+    delete node._prevWidth;
+    delete node._prevHeight;
   });
 }
 
@@ -936,7 +963,7 @@ function applyClass(dom, classFn, otherClasses) {
 }
 
 },{}],27:[function(require,module,exports){
-module.exports = "0.3.1-pre";
+module.exports = "0.3.1";
 
 },{}],28:[function(require,module,exports){
 /*
