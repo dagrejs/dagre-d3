@@ -17,7 +17,9 @@ svg {
   white-space: nowrap;
 }
 
-.node rect {
+.node rect,
+.node cicrce,
+.node ellipse {
   stroke: #333;
   fill: #fff;
   stroke-width: 1.5px;
@@ -159,6 +161,10 @@ function tryDraw() {
       g.graph().marginx = 20;
       g.graph().marginy = 20;
     }
+
+    g.graph().transition = function(selection) {
+      return selection.transition().duration(500);
+    };
 
     // Render the graph into svg g
     d3.select("svg g").call(render, g);
