@@ -936,7 +936,7 @@ function applyClass(dom, classFn, otherClasses) {
 }
 
 },{}],27:[function(require,module,exports){
-module.exports = "0.3.0";
+module.exports = "0.3.1-pre";
 
 },{}],28:[function(require,module,exports){
 /*

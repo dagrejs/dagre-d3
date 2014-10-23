@@ -1,5 +1,9 @@
 var expect = chai.expect;
 
+d3.select("body").append("link")
+  .attr("rel", "stylesheet")
+  .attr("href", "/base/test/bundle-test.css");
+
 describe("dagreD3", function() {
   var svg,
       g;
