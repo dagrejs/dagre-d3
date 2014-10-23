@@ -82,6 +82,32 @@ describe("dagreD3", function() {
     expect(d3.select("#a").node().getBBox().height).to.equal(2000);
   });
 
+  it("does not grow node dimensions when re-rendering", function() {
+    g.setNode("a", { id: "a" });
+    dagreD3.render()(svg, g);
+    var bbox = svg.select("#a rect").node().getBBox();
+
+    dagreD3.render()(svg, g);
+    var bbox2 = svg.select("#a rect").node().getBBox();
+
+    expect(bbox.width).equals(bbox2.width);
+    expect(bbox.height).equals(bbox2.height);
+  });
+
+  it("does not grow edge dimensions when re-rendering", function() {
+    g.setNode("a");
+    g.setNode("b");
+    g.setEdge("a", "b", { labelId: "ab", label: "foo" });
+    dagreD3.render()(svg, g);
+    var bbox = svg.select("#ab").node().getBBox();
+
+    dagreD3.render()(svg, g);
+    var bbox2 = svg.select("#ab").node().getBBox();
+
+    expect(bbox.width).equals(bbox2.width);
+    expect(bbox.height).equals(bbox2.height);
+  });
+
   describe("HTML labels", function() {
     it("can be created for a node", function() {
       g.setNode("a", { labelType: "html", label: "<p id='a-lab'>Hello</p>" });
