@@ -1,31 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-/**
- * @license
- * Copyright (c) 2012-2014 Chris Pettitt
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-global.dagreD3 = require("./index");
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./index":2}],2:[function(require,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.dagreD3=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @license
  * Copyright (c) 2012-2013 Chris Pettitt
@@ -57,7 +30,7 @@ module.exports =  {
   version: require("./lib/version")
 };
 
-},{"./lib/dagre":9,"./lib/graphlib":10,"./lib/intersect":11,"./lib/render":24,"./lib/util":26,"./lib/version":27}],3:[function(require,module,exports){
+},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":23,"./lib/util":25,"./lib/version":26}],2:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = {
@@ -102,7 +75,7 @@ function vee(parent, id, edge, type) {
   util.applyStyle(path, edge[type + "Style"]);
 }
 
-},{"./util":26}],4:[function(require,module,exports){
+},{"./util":25}],3:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = createClusters;
@@ -114,11 +87,17 @@ function createClusters(selection, g) {
 
   svgClusters.enter()
     .append("g")
-    .attr("class", "cluster")
-    .append("rect");
-  svgClusters.exit().remove();
+      .attr("class", "cluster")
+      .style("opacity", 0)
+      .append("rect");
+  util.applyTransition(svgClusters.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
-  svgClusters.selectAll("rect")
+  util.applyTransition(svgClusters, g)
+    .style("opacity", 1);
+
+  util.applyTransition(svgClusters.selectAll("rect"), g)
     .attr("width", function(v) { return g.node(v).width; })
     .attr("height", function(v) { return g.node(v).height; })
     .attr("x", function(v) {
@@ -131,7 +110,7 @@ function createClusters(selection, g) {
     });
 }
 
-},{"./util":26}],5:[function(require,module,exports){
+},{"./util":25}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -147,7 +126,10 @@ function createEdgeLabels(selection, g) {
     .classed("update", true);
 
   svgEdgeLabels.selectAll("*").remove();
-  svgEdgeLabels.enter().append("g").classed("edgeLabel", true);
+  svgEdgeLabels.enter()
+    .append("g")
+      .classed("edgeLabel", true)
+      .style("opacity", 0);
   svgEdgeLabels.each(function(e) {
     var edge = g.edge(e),
         label = addLabel(d3.select(this), g.edge(e), 0, 0).classed("label", true),
@@ -158,12 +140,14 @@ function createEdgeLabels(selection, g) {
     if (!_.has(edge, "height")) { edge.height = bbox.height; }
   });
 
-  svgEdgeLabels.exit().remove();
+  util.applyTransition(svgEdgeLabels.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
   return svgEdgeLabels;
 }
 
-},{"./d3":8,"./label/add-label":19,"./lodash":21,"./util":26}],6:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],5:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -178,35 +162,11 @@ function createEdgePaths(selection, g, arrows) {
     .data(g.edges(), function(e) { return util.edgeToId(e); })
     .classed("update", true);
 
-  var svgPathsEnter = svgPaths.enter()
-    .append("g")
-    .attr("class", "edgePath");
-  svgPathsEnter.append("path").attr("class", "path");
-  svgPathsEnter.append("defs");
-  svgPaths.exit().remove();
+  enter(svgPaths, g);
+  exit(svgPaths, g);
 
-  function calcPoints(e) {
-    var edge = g.edge(e),
-        tail = g.node(e.v),
-        head = g.node(e.w),
-        points = edge.points.slice(1, edge.points.length - 1);
-    points.unshift(intersectNode(tail, points[0]));
-    points.push(intersectNode(head, points[points.length - 1]));
-
-    var line = d3.svg.line()
-      .x(function(d) { return d.x; })
-      .y(function(d) { return d.y; });
-
-    if (_.has(edge, "lineInterpolate")) {
-      line.interpolate(edge.lineInterpolate);
-    }
-
-    if (_.has(edge, "lineTension")) {
-      line.tension(Number(edge.lineTension));
-    }
-
-    return line(points);
-  }
+  util.applyTransition(svgPaths, g)
+    .style("opacity", 1);
 
   svgPaths.selectAll("path.path")
     .each(function(e) {
@@ -214,11 +174,14 @@ function createEdgePaths(selection, g, arrows) {
       edge.arrowheadId = _.uniqueId("arrowhead");
 
       var domEdge = d3.select(this)
-        .attr("d", calcPoints)
         .attr("marker-end", function() {
           return "url(#" + edge.arrowheadId + ")";
         })
         .style("fill", "none");
+
+      util.applyTransition(domEdge, g)
+        .attr("d", function(e) { return calcPoints(g, e); });
+
       if (edge.id) { domEdge.attr("id", edge.id); }
       util.applyStyle(domEdge, edge.style);
     });
@@ -234,7 +197,76 @@ function createEdgePaths(selection, g, arrows) {
   return svgPaths;
 }
 
-},{"./d3":8,"./intersect/intersect-node":15,"./lodash":21,"./util":26}],7:[function(require,module,exports){
+function calcPoints(g, e) {
+  var edge = g.edge(e),
+      tail = g.node(e.v),
+      head = g.node(e.w),
+      points = edge.points.slice(1, edge.points.length - 1);
+  points.unshift(intersectNode(tail, points[0]));
+  points.push(intersectNode(head, points[points.length - 1]));
+
+  return createLine(edge, points);
+}
+
+function createLine(edge, points) {
+  var line = d3.svg.line()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; });
+
+  if (_.has(edge, "lineInterpolate")) {
+    line.interpolate(edge.lineInterpolate);
+  }
+
+  if (_.has(edge, "lineTension")) {
+    line.tension(Number(edge.lineTension));
+  }
+
+  return line(points);
+}
+
+function getCoords(elem) {
+  var bbox = elem.getBBox(),
+      matrix = elem.getTransformToElement(elem.ownerSVGElement)
+        .translate(bbox.width / 2, bbox.height / 2);
+  return { x: matrix.e, y: matrix.f };
+}
+
+function enter(svgPaths, g) {
+  var svgPathsEnter = svgPaths.enter()
+    .append("g")
+      .attr("class", "edgePath")
+      .style("opacity", 0);
+  svgPathsEnter.append("path")
+    .attr("class", "path")
+    .attr("d", function(e) {
+      var edge = g.edge(e),
+          sourceElem = g.node(e.v).elem,
+          points = _.range(edge.points.length).map(function() { return getCoords(sourceElem); });
+      return createLine(edge, points);
+    });
+  svgPathsEnter.append("defs");
+}
+
+function exit(svgPaths, g) {
+  var svgPathExit = svgPaths.exit();
+  util.applyTransition(svgPathExit, g)
+    .style("opacity", 0)
+    .remove();
+
+  util.applyTransition(svgPathExit.select("path.path"), g)
+    .attr("d", function(e) {
+      var source = g.node(e.v);
+
+      if (source) {
+        var points = _.range(this.pathSegList.length).map(function() { return source; });
+        return createLine({}, points);
+      } else {
+        return d3.select(this).attr("d");
+      }
+    });
+}
+
+},{"./d3":7,"./intersect/intersect-node":14,"./lodash":20,"./util":25}],6:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -253,7 +285,8 @@ function createNodes(selection, g, shapes) {
   svgNodes.selectAll("*").remove();
   svgNodes.enter()
     .append("g")
-    .attr("class", "node");
+      .attr("class", "node")
+      .style("opacity", 0);
   svgNodes.each(function(v) {
     var node = g.node(v),
         thisGroup = d3.select(this),
@@ -261,6 +294,8 @@ function createNodes(selection, g, shapes) {
         labelDom = addLabel(labelGroup, node),
         shape = shapes[node.shape],
         bbox = labelDom.node().getBBox();
+
+    node.elem = this;
 
     if (node.id) { thisGroup.attr("id", node.id); }
     if (node.labelId) { labelGroup.attr("id", node.labelId); }
@@ -283,16 +318,18 @@ function createNodes(selection, g, shapes) {
     node.height = shapeBBox.height;
   });
 
-  svgNodes.exit().remove();
+  util.applyTransition(svgNodes.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
   return svgNodes;
 }
 
-},{"./d3":8,"./label/add-label":19,"./lodash":21,"./util":26}],8:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],7:[function(require,module,exports){
 // Stub to get D3 either via NPM or from the global object
 module.exports = window.d3;
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /* global window */
 
 var dagre;
@@ -309,7 +346,7 @@ if (!dagre) {
 
 module.exports = dagre;
 
-},{"dagre":28}],10:[function(require,module,exports){
+},{"dagre":27}],9:[function(require,module,exports){
 /* global window */
 
 var graphlib;
@@ -326,7 +363,7 @@ if (!graphlib) {
 
 module.exports = graphlib;
 
-},{"graphlib":58}],11:[function(require,module,exports){
+},{"graphlib":57}],10:[function(require,module,exports){
 module.exports = {
   node: require("./intersect-node"),
   circle: require("./intersect-circle"),
@@ -335,7 +372,7 @@ module.exports = {
   rect: require("./intersect-rect")
 };
 
-},{"./intersect-circle":12,"./intersect-ellipse":13,"./intersect-node":15,"./intersect-polygon":16,"./intersect-rect":17}],12:[function(require,module,exports){
+},{"./intersect-circle":11,"./intersect-ellipse":12,"./intersect-node":14,"./intersect-polygon":15,"./intersect-rect":16}],11:[function(require,module,exports){
 var intersectEllipse = require("./intersect-ellipse");
 
 module.exports = intersectCircle;
@@ -344,7 +381,7 @@ function intersectCircle(node, rx, point) {
   return intersectEllipse(node, rx, rx, point);
 }
 
-},{"./intersect-ellipse":13}],13:[function(require,module,exports){
+},{"./intersect-ellipse":12}],12:[function(require,module,exports){
 module.exports = intersectEllipse;
 
 function intersectEllipse(node, rx, ry, point) {
@@ -371,7 +408,7 @@ function intersectEllipse(node, rx, ry, point) {
 }
 
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = intersectLine;
 
 /*
@@ -443,14 +480,14 @@ function sameSign(r1, r2) {
   return r1 * r2 > 0;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = intersectNode;
 
 function intersectNode(node, point) {
   return node.intersect(point);
 }
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var intersectLine = require("./intersect-line");
 
 module.exports = intersectPolygon;
@@ -507,7 +544,7 @@ function intersectPolygon(node, polyPoints, point) {
   return intersections[0];
 }
 
-},{"./intersect-line":14}],17:[function(require,module,exports){
+},{"./intersect-line":13}],16:[function(require,module,exports){
 module.exports = intersectRect;
 
 function intersectRect(node, point) {
@@ -541,7 +578,7 @@ function intersectRect(node, point) {
   return {x: x + sx, y: y + sy};
 }
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addHtmlLabel;
@@ -586,7 +623,7 @@ function addHtmlLabel(root, node) {
   return fo;
 }
 
-},{"../util":26}],19:[function(require,module,exports){
+},{"../util":25}],18:[function(require,module,exports){
 var addTextLabel = require("./add-text-label"),
     addHtmlLabel = require("./add-html-label");
 
@@ -611,7 +648,7 @@ function addLabel(root, node) {
   return labelSvg;
 }
 
-},{"./add-html-label":18,"./add-text-label":20}],20:[function(require,module,exports){
+},{"./add-html-label":17,"./add-text-label":19}],19:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addTextLabel;
@@ -658,7 +695,7 @@ function processEscapeSequences(text) {
   return newText;
 }
 
-},{"../util":26}],21:[function(require,module,exports){
+},{"../util":25}],20:[function(require,module,exports){
 /* global window */
 
 var lodash;
@@ -675,29 +712,54 @@ if (!lodash) {
 
 module.exports = lodash;
 
-},{"lodash":78}],22:[function(require,module,exports){
+},{"lodash":77}],21:[function(require,module,exports){
+"use strict";
+
+var util = require("./util"),
+    d3 = require("./d3"),
+    _ = require("./lodash");
+
 module.exports = positionEdgeLabels;
 
 function positionEdgeLabels(selection, g) {
-  selection.attr("transform", function(e) {
+  var created = selection.filter(function() { return !d3.select(this).classed("update"); });
+
+  function translate(e) {
     var edge = g.edge(e);
-    if (edge.width && edge.height) {
-      return "translate(" + edge.x + "," + edge.y + ")";
-    }
-  });
+    return _.has(edge, "x") ? "translate(" + edge.x + "," + edge.y + ")" : "";
+  }
+
+  created.attr("transform", translate);
+
+  util.applyTransition(selection, g)
+    .style("opacity", 1)
+    .attr("transform", translate);
 }
 
-},{}],23:[function(require,module,exports){
+},{"./d3":7,"./lodash":20,"./util":25}],22:[function(require,module,exports){
+"use strict";
+
+var util = require("./util"),
+    d3 = require("./d3");
+
 module.exports = positionNodes;
 
 function positionNodes(selection, g) {
-  selection.attr("transform", function(v) {
+  var created = selection.filter(function() { return !d3.select(this).classed("update"); });
+
+  function translate(v) {
     var node = g.node(v);
     return "translate(" + node.x + "," + node.y + ")";
-  });
+  }
+
+  created.attr("transform", translate);
+
+  util.applyTransition(selection, g)
+    .style("opacity", 1)
+    .attr("transform", translate);
 }
 
-},{}],24:[function(require,module,exports){
+},{"./d3":7,"./util":25}],23:[function(require,module,exports){
 var _ = require("./lodash"),
     layout = require("./dagre").layout;
 
@@ -863,7 +925,7 @@ function createOrSelectGroup(root, name) {
   return selection;
 }
 
-},{"./arrows":3,"./create-clusters":4,"./create-edge-labels":5,"./create-edge-paths":6,"./create-nodes":7,"./dagre":9,"./lodash":21,"./position-edge-labels":22,"./position-nodes":23,"./shapes":25}],25:[function(require,module,exports){
+},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":20,"./position-edge-labels":21,"./position-nodes":22,"./shapes":24}],24:[function(require,module,exports){
 "use strict";
 
 var intersectRect = require("./intersect/intersect-rect"),
@@ -922,13 +984,16 @@ function circle(parent, bbox, node) {
   return shapeSvg;
 }
 
-},{"./intersect/intersect-circle":12,"./intersect/intersect-ellipse":13,"./intersect/intersect-rect":17}],26:[function(require,module,exports){
+},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
+var _ = require("./lodash");
+
 // Public utility functions
 module.exports = {
   isSubgraph: isSubgraph,
   edgeToId: edgeToId,
   applyStyle: applyStyle,
-  applyClass: applyClass
+  applyClass: applyClass,
+  applyTransition: applyTransition
 };
 
 /*
@@ -962,10 +1027,23 @@ function applyClass(dom, classFn, otherClasses) {
   }
 }
 
-},{}],27:[function(require,module,exports){
-module.exports = "0.3.1";
+function applyTransition(selection, g) {
+  var graph = g.graph();
 
-},{}],28:[function(require,module,exports){
+  if (_.isPlainObject(graph)) {
+    var transition = graph.transition;
+    if (_.isFunction(transition)) {
+      return transition(selection);
+    }
+  }
+
+  return selection;
+}
+
+},{"./lodash":20}],26:[function(require,module,exports){
+module.exports = "0.3.2";
+
+},{}],27:[function(require,module,exports){
 /*
 Copyright (c) 2012-2014 Chris Pettitt
 
@@ -1000,7 +1078,7 @@ module.exports = {
   version: require("./lib/version")
 };
 
-},{"./lib/debug":33,"./lib/graphlib":34,"./lib/layout":36,"./lib/util":56,"./lib/version":57}],29:[function(require,module,exports){
+},{"./lib/debug":32,"./lib/graphlib":33,"./lib/layout":35,"./lib/util":55,"./lib/version":56}],28:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -1069,7 +1147,7 @@ function undo(g) {
   });
 }
 
-},{"./greedy-fas":35,"./lodash":37}],30:[function(require,module,exports){
+},{"./greedy-fas":34,"./lodash":36}],29:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -1109,7 +1187,7 @@ function addBorderNode(g, prop, prefix, sg, sgNode, rank) {
   }
 }
 
-},{"./lodash":37,"./util":56}],31:[function(require,module,exports){
+},{"./lodash":36,"./util":55}],30:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash");
@@ -1183,7 +1261,7 @@ function swapXYOne(attrs) {
   attrs.y = x;
 }
 
-},{"./lodash":37}],32:[function(require,module,exports){
+},{"./lodash":36}],31:[function(require,module,exports){
 /*
  * Simple doubly linked list implementation derived from Cormen, et al.,
  * "Introduction to Algorithms".
@@ -1241,7 +1319,7 @@ function filterOutLinks(k, v) {
   }
 }
 
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util"),
     Graph = require("./graphlib").Graph;
@@ -1277,9 +1355,9 @@ function debugOrdering(g) {
   return h;
 }
 
-},{"./graphlib":34,"./lodash":37,"./util":56}],34:[function(require,module,exports){
-module.exports=require(10)
-},{"/Users/cpettitt/projects/dagre-d3/lib/graphlib.js":10,"graphlib":58}],35:[function(require,module,exports){
+},{"./graphlib":33,"./lodash":36,"./util":55}],33:[function(require,module,exports){
+module.exports=require(9)
+},{"/Users/cpettitt/projects/dagre-d3/lib/graphlib.js":9,"graphlib":57}],34:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graphlib").Graph,
     List = require("./data/list");
@@ -1399,7 +1477,7 @@ function assignBucket(buckets, zeroIdx, entry) {
   }
 }
 
-},{"./data/list":32,"./graphlib":34,"./lodash":37}],36:[function(require,module,exports){
+},{"./data/list":31,"./graphlib":33,"./lodash":36}],35:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -1793,9 +1871,9 @@ function canonicalize(attrs) {
   return newAttrs;
 }
 
-},{"./acyclic":29,"./add-border-segments":30,"./coordinate-system":31,"./graphlib":34,"./lodash":37,"./nesting-graph":38,"./normalize":39,"./order":44,"./parent-dummy-chains":49,"./position":51,"./rank":53,"./util":56}],37:[function(require,module,exports){
-module.exports=require(21)
-},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":21,"lodash":78}],38:[function(require,module,exports){
+},{"./acyclic":28,"./add-border-segments":29,"./coordinate-system":30,"./graphlib":33,"./lodash":36,"./nesting-graph":37,"./normalize":38,"./order":43,"./parent-dummy-chains":48,"./position":50,"./rank":52,"./util":55}],36:[function(require,module,exports){
+module.exports=require(20)
+},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":20,"lodash":77}],37:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -1929,7 +2007,7 @@ function cleanup(g) {
   });
 }
 
-},{"./lodash":37,"./util":56}],39:[function(require,module,exports){
+},{"./lodash":36,"./util":55}],38:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -2021,7 +2099,7 @@ function undo(g) {
   });
 }
 
-},{"./lodash":37,"./util":56}],40:[function(require,module,exports){
+},{"./lodash":36,"./util":55}],39:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = addSubgraphConstraints;
@@ -2076,7 +2154,7 @@ function addSubgraphConstraints(g, cg, vs) {
   */
 }
 
-},{"../lodash":37}],41:[function(require,module,exports){
+},{"../lodash":36}],40:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = barycenter;
@@ -2106,7 +2184,7 @@ function barycenter(g, movable) {
 }
 
 
-},{"../lodash":37}],42:[function(require,module,exports){
+},{"../lodash":36}],41:[function(require,module,exports){
 var _ = require("../lodash"),
     Graph = require("../graphlib").Graph;
 
@@ -2181,7 +2259,7 @@ function createRootNode(g) {
   return v;
 }
 
-},{"../graphlib":34,"../lodash":37}],43:[function(require,module,exports){
+},{"../graphlib":33,"../lodash":36}],42:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash");
@@ -2253,7 +2331,7 @@ function twoLayerCrossCount(g, northLayer, southLayer) {
   return cc;
 }
 
-},{"../lodash":37}],44:[function(require,module,exports){
+},{"../lodash":36}],43:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -2334,7 +2412,7 @@ function assignOrder(g, layering) {
   });
 }
 
-},{"../graphlib":34,"../lodash":37,"../util":56,"./add-subgraph-constraints":40,"./build-layer-graph":42,"./cross-count":43,"./init-order":45,"./sort-subgraph":47}],45:[function(require,module,exports){
+},{"../graphlib":33,"../lodash":36,"../util":55,"./add-subgraph-constraints":39,"./build-layer-graph":41,"./cross-count":42,"./init-order":44,"./sort-subgraph":46}],44:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash");
@@ -2374,7 +2452,7 @@ function initOrder(g) {
   return layers;
 }
 
-},{"../lodash":37}],46:[function(require,module,exports){
+},{"../lodash":36}],45:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash");
@@ -2499,7 +2577,7 @@ function mergeEntries(target, source) {
   source.merged = true;
 }
 
-},{"../lodash":37}],47:[function(require,module,exports){
+},{"../lodash":36}],46:[function(require,module,exports){
 var _ = require("../lodash"),
     barycenter = require("./barycenter"),
     resolveConflicts = require("./resolve-conflicts"),
@@ -2577,7 +2655,7 @@ function mergeBarycenters(target, other) {
   }
 }
 
-},{"../lodash":37,"./barycenter":41,"./resolve-conflicts":46,"./sort":48}],48:[function(require,module,exports){
+},{"../lodash":36,"./barycenter":40,"./resolve-conflicts":45,"./sort":47}],47:[function(require,module,exports){
 var _ = require("../lodash"),
     util = require("../util");
 
@@ -2636,7 +2714,7 @@ function compareWithBias(bias) {
   };
 }
 
-},{"../lodash":37,"../util":56}],49:[function(require,module,exports){
+},{"../lodash":36,"../util":55}],48:[function(require,module,exports){
 var _ = require("./lodash");
 
 module.exports = parentDummyChains;
@@ -2724,7 +2802,7 @@ function postorder(g) {
   return result;
 }
 
-},{"./lodash":37}],50:[function(require,module,exports){
+},{"./lodash":36}],49:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -3117,7 +3195,7 @@ function width(g, v) {
   return g.node(v).width;
 }
 
-},{"../lodash":37,"../util":56}],51:[function(require,module,exports){
+},{"../lodash":36,"../util":55}],50:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -3149,7 +3227,7 @@ function positionY(g) {
 }
 
 
-},{"../lodash":37,"../util":56,"./bk":50}],52:[function(require,module,exports){
+},{"../lodash":36,"../util":55,"./bk":49}],51:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -3240,7 +3318,7 @@ function shiftRanks(t, g, delta) {
   });
 }
 
-},{"../graphlib":34,"../lodash":37,"./util":55}],53:[function(require,module,exports){
+},{"../graphlib":33,"../lodash":36,"./util":54}],52:[function(require,module,exports){
 "use strict";
 
 var rankUtil = require("./util"),
@@ -3290,7 +3368,7 @@ function networkSimplexRanker(g) {
   networkSimplex(g);
 }
 
-},{"./feasible-tree":52,"./network-simplex":54,"./util":55}],54:[function(require,module,exports){
+},{"./feasible-tree":51,"./network-simplex":53,"./util":54}],53:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -3526,7 +3604,7 @@ function isDescendant(tree, vLabel, rootLabel) {
   return rootLabel.low <= vLabel.lim && vLabel.lim <= rootLabel.lim;
 }
 
-},{"../graphlib":34,"../lodash":37,"../util":56,"./feasible-tree":52,"./util":55}],55:[function(require,module,exports){
+},{"../graphlib":33,"../lodash":36,"../util":55,"./feasible-tree":51,"./util":54}],54:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash");
@@ -3589,7 +3667,7 @@ function slack(g, e) {
   return g.node(e.w).rank - g.node(e.v).rank - g.edge(e).minlen;
 }
 
-},{"../lodash":37}],56:[function(require,module,exports){
+},{"../lodash":36}],55:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -3827,10 +3905,10 @@ function notime(name, fn) {
   return fn();
 }
 
-},{"./graphlib":34,"./lodash":37}],57:[function(require,module,exports){
+},{"./graphlib":33,"./lodash":36}],56:[function(require,module,exports){
 module.exports = "0.6.1";
 
-},{}],58:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /**
  * Copyright (c) 2014, Chris Pettitt
  * All rights reserved.
@@ -3870,7 +3948,7 @@ module.exports = {
   version: lib.version
 };
 
-},{"./lib":74,"./lib/alg":65,"./lib/json":75}],59:[function(require,module,exports){
+},{"./lib":73,"./lib/alg":64,"./lib/json":74}],58:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = components;
@@ -3899,7 +3977,7 @@ function components(g) {
   return cmpts;
 }
 
-},{"../lodash":76}],60:[function(require,module,exports){
+},{"../lodash":75}],59:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = dfs;
@@ -3940,7 +4018,7 @@ function doDfs(g, v, postorder, visited, acc) {
   }
 }
 
-},{"../lodash":76}],61:[function(require,module,exports){
+},{"../lodash":75}],60:[function(require,module,exports){
 var dijkstra = require("./dijkstra"),
     _ = require("../lodash");
 
@@ -3952,7 +4030,7 @@ function dijkstraAll(g, weightFunc, edgeFunc) {
   }, {});
 }
 
-},{"../lodash":76,"./dijkstra":62}],62:[function(require,module,exports){
+},{"../lodash":75,"./dijkstra":61}],61:[function(require,module,exports){
 var _ = require("../lodash"),
     PriorityQueue = require("../data/priority-queue");
 
@@ -4008,7 +4086,7 @@ function runDijkstra(g, source, weightFn, edgeFn) {
   return results;
 }
 
-},{"../data/priority-queue":72,"../lodash":76}],63:[function(require,module,exports){
+},{"../data/priority-queue":71,"../lodash":75}],62:[function(require,module,exports){
 var _ = require("../lodash"),
     tarjan = require("./tarjan");
 
@@ -4018,7 +4096,7 @@ function findCycles(g) {
   return _.filter(tarjan(g), function(cmpt) { return cmpt.length > 1; });
 }
 
-},{"../lodash":76,"./tarjan":70}],64:[function(require,module,exports){
+},{"../lodash":75,"./tarjan":69}],63:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = floydWarshall;
@@ -4070,7 +4148,7 @@ function runFloydWarshall(g, weightFn, edgeFn) {
   return results;
 }
 
-},{"../lodash":76}],65:[function(require,module,exports){
+},{"../lodash":75}],64:[function(require,module,exports){
 module.exports = {
   components: require("./components"),
   dijkstra: require("./dijkstra"),
@@ -4085,7 +4163,7 @@ module.exports = {
   topsort: require("./topsort")
 };
 
-},{"./components":59,"./dijkstra":62,"./dijkstra-all":61,"./find-cycles":63,"./floyd-warshall":64,"./is-acyclic":66,"./postorder":67,"./preorder":68,"./prim":69,"./tarjan":70,"./topsort":71}],66:[function(require,module,exports){
+},{"./components":58,"./dijkstra":61,"./dijkstra-all":60,"./find-cycles":62,"./floyd-warshall":63,"./is-acyclic":65,"./postorder":66,"./preorder":67,"./prim":68,"./tarjan":69,"./topsort":70}],65:[function(require,module,exports){
 var topsort = require("./topsort");
 
 module.exports = isAcyclic;
@@ -4102,7 +4180,7 @@ function isAcyclic(g) {
   return true;
 }
 
-},{"./topsort":71}],67:[function(require,module,exports){
+},{"./topsort":70}],66:[function(require,module,exports){
 var dfs = require("./dfs");
 
 module.exports = postorder;
@@ -4111,7 +4189,7 @@ function postorder(g, vs) {
   return dfs(g, vs, "post");
 }
 
-},{"./dfs":60}],68:[function(require,module,exports){
+},{"./dfs":59}],67:[function(require,module,exports){
 var dfs = require("./dfs");
 
 module.exports = preorder;
@@ -4120,7 +4198,7 @@ function preorder(g, vs) {
   return dfs(g, vs, "pre");
 }
 
-},{"./dfs":60}],69:[function(require,module,exports){
+},{"./dfs":59}],68:[function(require,module,exports){
 var _ = require("../lodash"),
     Graph = require("../graph"),
     PriorityQueue = require("../data/priority-queue");
@@ -4174,7 +4252,7 @@ function prim(g, weightFunc) {
   return result;
 }
 
-},{"../data/priority-queue":72,"../graph":73,"../lodash":76}],70:[function(require,module,exports){
+},{"../data/priority-queue":71,"../graph":72,"../lodash":75}],69:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = tarjan;
@@ -4223,7 +4301,7 @@ function tarjan(g) {
   return results;
 }
 
-},{"../lodash":76}],71:[function(require,module,exports){
+},{"../lodash":75}],70:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = topsort;
@@ -4259,7 +4337,7 @@ function topsort(g) {
 
 function CycleException() {}
 
-},{"../lodash":76}],72:[function(require,module,exports){
+},{"../lodash":75}],71:[function(require,module,exports){
 var _ = require("../lodash");
 
 module.exports = PriorityQueue;
@@ -4413,7 +4491,7 @@ PriorityQueue.prototype._swap = function(i, j) {
   keyIndices[origArrI.key] = j;
 };
 
-},{"../lodash":76}],73:[function(require,module,exports){
+},{"../lodash":75}],72:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash");
@@ -4874,14 +4952,14 @@ function edgeObjToId(isDirected, edgeObj) {
   return edgeArgsToId(isDirected, edgeObj.v, edgeObj.w, edgeObj.name);
 }
 
-},{"./lodash":76}],74:[function(require,module,exports){
+},{"./lodash":75}],73:[function(require,module,exports){
 // Includes only the "core" of graphlib
 module.exports = {
   Graph: require("./graph"),
   version: require("./version")
 };
 
-},{"./graph":73,"./version":77}],75:[function(require,module,exports){
+},{"./graph":72,"./version":76}],74:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graph");
 
@@ -4949,12 +5027,12 @@ function read(json) {
   return g;
 }
 
-},{"./graph":73,"./lodash":76}],76:[function(require,module,exports){
-module.exports=require(21)
-},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":21,"lodash":78}],77:[function(require,module,exports){
+},{"./graph":72,"./lodash":75}],75:[function(require,module,exports){
+module.exports=require(20)
+},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":20,"lodash":77}],76:[function(require,module,exports){
 module.exports = '0.9.1';
 
-},{}],78:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -11743,4 +11821,5 @@ module.exports = '0.9.1';
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[1]);
+},{}]},{},[1])(1)
+});

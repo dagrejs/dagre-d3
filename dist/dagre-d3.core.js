@@ -1,31 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-/**
- * @license
- * Copyright (c) 2012-2014 Chris Pettitt
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-global.dagreD3 = require("./index");
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./index":2}],2:[function(require,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.dagreD3=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @license
  * Copyright (c) 2012-2013 Chris Pettitt
@@ -57,7 +30,7 @@ module.exports =  {
   version: require("./lib/version")
 };
 
-},{"./lib/dagre":9,"./lib/graphlib":10,"./lib/intersect":11,"./lib/render":24,"./lib/util":26,"./lib/version":27}],3:[function(require,module,exports){
+},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":23,"./lib/util":25,"./lib/version":26}],2:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = {
@@ -102,7 +75,7 @@ function vee(parent, id, edge, type) {
   util.applyStyle(path, edge[type + "Style"]);
 }
 
-},{"./util":26}],4:[function(require,module,exports){
+},{"./util":25}],3:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = createClusters;
@@ -114,11 +87,17 @@ function createClusters(selection, g) {
 
   svgClusters.enter()
     .append("g")
-    .attr("class", "cluster")
-    .append("rect");
-  svgClusters.exit().remove();
+      .attr("class", "cluster")
+      .style("opacity", 0)
+      .append("rect");
+  util.applyTransition(svgClusters.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
-  svgClusters.selectAll("rect")
+  util.applyTransition(svgClusters, g)
+    .style("opacity", 1);
+
+  util.applyTransition(svgClusters.selectAll("rect"), g)
     .attr("width", function(v) { return g.node(v).width; })
     .attr("height", function(v) { return g.node(v).height; })
     .attr("x", function(v) {
@@ -131,7 +110,7 @@ function createClusters(selection, g) {
     });
 }
 
-},{"./util":26}],5:[function(require,module,exports){
+},{"./util":25}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -147,7 +126,10 @@ function createEdgeLabels(selection, g) {
     .classed("update", true);
 
   svgEdgeLabels.selectAll("*").remove();
-  svgEdgeLabels.enter().append("g").classed("edgeLabel", true);
+  svgEdgeLabels.enter()
+    .append("g")
+      .classed("edgeLabel", true)
+      .style("opacity", 0);
   svgEdgeLabels.each(function(e) {
     var edge = g.edge(e),
         label = addLabel(d3.select(this), g.edge(e), 0, 0).classed("label", true),
@@ -158,12 +140,14 @@ function createEdgeLabels(selection, g) {
     if (!_.has(edge, "height")) { edge.height = bbox.height; }
   });
 
-  svgEdgeLabels.exit().remove();
+  util.applyTransition(svgEdgeLabels.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
   return svgEdgeLabels;
 }
 
-},{"./d3":8,"./label/add-label":19,"./lodash":21,"./util":26}],6:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],5:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -178,35 +162,11 @@ function createEdgePaths(selection, g, arrows) {
     .data(g.edges(), function(e) { return util.edgeToId(e); })
     .classed("update", true);
 
-  var svgPathsEnter = svgPaths.enter()
-    .append("g")
-    .attr("class", "edgePath");
-  svgPathsEnter.append("path").attr("class", "path");
-  svgPathsEnter.append("defs");
-  svgPaths.exit().remove();
+  enter(svgPaths, g);
+  exit(svgPaths, g);
 
-  function calcPoints(e) {
-    var edge = g.edge(e),
-        tail = g.node(e.v),
-        head = g.node(e.w),
-        points = edge.points.slice(1, edge.points.length - 1);
-    points.unshift(intersectNode(tail, points[0]));
-    points.push(intersectNode(head, points[points.length - 1]));
-
-    var line = d3.svg.line()
-      .x(function(d) { return d.x; })
-      .y(function(d) { return d.y; });
-
-    if (_.has(edge, "lineInterpolate")) {
-      line.interpolate(edge.lineInterpolate);
-    }
-
-    if (_.has(edge, "lineTension")) {
-      line.tension(Number(edge.lineTension));
-    }
-
-    return line(points);
-  }
+  util.applyTransition(svgPaths, g)
+    .style("opacity", 1);
 
   svgPaths.selectAll("path.path")
     .each(function(e) {
@@ -214,11 +174,14 @@ function createEdgePaths(selection, g, arrows) {
       edge.arrowheadId = _.uniqueId("arrowhead");
 
       var domEdge = d3.select(this)
-        .attr("d", calcPoints)
         .attr("marker-end", function() {
           return "url(#" + edge.arrowheadId + ")";
         })
         .style("fill", "none");
+
+      util.applyTransition(domEdge, g)
+        .attr("d", function(e) { return calcPoints(g, e); });
+
       if (edge.id) { domEdge.attr("id", edge.id); }
       util.applyStyle(domEdge, edge.style);
     });
@@ -234,7 +197,76 @@ function createEdgePaths(selection, g, arrows) {
   return svgPaths;
 }
 
-},{"./d3":8,"./intersect/intersect-node":15,"./lodash":21,"./util":26}],7:[function(require,module,exports){
+function calcPoints(g, e) {
+  var edge = g.edge(e),
+      tail = g.node(e.v),
+      head = g.node(e.w),
+      points = edge.points.slice(1, edge.points.length - 1);
+  points.unshift(intersectNode(tail, points[0]));
+  points.push(intersectNode(head, points[points.length - 1]));
+
+  return createLine(edge, points);
+}
+
+function createLine(edge, points) {
+  var line = d3.svg.line()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; });
+
+  if (_.has(edge, "lineInterpolate")) {
+    line.interpolate(edge.lineInterpolate);
+  }
+
+  if (_.has(edge, "lineTension")) {
+    line.tension(Number(edge.lineTension));
+  }
+
+  return line(points);
+}
+
+function getCoords(elem) {
+  var bbox = elem.getBBox(),
+      matrix = elem.getTransformToElement(elem.ownerSVGElement)
+        .translate(bbox.width / 2, bbox.height / 2);
+  return { x: matrix.e, y: matrix.f };
+}
+
+function enter(svgPaths, g) {
+  var svgPathsEnter = svgPaths.enter()
+    .append("g")
+      .attr("class", "edgePath")
+      .style("opacity", 0);
+  svgPathsEnter.append("path")
+    .attr("class", "path")
+    .attr("d", function(e) {
+      var edge = g.edge(e),
+          sourceElem = g.node(e.v).elem,
+          points = _.range(edge.points.length).map(function() { return getCoords(sourceElem); });
+      return createLine(edge, points);
+    });
+  svgPathsEnter.append("defs");
+}
+
+function exit(svgPaths, g) {
+  var svgPathExit = svgPaths.exit();
+  util.applyTransition(svgPathExit, g)
+    .style("opacity", 0)
+    .remove();
+
+  util.applyTransition(svgPathExit.select("path.path"), g)
+    .attr("d", function(e) {
+      var source = g.node(e.v);
+
+      if (source) {
+        var points = _.range(this.pathSegList.length).map(function() { return source; });
+        return createLine({}, points);
+      } else {
+        return d3.select(this).attr("d");
+      }
+    });
+}
+
+},{"./d3":7,"./intersect/intersect-node":14,"./lodash":20,"./util":25}],6:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -253,7 +285,8 @@ function createNodes(selection, g, shapes) {
   svgNodes.selectAll("*").remove();
   svgNodes.enter()
     .append("g")
-    .attr("class", "node");
+      .attr("class", "node")
+      .style("opacity", 0);
   svgNodes.each(function(v) {
     var node = g.node(v),
         thisGroup = d3.select(this),
@@ -261,6 +294,8 @@ function createNodes(selection, g, shapes) {
         labelDom = addLabel(labelGroup, node),
         shape = shapes[node.shape],
         bbox = labelDom.node().getBBox();
+
+    node.elem = this;
 
     if (node.id) { thisGroup.attr("id", node.id); }
     if (node.labelId) { labelGroup.attr("id", node.labelId); }
@@ -283,16 +318,18 @@ function createNodes(selection, g, shapes) {
     node.height = shapeBBox.height;
   });
 
-  svgNodes.exit().remove();
+  util.applyTransition(svgNodes.exit(), g)
+    .style("opacity", 0)
+    .remove();
 
   return svgNodes;
 }
 
-},{"./d3":8,"./label/add-label":19,"./lodash":21,"./util":26}],8:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],7:[function(require,module,exports){
 // Stub to get D3 either via NPM or from the global object
 module.exports = window.d3;
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /* global window */
 
 var dagre;
@@ -309,7 +346,7 @@ if (!dagre) {
 
 module.exports = dagre;
 
-},{"dagre":undefined}],10:[function(require,module,exports){
+},{"dagre":undefined}],9:[function(require,module,exports){
 /* global window */
 
 var graphlib;
@@ -326,7 +363,7 @@ if (!graphlib) {
 
 module.exports = graphlib;
 
-},{"graphlib":undefined}],11:[function(require,module,exports){
+},{"graphlib":undefined}],10:[function(require,module,exports){
 module.exports = {
   node: require("./intersect-node"),
   circle: require("./intersect-circle"),
@@ -335,7 +372,7 @@ module.exports = {
   rect: require("./intersect-rect")
 };
 
-},{"./intersect-circle":12,"./intersect-ellipse":13,"./intersect-node":15,"./intersect-polygon":16,"./intersect-rect":17}],12:[function(require,module,exports){
+},{"./intersect-circle":11,"./intersect-ellipse":12,"./intersect-node":14,"./intersect-polygon":15,"./intersect-rect":16}],11:[function(require,module,exports){
 var intersectEllipse = require("./intersect-ellipse");
 
 module.exports = intersectCircle;
@@ -344,7 +381,7 @@ function intersectCircle(node, rx, point) {
   return intersectEllipse(node, rx, rx, point);
 }
 
-},{"./intersect-ellipse":13}],13:[function(require,module,exports){
+},{"./intersect-ellipse":12}],12:[function(require,module,exports){
 module.exports = intersectEllipse;
 
 function intersectEllipse(node, rx, ry, point) {
@@ -371,7 +408,7 @@ function intersectEllipse(node, rx, ry, point) {
 }
 
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = intersectLine;
 
 /*
@@ -443,14 +480,14 @@ function sameSign(r1, r2) {
   return r1 * r2 > 0;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = intersectNode;
 
 function intersectNode(node, point) {
   return node.intersect(point);
 }
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var intersectLine = require("./intersect-line");
 
 module.exports = intersectPolygon;
@@ -507,7 +544,7 @@ function intersectPolygon(node, polyPoints, point) {
   return intersections[0];
 }
 
-},{"./intersect-line":14}],17:[function(require,module,exports){
+},{"./intersect-line":13}],16:[function(require,module,exports){
 module.exports = intersectRect;
 
 function intersectRect(node, point) {
@@ -541,7 +578,7 @@ function intersectRect(node, point) {
   return {x: x + sx, y: y + sy};
 }
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addHtmlLabel;
@@ -586,7 +623,7 @@ function addHtmlLabel(root, node) {
   return fo;
 }
 
-},{"../util":26}],19:[function(require,module,exports){
+},{"../util":25}],18:[function(require,module,exports){
 var addTextLabel = require("./add-text-label"),
     addHtmlLabel = require("./add-html-label");
 
@@ -611,7 +648,7 @@ function addLabel(root, node) {
   return labelSvg;
 }
 
-},{"./add-html-label":18,"./add-text-label":20}],20:[function(require,module,exports){
+},{"./add-html-label":17,"./add-text-label":19}],19:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addTextLabel;
@@ -658,7 +695,7 @@ function processEscapeSequences(text) {
   return newText;
 }
 
-},{"../util":26}],21:[function(require,module,exports){
+},{"../util":25}],20:[function(require,module,exports){
 /* global window */
 
 var lodash;
@@ -675,29 +712,54 @@ if (!lodash) {
 
 module.exports = lodash;
 
-},{"lodash":undefined}],22:[function(require,module,exports){
+},{"lodash":undefined}],21:[function(require,module,exports){
+"use strict";
+
+var util = require("./util"),
+    d3 = require("./d3"),
+    _ = require("./lodash");
+
 module.exports = positionEdgeLabels;
 
 function positionEdgeLabels(selection, g) {
-  selection.attr("transform", function(e) {
+  var created = selection.filter(function() { return !d3.select(this).classed("update"); });
+
+  function translate(e) {
     var edge = g.edge(e);
-    if (edge.width && edge.height) {
-      return "translate(" + edge.x + "," + edge.y + ")";
-    }
-  });
+    return _.has(edge, "x") ? "translate(" + edge.x + "," + edge.y + ")" : "";
+  }
+
+  created.attr("transform", translate);
+
+  util.applyTransition(selection, g)
+    .style("opacity", 1)
+    .attr("transform", translate);
 }
 
-},{}],23:[function(require,module,exports){
+},{"./d3":7,"./lodash":20,"./util":25}],22:[function(require,module,exports){
+"use strict";
+
+var util = require("./util"),
+    d3 = require("./d3");
+
 module.exports = positionNodes;
 
 function positionNodes(selection, g) {
-  selection.attr("transform", function(v) {
+  var created = selection.filter(function() { return !d3.select(this).classed("update"); });
+
+  function translate(v) {
     var node = g.node(v);
     return "translate(" + node.x + "," + node.y + ")";
-  });
+  }
+
+  created.attr("transform", translate);
+
+  util.applyTransition(selection, g)
+    .style("opacity", 1)
+    .attr("transform", translate);
 }
 
-},{}],24:[function(require,module,exports){
+},{"./d3":7,"./util":25}],23:[function(require,module,exports){
 var _ = require("./lodash"),
     layout = require("./dagre").layout;
 
@@ -863,7 +925,7 @@ function createOrSelectGroup(root, name) {
   return selection;
 }
 
-},{"./arrows":3,"./create-clusters":4,"./create-edge-labels":5,"./create-edge-paths":6,"./create-nodes":7,"./dagre":9,"./lodash":21,"./position-edge-labels":22,"./position-nodes":23,"./shapes":25}],25:[function(require,module,exports){
+},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":20,"./position-edge-labels":21,"./position-nodes":22,"./shapes":24}],24:[function(require,module,exports){
 "use strict";
 
 var intersectRect = require("./intersect/intersect-rect"),
@@ -922,13 +984,16 @@ function circle(parent, bbox, node) {
   return shapeSvg;
 }
 
-},{"./intersect/intersect-circle":12,"./intersect/intersect-ellipse":13,"./intersect/intersect-rect":17}],26:[function(require,module,exports){
+},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
+var _ = require("./lodash");
+
 // Public utility functions
 module.exports = {
   isSubgraph: isSubgraph,
   edgeToId: edgeToId,
   applyStyle: applyStyle,
-  applyClass: applyClass
+  applyClass: applyClass,
+  applyTransition: applyTransition
 };
 
 /*
@@ -962,7 +1027,21 @@ function applyClass(dom, classFn, otherClasses) {
   }
 }
 
-},{}],27:[function(require,module,exports){
-module.exports = "0.3.1";
+function applyTransition(selection, g) {
+  var graph = g.graph();
 
-},{}]},{},[1]);
+  if (_.isPlainObject(graph)) {
+    var transition = graph.transition;
+    if (_.isFunction(transition)) {
+      return transition(selection);
+    }
+  }
+
+  return selection;
+}
+
+},{"./lodash":20}],26:[function(require,module,exports){
+module.exports = "0.3.2";
+
+},{}]},{},[1])(1)
+});
