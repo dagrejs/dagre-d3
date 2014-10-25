@@ -20,7 +20,6 @@ echo Attemping to publish version: $VERSION
 
 # Preflight checks
 [ -z "`git tag -l v$VERSION`"] || bail "Version already published. Skipping publish."
-[ -n "`grep v$VERSION CHANGELOG.md`" ] || bail "ERROR: No entry for v$VERSION in CHANGELOG.md"
 [ "`git rev-parse HEAD`" = "`git rev-parse master`" ] || bail "ERROR: You must release from the master branch"
 [ -z "`git status --porcelain`" ] || bail "ERROR: Dirty index on working tree. Use git status to check"
 
