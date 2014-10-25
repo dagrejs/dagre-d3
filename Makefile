@@ -52,16 +52,18 @@ demo-test: test/demo-test.js $(SRC_FILES) node_modules
 bower.json: package.json src/release/make-bower.json.js
 	src/release/make-bower.json.js > $@
 
-$(BUILD_DIR)/$(MOD).js: browser.js $(SRC_FILES) $(BUILD_DIR) | lint
+$(BUILD_DIR)/$(MOD).js: index.js $(SRC_FILES) $(BUILD_DIR) | lint
 	$(BROWSERIFY) $(BROWSERIFY_OPTS) $< > $@ \
 		-x node_modules/d3/index.js \
-		-x node_modules/d3/d3.js
+		-x node_modules/d3/d3.js \
+		-s dagreD3
 
 $(BUILD_DIR)/$(MOD).min.js: $(BUILD_DIR)/$(MOD).js
 	@$(UGLIFY) $< --comments '@license' > $@
 
-$(BUILD_DIR)/$(MOD).core.js: browser.js $(SRC_FILES) $(BUILD_DIR) | lint
-	@$(BROWSERIFY) $< > $@ --no-bundle-external
+$(BUILD_DIR)/$(MOD).core.js: index.js $(SRC_FILES) $(BUILD_DIR) | lint
+	@$(BROWSERIFY) $< > $@ --no-bundle-external \
+		-s dagreD3
 
 $(BUILD_DIR)/$(MOD).core.min.js: $(BUILD_DIR)/$(MOD).core.js
 	@$(UGLIFY) $< --comments '@license' > $@
