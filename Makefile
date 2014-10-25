@@ -38,7 +38,7 @@ $(DIRS):
 
 test: lint browser-test demo-test
 
-lint: browser.js $(SRC_FILES) $(TEST_FILES)
+lint: index.js $(SRC_FILES) $(TEST_FILES)
 	@$(JSHINT) $(JSHINT_OPTS) $?
 	@$(JSCS) $?
 
