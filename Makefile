@@ -47,7 +47,7 @@ browser-test: $(BUILD_DIR)/$(MOD).js $(BUILD_DIR)/$(MOD).core.js
 	$(KARMA) start karma.core.conf.js --single-run $(KARMA_OPTS)
 
 demo-test: test/demo-test.js $(SRC_FILES) node_modules
-	#$(PHANTOMJS) $<
+	$(PHANTOMJS) $<
 
 bower.json: package.json src/release/make-bower.json.js
 	src/release/make-bower.json.js > $@

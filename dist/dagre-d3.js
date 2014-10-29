@@ -1041,7 +1041,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.3.2";
+module.exports = "0.3.3-pre";
 
 },{}],27:[function(require,module,exports){
 /*
@@ -3906,7 +3906,7 @@ function notime(name, fn) {
 }
 
 },{"./graphlib":33,"./lodash":36}],56:[function(require,module,exports){
-module.exports = "0.6.1";
+module.exports = "0.6.2";
 
 },{}],57:[function(require,module,exports){
 /**
@@ -4798,14 +4798,9 @@ Graph.prototype.setPath = function(vs, value) {
  * setEdge(v, w, [value, [name]])
  * setEdge({ v, w, [name] }, [value])
  */
-Graph.prototype.setEdge = function(v, w, value, name) {
-  var valueSpecified = arguments.length > 2;
-
-  v = String(v);
-  w = String(w);
-  if (!_.isUndefined(name)) {
-    name = String(name);
-  }
+Graph.prototype.setEdge = function() {
+  var v, w, name, value,
+      valueSpecified = false;
 
   if (_.isPlainObject(arguments[0])) {
     v = arguments[0].v;
@@ -4815,6 +4810,20 @@ Graph.prototype.setEdge = function(v, w, value, name) {
       value = arguments[1];
       valueSpecified = true;
     }
+  } else {
+    v = arguments[0];
+    w = arguments[1];
+    name = arguments[3];
+    if (arguments.length > 2) {
+      value = arguments[2];
+      valueSpecified = true;
+    }
+  }
+
+  v = "" + v;
+  w = "" + w;
+  if (!_.isUndefined(name)) {
+    name = "" + name;
   }
 
   var e = edgeArgsToId(this._isDirected, v, w, name);
@@ -5030,7 +5039,7 @@ function read(json) {
 },{"./graph":72,"./lodash":75}],75:[function(require,module,exports){
 module.exports=require(20)
 },{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":20,"lodash":77}],76:[function(require,module,exports){
-module.exports = '0.9.1';
+module.exports = '1.0.1';
 
 },{}],77:[function(require,module,exports){
 (function (global){
