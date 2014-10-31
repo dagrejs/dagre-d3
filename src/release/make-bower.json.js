@@ -16,6 +16,7 @@ var template = {
     "browser.js",
     "dist/" + packageJson.name + ".js",
     "dist/" + packageJson.name + ".min.js",
+    "dist/demo/**",
     "index.js",
     "karma*",
     "lib/**",
