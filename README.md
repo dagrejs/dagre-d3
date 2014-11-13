@@ -2,8 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/cpettitt/dagre-d3.png?branch=master)](http://travis-ci.org/cpettitt/dagre-d3)
 
-Dagre is a JavaScript library that makes it easy to lay out directed graphs on
-the client-side. The dagre-d3 library acts as a front-end to dagre, providding
+[Dagre](https://github.com/cpettitt/dagre) is a JavaScript library that makes it easy to lay out directed graphs on
+the client-side. The dagre-d3 library acts as a front-end to dagre, providing
 actual rendering using [D3](http://d3js.org).
 
 For more details, including examples and configuration options, please see our
