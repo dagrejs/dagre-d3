@@ -66,6 +66,9 @@ describe("dagreD3", function() {
       dagreD3.render()(svg, g);
 
       expect(d3.select("#ab").datum()).eqls({ v: "a", w: "b" });
+
+      // We should also be able to get to the element from the edge object.
+      expect(g.edge("a", "b").elem).to.equal(d3.select("#ab").node().parentNode);
     });
 
     it("are created for each edge label", function() {
