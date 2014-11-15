@@ -44,6 +44,10 @@ describe("dagreD3", function() {
 
       expect(d3.select("#a").datum()).to.equal("a");
       expect(d3.select("#b").datum()).to.equal("b");
+
+      // We should also be able to get to the element from the node object.
+      expect(g.node("a").elem).to.equal(d3.select("#a").node());
+      expect(g.node("b").elem).to.equal(d3.select("#b").node());
     });
 
     it("are created for each node label", function() {
