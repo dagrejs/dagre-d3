@@ -49,6 +49,8 @@ g.setNode("B", { labelStyle: "font-weight: bold" });
 // Double the size of the font for node "C"
 g.setNode("C", { labelStyle: "font-size: 2em" });
 
+g.setNode("D", {});
+
 // Make the edge from "A" to "B" red, thick, and dashed
 g.setEdge("A", "B", {
   style: "stroke: #f66; stroke-width: 3px; stroke-dasharray: 5, 5;",
@@ -59,6 +61,13 @@ g.setEdge("A", "B", {
 g.setEdge("C", "B", {
   label: "A to C",
   labelStyle: "font-style: italic; text-decoration: underline;"
+});
+
+// Make the edge between A and D smoother. 
+// see available options for lineInterpolate here: https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate
+g.setEdge("A", "D", {
+  label: "line interpolation different",
+  lineInterpolate: 'basis' 
 });
 
 // Create the renderer
