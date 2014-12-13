@@ -293,7 +293,7 @@ function createNodes(selection, g, shapes) {
         labelGroup = thisGroup.append("g").attr("class", "label"),
         labelDom = addLabel(labelGroup, node),
         shape = shapes[node.shape],
-        bbox = labelDom.node().getBBox();
+        bbox = _.pick(labelDom.node().getBBox(), "width", "height");
 
     node.elem = this;
 
@@ -1041,7 +1041,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.3.3-pre";
+module.exports = "0.3.3";
 
 },{}],27:[function(require,module,exports){
 /*
@@ -3906,7 +3906,7 @@ function notime(name, fn) {
 }
 
 },{"./graphlib":33,"./lodash":36}],56:[function(require,module,exports){
-module.exports = "0.6.2";
+module.exports = "0.6.3";
 
 },{}],57:[function(require,module,exports){
 /**
