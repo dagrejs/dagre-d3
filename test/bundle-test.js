@@ -71,6 +71,19 @@ describe("dagreD3", function() {
       expect(g.edge("a", "b").elem).to.equal(d3.select("#ab").node());
     });
 
+    it("preserve link to the elem even after re-rendering", function() {
+      g.setNode("a", {});
+      g.setNode("b", {});
+      g.setEdge("a", "b", { id: "ab" });
+      dagreD3.render()(svg, g);
+
+      // Remove elem from edge object and re-render
+      g.setEdge("a", "b", { id: "ab" });
+      dagreD3.render()(svg, g);
+
+      expect(g.edge("a", "b").elem).to.equal(d3.select("#ab").node());
+    });
+
     it("are created for each edge label", function() {
       g.setNode("a", {});
       g.setNode("b", {});
