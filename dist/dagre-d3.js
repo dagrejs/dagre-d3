@@ -168,6 +168,15 @@ function createEdgePaths(selection, g, arrows) {
   util.applyTransition(svgPaths, g)
     .style("opacity", 1);
 
+  // Save DOM element in the path group, and set ID
+  svgPaths.each(function(e) {
+    var edge = g.edge(e);
+    edge.elem = this;
+    if (edge.id) {
+      d3.select(this).attr("id", edge.id);
+    }
+  });
+
   svgPaths.selectAll("path.path")
     .each(function(e) {
       var edge = g.edge(e);
@@ -182,7 +191,6 @@ function createEdgePaths(selection, g, arrows) {
       util.applyTransition(domEdge, g)
         .attr("d", function(e) { return calcPoints(g, e); });
 
-      if (edge.id) { domEdge.attr("id", edge.id); }
       util.applyStyle(domEdge, edge.style);
     });
 
@@ -299,7 +307,8 @@ function createNodes(selection, g, shapes) {
 
     if (node.id) { thisGroup.attr("id", node.id); }
     if (node.labelId) { labelGroup.attr("id", node.labelId); }
-    util.applyClass(thisGroup, node.class, (thisGroup.classed("update") ? "update " : "") + "node");
+    util.applyClass(thisGroup, node["class"],
+      (thisGroup.classed("update") ? "update " : "") + "node");
 
     if (_.has(node, "width")) { bbox.width = node.width; }
     if (_.has(node, "height")) { bbox.height = node.height; }
@@ -1041,7 +1050,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.3.3";
+module.exports = "0.4.0";
 
 },{}],27:[function(require,module,exports){
 /*
@@ -1428,7 +1437,7 @@ function removeNode(g, buckets, zeroIdx, entry, collectPredecessors) {
     var weight = g.edge(edge),
         w = edge.w,
         wEntry = g.node(w);
-    wEntry.in -= weight;
+    wEntry["in"] -= weight;
     assignBucket(buckets, zeroIdx, wEntry);
   });
 
@@ -1443,7 +1452,7 @@ function buildState(g, weightFn) {
       maxOut = 0;
 
   _.each(g.nodes(), function(v) {
-    fasGraph.setNode(v, { v: v, in: 0, out: 0 });
+    fasGraph.setNode(v, { v: v, "in": 0, out: 0 });
   });
 
   // Aggregate weights on nodes, but also sum the weights across multi-edges
@@ -1454,7 +1463,7 @@ function buildState(g, weightFn) {
         edgeWeight = prevWeight + weight;
     fasGraph.setEdge(e.v, e.w, edgeWeight);
     maxOut = Math.max(maxOut, fasGraph.node(e.v).out += weight);
-    maxIn  = Math.max(maxIn,  fasGraph.node(e.w).in  += weight);
+    maxIn  = Math.max(maxIn,  fasGraph.node(e.w)["in"]  += weight);
   });
 
   var buckets = _.range(maxOut + maxIn + 3).map(function() { return new List(); });
@@ -1470,10 +1479,10 @@ function buildState(g, weightFn) {
 function assignBucket(buckets, zeroIdx, entry) {
   if (!entry.out) {
     buckets[0].enqueue(entry);
-  } else if (!entry.in) {
+  } else if (!entry["in"]) {
     buckets[buckets.length - 1].enqueue(entry);
   } else {
-    buckets[entry.out - entry.in + zeroIdx].enqueue(entry);
+    buckets[entry.out - entry["in"] + zeroIdx].enqueue(entry);
   }
 }
 
@@ -2489,7 +2498,7 @@ function resolveConflicts(entries, cg) {
   _.each(entries, function(entry, i) {
     var tmp = mappedEntries[entry.v] = {
       indegree: 0,
-      in: [],
+      "in": [],
       out: [],
       vs: [entry.v],
       i: i
@@ -2534,7 +2543,7 @@ function doResolveConflicts(sourceSet) {
 
   function handleOut(vEntry) {
     return function(wEntry) {
-      wEntry.in.push(vEntry);
+      wEntry["in"].push(vEntry);
       if (--wEntry.indegree === 0) {
         sourceSet.push(wEntry);
       }
@@ -2544,7 +2553,7 @@ function doResolveConflicts(sourceSet) {
   while (sourceSet.length) {
     var entry = sourceSet.pop();
     entries.push(entry);
-    _.each(entry.in.reverse(), handleIn(entry));
+    _.each(entry["in"].reverse(), handleIn(entry));
     _.each(entry.out, handleOut(entry));
   }
 
@@ -2806,6 +2815,7 @@ function postorder(g) {
 "use strict";
 
 var _ = require("../lodash"),
+    Graph = require("../graphlib").Graph,
     util = require("../util");
 
 /*
@@ -3009,66 +3019,71 @@ function verticalAlignment(g, layering, conflicts, neighborFn) {
 }
 
 function horizontalCompaction(g, layering, root, align, reverseSep) {
-  // We use local variables for these parameters instead of manipulating the
-  // graph because it becomes more verbose to access them in a chained manner.
-  var shift = {},
-      sink = {},
-      xs = {},
-      pred = {},
-      graphLabel = g.graph(),
-      sepFn = sep(graphLabel.nodesep, graphLabel.edgesep, reverseSep);
+  // This portion of the algorithm differs from BK due to a number of problems.
+  // Instead of their algorithm we construct a new block graph and do two
+  // sweeps. The first sweep places blocks with the smallest possible
+  // coordinates. The second sweep removes unused space by moving blocks to the
+  // greatest coordinates without violating separation.
+  var xs = {},
+      blockG = buildBlockGraph(g, layering, root, reverseSep);
 
-  _.each(layering, function(layer) {
-    _.each(layer, function(v, order) {
-      sink[v] = v;
-      shift[v] = Number.POSITIVE_INFINITY;
-      pred[v] = layer[order - 1];
-    });
-  });
-
-  _.each(g.nodes(), function(v) {
-    if (root[v] === v) {
-      placeBlock(g, layering, sepFn, root, align, shift, sink, pred, xs, v);
+  // First pass, assign smallest coordinates via DFS
+  var visited = {};
+  function pass1(v) {
+    if (!_.has(visited, v)) {
+      visited[v] = true;
+      xs[v] = _.reduce(blockG.inEdges(v), function(max, e) {
+        pass1(e.v);
+        return Math.max(max, xs[e.v] + blockG.edge(e));
+      }, 0);
     }
-  });
+  }
+  _.each(blockG.nodes(), pass1);
 
-  _.each(layering, function(layer) {
-    _.each(layer, function(v) {
-      xs[v] = xs[root[v]];
-      // This line differs from the source paper. See
-      // http://www.inf.uni-konstanz.de/~brandes/publications/ for details.
-      if (v === root[v] && shift[sink[root[v]]] < Number.POSITIVE_INFINITY) {
-        xs[v] += shift[sink[root[v]]];
+  function pass2(v) {
+    if (visited[v] !== 2) {
+      visited[v]++;
+      var min = _.reduce(blockG.outEdges(v), function(min, e) {
+        pass2(e.w);
+        return Math.min(min, xs[e.w] - blockG.edge(e));
+      }, Number.POSITIVE_INFINITY);
+      if (min !== Number.POSITIVE_INFINITY) {
+        xs[v] = Math.max(xs[v], min);
       }
-    });
+    }
+  }
+  _.each(blockG.nodes(), pass2);
+
+
+  // Assign x coordinates to all nodes
+  _.each(align, function(v) {
+    xs[v] = xs[root[v]];
   });
 
   return xs;
 }
 
-function placeBlock(g, layering, sepFn, root, align, shift, sink, pred, xs, v) {
-  if (_.has(xs, v)) return;
-  xs[v] = 0;
 
-  var w = v,
-      u;
-  do {
-    if (pred[w]) {
-      u = root[pred[w]];
-      placeBlock(g, layering, sepFn, root, align, shift, sink, pred, xs, u);
-      if (sink[v] === v) {
-        sink[v] = sink[u];
-      }
+function buildBlockGraph(g, layering, root, reverseSep) {
+  var blockGraph = new Graph(),
+      graphLabel = g.graph(),
+      sepFn = sep(graphLabel.nodesep, graphLabel.edgesep, reverseSep);
 
-      var delta = sepFn(g, w, pred[w]);
-      if (sink[v] !== sink[u]) {
-        shift[sink[u]] = Math.min(shift[sink[u]], xs[v] - xs[u] - delta);
-      } else {
-        xs[v] = Math.max(xs[v], xs[u] + delta);
+  _.each(layering, function(layer) {
+    var u;
+    _.each(layer, function(v) {
+      var vRoot = root[v];
+      blockGraph.setNode(vRoot);
+      if (u) {
+        var uRoot = root[u],
+            prevMax = blockGraph.edge(uRoot, vRoot);
+        blockGraph.setEdge(uRoot, vRoot, Math.max(sepFn(g, v, u), prevMax || 0));
       }
-    }
-    w = align[w];
-  } while (w !== v);
+      u = v;
+    });
+  });
+
+  return blockGraph;
 }
 
 /*
@@ -3195,7 +3210,7 @@ function width(g, v) {
   return g.node(v).width;
 }
 
-},{"../lodash":36,"../util":55}],50:[function(require,module,exports){
+},{"../graphlib":33,"../lodash":36,"../util":55}],50:[function(require,module,exports){
 "use strict";
 
 var _ = require("../lodash"),
@@ -3906,7 +3921,7 @@ function notime(name, fn) {
 }
 
 },{"./graphlib":33,"./lodash":36}],56:[function(require,module,exports){
-module.exports = "0.6.3";
+module.exports = "0.7.1";
 
 },{}],57:[function(require,module,exports){
 /**

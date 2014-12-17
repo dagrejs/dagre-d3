@@ -168,6 +168,15 @@ function createEdgePaths(selection, g, arrows) {
   util.applyTransition(svgPaths, g)
     .style("opacity", 1);
 
+  // Save DOM element in the path group, and set ID
+  svgPaths.each(function(e) {
+    var edge = g.edge(e);
+    edge.elem = this;
+    if (edge.id) {
+      d3.select(this).attr("id", edge.id);
+    }
+  });
+
   svgPaths.selectAll("path.path")
     .each(function(e) {
       var edge = g.edge(e);
@@ -182,7 +191,6 @@ function createEdgePaths(selection, g, arrows) {
       util.applyTransition(domEdge, g)
         .attr("d", function(e) { return calcPoints(g, e); });
 
-      if (edge.id) { domEdge.attr("id", edge.id); }
       util.applyStyle(domEdge, edge.style);
     });
 
@@ -299,7 +307,8 @@ function createNodes(selection, g, shapes) {
 
     if (node.id) { thisGroup.attr("id", node.id); }
     if (node.labelId) { labelGroup.attr("id", node.labelId); }
-    util.applyClass(thisGroup, node.class, (thisGroup.classed("update") ? "update " : "") + "node");
+    util.applyClass(thisGroup, node["class"],
+      (thisGroup.classed("update") ? "update " : "") + "node");
 
     if (_.has(node, "width")) { bbox.width = node.width; }
     if (_.has(node, "height")) { bbox.height = node.height; }
@@ -1041,7 +1050,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.3.3";
+module.exports = "0.4.0";
 
 },{}]},{},[1])(1)
 });
