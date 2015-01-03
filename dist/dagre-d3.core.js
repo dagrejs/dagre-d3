@@ -958,12 +958,14 @@ function createOrSelectGroup(root, name) {
 
 var intersectRect = require("./intersect/intersect-rect"),
     intersectEllipse = require("./intersect/intersect-ellipse"),
-    intersectCircle = require("./intersect/intersect-circle");
+    intersectCircle = require("./intersect/intersect-circle"),
+    intersectPolygon = require("./intersect/intersect-polygon");
 
 module.exports = {
   rect: rect,
   ellipse: ellipse,
-  circle: circle
+  circle: circle,
+  diamond: diamond
 };
 
 function rect(parent, bbox, node) {
@@ -1012,7 +1014,29 @@ function circle(parent, bbox, node) {
   return shapeSvg;
 }
 
-},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
+// Circumscribe an ellipse for the bounding box with a diamond shape. I derived
+// the function to calculate the diamond shape from:
+// http://mathforum.org/kb/message.jspa?messageID=3750236
+function diamond(parent, bbox, node) {
+  var w = (bbox.width * Math.SQRT2) / 2,
+      h = (bbox.height * Math.SQRT2) / 2,
+      points = [
+        { x:  0, y: -h },
+        { x: -w, y:  0 },
+        { x:  0, y:  h },
+        { x:  w, y:  0 }
+      ],
+      shapeSvg = parent.insert("polygon", ":first-child")
+        .attr("points", points.map(function(p) { return p.x + "," + p.y; }).join(" "));
+
+  node.intersect = function(p) {
+    return intersectPolygon(node, points, p);
+  };
+
+  return shapeSvg;
+}
+
+},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-polygon":15,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
 var _ = require("./lodash");
 
 // Public utility functions
@@ -1069,7 +1093,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.1";
+module.exports = "0.4.2";
 
 },{}]},{},[1])(1)
 });
