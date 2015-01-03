@@ -1,18 +1,91 @@
 <!doctype html>
-<html>
-<head>
+
 <meta charset="utf-8">
 <title>Graph Storyboard. Add and Prune Dependencies Algorithm</title>
+
 <script src="http://d3js.org/d3.v3.js"></script>
 <script src="../build/dagre-d3.js"></script>
-<script>
 
-Array.prototype.each = function(callback){
-    for (var i =  0; i < this.length; i++){
-        callback(this[i]);
-    }
+<style id="css">
+h1 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  margin-top: 0.8em;
+  margin-bottom: 0.2em;
 }
 
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.node polygon {
+  stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+  stroke: #333;
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+div#top-frame {
+  height: 350px;
+}
+
+div#WBS-frame {
+  float: left;
+  width: 50%;
+}
+
+div#dependencies-frame {
+  float: left;
+  width: 50%;
+}
+
+div#schedule-frame {
+  float: none;
+}
+</style>
+
+<script>
+// Polyfill for PhantomJS. This can be safely ignored if not using PhantomJS.
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP && oThis
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+</script>
+
+<script>
 var dagred3Story = function(svgelement, graphType, interframetime) {
 	this.interframetime = interframetime;
 	this.lastrenderTime = null;
@@ -22,6 +95,8 @@ var dagred3Story = function(svgelement, graphType, interframetime) {
     //  return selection.transition().duration(50);
     //}.bind(this);
 	this.g.setDefaultEdgeLabel(function() { return {}; });
+  this.g.graph().marginx = 10;
+  this.g.graph().marginy = 10;
 	switch(graphType) {
 	case 'Work Breakdown Structure':
 		this.WBS = true;
@@ -40,42 +115,22 @@ var dagred3Story = function(svgelement, graphType, interframetime) {
 		console.log ("graphType of "+x+" is not implemented")
 	}
 	this.svg = d3.select(svgelement);
-    this.inner = this.svg.append("g");
-	this.inner.attr("transform", "translate(5, " + (this.svg.attr("height") - this.g.graph().height) / 2 + ")");
-	this.svg.call(d3.behavior.zoom().on("zoom", function() {
+  this.inner = this.svg.append("g");
+	this.svg.call(d3.behavior.zoom().on("zoom", (function() {
 		this.inner.attr("transform", "translate(" + d3.event.translate + ")" +
-		"scale(" + d3.event.scale + ")")}.bind(this)));
+		                                 "scale(" + d3.event.scale + ")")
+  }).bind(this)));
 	
 	this.t = 0;
 
 	this.dagreD3render = new dagreD3.render();
-	this.dagreD3render.shapes().diamond = function(parent, bbox, node) {
-	  var w = bbox.width,
-		  h = bbox.height,
-		  points = [
-			{ x:   0, y:       -h/2 },
-			{ x:   w/2, y:        0 },
-			{ x:   w, y:       -h/2 },
-			{ x: w/2, y: -h }
-		  ];
-		  shapeSvg = parent.insert("polygon", ":first-child")
-			.attr("points", points.map(function(d) { return d.x + "," + d.y; }).join(" "))
-			.attr("transform", "translate(" + (-w*.48) + "," + (h * .53) + ")");
-
-	  node.intersect = function(point) {
-		return dagreD3.intersect.polygon(node, points, point);
-	  };
-
-	  return shapeSvg;
-	};
-
 };
 
 dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 	this.t += RenderAfter
 	//var that = this;
 	setTimeout(function() {
-		Frame.each(function(x) {
+		Frame.forEach(function(x) {
 			if (this.Schedule) {
 				switch(x[0]) {
 				case 'setActivity':
@@ -133,8 +188,6 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 		}.bind(this))
 		
 		if (this.g) {
-			// Centre the graph
-			this.inner.attr("transform", "translate(5, " + (this.svg.attr("height") - this.g.graph().height) / 2 + ")");
 			// Render
 			this.dagreD3render(this.inner,this.g);
 		}
@@ -144,48 +197,31 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 dagred3Story.prototype.animateStory = function(RenderAfter, Story) {
 	this.t += RenderAfter
 	setTimeout(function() {
-		Story.each(function(Frame) {
+		Story.forEach(function(Frame) {
 			this.animateFrame(this.interframetime, Frame);
 		}.bind(this))
 	}.bind(this), this.t)
 };
 
 </script>
-<style id="css">
-h1 {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serf; 
-}
-text {
-  font-weight: 300;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
-  font-size: 14px;
-}
 
-.node rect {
-  stroke: #333;
-  fill: #fff;
-  stroke-width: 1.5px;
-}
+<div id="top-frame">
+  <div id="WBS-frame">
+    <h1>WBS</h1>
+    <svg id="WBS" width=250 height=250></svg>
+  </div>
 
-.edgePath path.path {
-  stroke: #333;
-  fill: none;
-  stroke-width: 1.5px;
-}
-</style>
-</head>
-<body>
-<table >
-<tr><td valign=top>
-<h1>WBS</h1>
-	<svg id="WBS" width=250 height=400></svg>
-</td><td  valign=top>
-<h1>Coherent Schedule Network</h1>
-	<svg id="schedule" width=900 height=500></svg>
-</td><td valign=top>
-<h1>Sequencing</h1>
-	<svg id="dependencies" width=300 height=400></svg>
-</td></tr></table>
+  <div id="dependencies-frame">
+    <h1>Sequencing</h1>
+    <svg id="dependencies" width=300 height=250></svg>
+  </div>
+</div>
+
+<div id="schedule-frame">
+  <h1>Coherent Schedule Network</h1>
+  <svg id="schedule" width=1150 height=500></svg>
+</div>
+
 <script id="js">
 var framedelay = 2000;
 var dependenciesstory = new dagred3Story("#dependencies", "Schedule Network", framedelay);
@@ -194,7 +230,6 @@ dependenciesstory.animateStory(0,
 	[
 		
 	],[ 
-		
 		
 	],[
 		
