@@ -14,7 +14,8 @@ body {
 
 .node rect,
 .node circle,
-.node ellipse {
+.node ellipse,
+.node polygon {
   stroke: #333;
   fill: #fff;
   stroke-width: 1.5px;
@@ -42,6 +43,7 @@ var g = new dagreD3.graphlib.Graph().setGraph({});
 g.setNode("rect", { shape: "rect" });
 g.setNode("circle", { shape: "circle" });
 g.setNode("ellipse", { shape: "ellipse" });
+g.setNode("diamond", { shape: "diamond" });
 
 var svg = d3.select("svg"),
     inner = svg.select("g");
