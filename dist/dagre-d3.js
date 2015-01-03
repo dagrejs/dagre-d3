@@ -36,7 +36,8 @@ var util = require("./util");
 module.exports = {
   "default": normal,
   "normal": normal,
-  "vee": vee
+  "vee": vee,
+  "undirected": undirected
 };
 
 function normal(parent, id, edge, type) {
@@ -70,6 +71,24 @@ function vee(parent, id, edge, type) {
 
   var path = marker.append("path")
     .attr("d", "M 0 0 L 10 5 L 0 10 L 4 5 z")
+    .style("stroke-width", 1)
+    .style("stroke-dasharray", "1,0");
+  util.applyStyle(path, edge[type + "Style"]);
+}
+
+function undirected(parent, id, edge, type) {
+  var marker = parent.append("marker")
+    .attr("id", id)
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 9)
+    .attr("refY", 5)
+    .attr("markerUnits", "strokeWidth")
+    .attr("markerWidth", 8)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto");
+
+  var path = marker.append("path")
+    .attr("d", "M 0 5 L 10 5")
     .style("stroke-width", 1)
     .style("stroke-dasharray", "1,0");
   util.applyStyle(path, edge[type + "Style"]);
@@ -1050,7 +1069,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.0";
+module.exports = "0.4.1";
 
 },{}],27:[function(require,module,exports){
 /*
