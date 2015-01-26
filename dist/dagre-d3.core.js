@@ -95,7 +95,8 @@ function undirected(parent, id, edge, type) {
 }
 
 },{"./util":26}],3:[function(require,module,exports){
-var util = require("./util");
+var util = require("./util"),
+    addLabel = require("./label/add-label");
 
 module.exports = createClusters;
 
@@ -109,6 +110,14 @@ function createClusters(selection, g) {
       .attr("class", "cluster")
       .style("opacity", 0)
       .append("rect");
+
+  svgClusters.each(function(v) {
+    var cluster = g.node(v),
+      thisGroup = d3.select(this),
+      labelGroup = thisGroup.append("g").attr("class", "label");
+      addLabel(labelGroup, cluster, true);
+  });
+
   util.applyTransition(svgClusters.exit(), g)
     .style("opacity", 0)
     .remove();
@@ -129,7 +138,7 @@ function createClusters(selection, g) {
     });
 }
 
-},{"./util":26}],4:[function(require,module,exports){
+},{"./label/add-label":19,"./util":26}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -691,7 +700,7 @@ function addHtmlLabel(root, node) {
 
 module.exports = addLabel;
 
-function addLabel(root, node) {
+function addLabel(root, node, cluster) {
   var label = node.label;
   var labelSvg = root.append("g");
 
@@ -707,9 +716,14 @@ function addLabel(root, node) {
     console.log("Invalid label type");
   }
 
-  var labelBBox = labelSvg.node().getBBox();
-  labelSvg.attr("transform",
-                "translate(" + (-labelBBox.width / 2) + "," + (-labelBBox.height / 2) + ")");
+  if (!cluster) {
+    var labelBBox = labelSvg.node().getBBox();
+    labelSvg.attr("transform",
+                  "translate(" + (-labelBBox.width / 2) + "," + (-labelBBox.height / 2) + ")");
+  } else {
+    labelSvg.attr("transform",
+                  "translate(" + node.paddingLeft + "," + node.paddingRight + ")");
+  }
 
   return labelSvg;
 }
@@ -1021,8 +1035,6 @@ function rect(parent, bbox, node) {
 
   // Handle multiple-label dividers
   if (typeof node.label === "object" && Array.isArray(node.label)) {
-  console.log("NODE: %o", node);
-  console.log("BBOX: %o", bbox);
     for (var i = 1; i < node.label.length; i++) {
       var lineShape = parent.append("line");
       var dividerHeight = bbox.height / node.label.length;
