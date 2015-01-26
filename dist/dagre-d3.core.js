@@ -30,7 +30,7 @@ module.exports =  {
   version: require("./lib/version")
 };
 
-},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":23,"./lib/util":25,"./lib/version":26}],2:[function(require,module,exports){
+},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":24,"./lib/util":26,"./lib/version":27}],2:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = {
@@ -94,7 +94,7 @@ function undirected(parent, id, edge, type) {
   util.applyStyle(path, edge[type + "Style"]);
 }
 
-},{"./util":25}],3:[function(require,module,exports){
+},{"./util":26}],3:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = createClusters;
@@ -129,7 +129,7 @@ function createClusters(selection, g) {
     });
 }
 
-},{"./util":25}],4:[function(require,module,exports){
+},{"./util":26}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -166,7 +166,7 @@ function createEdgeLabels(selection, g) {
   return svgEdgeLabels;
 }
 
-},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],5:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":19,"./lodash":21,"./util":26}],5:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -293,7 +293,7 @@ function exit(svgPaths, g) {
     });
 }
 
-},{"./d3":7,"./intersect/intersect-node":14,"./lodash":20,"./util":25}],6:[function(require,module,exports){
+},{"./d3":7,"./intersect/intersect-node":14,"./lodash":21,"./util":26}],6:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -353,7 +353,7 @@ function createNodes(selection, g, shapes) {
   return svgNodes;
 }
 
-},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],7:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":19,"./lodash":21,"./util":26}],7:[function(require,module,exports){
 // Stub to get D3 either via NPM or from the global object
 module.exports = window.d3;
 
@@ -609,6 +609,39 @@ function intersectRect(node, point) {
 },{}],17:[function(require,module,exports){
 var util = require("../util");
 
+module.exports = addArrayLabel;
+
+/*
+ * Attaches a text label to the specified root. Handles escape sequences.
+ */
+function addArrayLabel(root, node) {
+  var domNode = root.append("text");
+  var tspanNode = [];
+
+  for (var i = 0; i < node.label.length; i++) {
+    tspanNode.push(domNode.append("tspan"));
+    tspanNode[i]
+        .attr("xml:space", "preserve")
+        .attr("dy", i === 0 ? "1em" : "2em")
+        .attr("x", "1")
+        .attr("text-anchor", "middle")
+        .text(node.label[i]);
+  }
+
+  // Center the text
+  var textBounds = domNode.node().getBBox();
+  for (i = 0; i < tspanNode.length; i++) {
+    tspanNode[i].attr("x", -textBounds.x);
+  }
+
+  util.applyStyle(domNode, node.labelStyle);
+
+  return domNode;
+}
+
+},{"../util":26}],18:[function(require,module,exports){
+var util = require("../util");
+
 module.exports = addHtmlLabel;
 
 function addHtmlLabel(root, node) {
@@ -651,8 +684,9 @@ function addHtmlLabel(root, node) {
   return fo;
 }
 
-},{"../util":25}],18:[function(require,module,exports){
-var addTextLabel = require("./add-text-label"),
+},{"../util":26}],19:[function(require,module,exports){
+ var addTextLabel = require("./add-text-label"),
+    addArrayLabel = require("./add-array-label"),
     addHtmlLabel = require("./add-html-label");
 
 module.exports = addLabel;
@@ -663,10 +697,14 @@ function addLabel(root, node) {
 
   // Allow the label to be a string, a function that returns a DOM element, or
   // a DOM element itself.
-  if (typeof label !== "string" || node.labelType === "html") {
+  if (node.labelType === "html") {
     addHtmlLabel(labelSvg, node);
-  } else {
+  } else if (typeof label === "string" || typeof label === "number") {
     addTextLabel(labelSvg, node);
+  } else if (typeof label === "object" && Array.isArray(label)) {
+    addArrayLabel(labelSvg, node);
+  } else {
+    console.log("Invalid label type");
   }
 
   var labelBBox = labelSvg.node().getBBox();
@@ -676,7 +714,7 @@ function addLabel(root, node) {
   return labelSvg;
 }
 
-},{"./add-html-label":17,"./add-text-label":19}],19:[function(require,module,exports){
+},{"./add-array-label":17,"./add-html-label":18,"./add-text-label":20}],20:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addTextLabel;
@@ -723,7 +761,7 @@ function processEscapeSequences(text) {
   return newText;
 }
 
-},{"../util":25}],20:[function(require,module,exports){
+},{"../util":26}],21:[function(require,module,exports){
 /* global window */
 
 var lodash;
@@ -740,7 +778,7 @@ if (!lodash) {
 
 module.exports = lodash;
 
-},{"lodash":undefined}],21:[function(require,module,exports){
+},{"lodash":undefined}],22:[function(require,module,exports){
 "use strict";
 
 var util = require("./util"),
@@ -764,7 +802,7 @@ function positionEdgeLabels(selection, g) {
     .attr("transform", translate);
 }
 
-},{"./d3":7,"./lodash":20,"./util":25}],22:[function(require,module,exports){
+},{"./d3":7,"./lodash":21,"./util":26}],23:[function(require,module,exports){
 "use strict";
 
 var util = require("./util"),
@@ -787,7 +825,7 @@ function positionNodes(selection, g) {
     .attr("transform", translate);
 }
 
-},{"./d3":7,"./util":25}],23:[function(require,module,exports){
+},{"./d3":7,"./util":26}],24:[function(require,module,exports){
 var _ = require("./lodash"),
     layout = require("./dagre").layout;
 
@@ -953,7 +991,7 @@ function createOrSelectGroup(root, name) {
   return selection;
 }
 
-},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":20,"./position-edge-labels":21,"./position-nodes":22,"./shapes":24}],24:[function(require,module,exports){
+},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":21,"./position-edge-labels":22,"./position-nodes":23,"./shapes":25}],25:[function(require,module,exports){
 "use strict";
 
 var intersectRect = require("./intersect/intersect-rect"),
@@ -980,6 +1018,22 @@ function rect(parent, bbox, node) {
   node.intersect = function(point) {
     return intersectRect(node, point);
   };
+
+  // Handle multiple-label dividers
+  if (typeof node.label === "object" && Array.isArray(node.label)) {
+  console.log("NODE: %o", node);
+  console.log("BBOX: %o", bbox);
+    for (var i = 1; i < node.label.length; i++) {
+      var lineShape = parent.append("line");
+      var dividerHeight = bbox.height / node.label.length;
+      lineShape
+        .attr("x1", -bbox.width / 2)
+        .attr("y1", i * dividerHeight - bbox.height / 2)
+        .attr("x2", bbox.width / 2)
+        .attr("y2", i * dividerHeight - bbox.height / 2)
+        .attr("stroke", "black");
+    }
+  }
 
   return shapeSvg;
 }
@@ -1036,7 +1090,7 @@ function diamond(parent, bbox, node) {
   return shapeSvg;
 }
 
-},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-polygon":15,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
+},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-polygon":15,"./intersect/intersect-rect":16}],26:[function(require,module,exports){
 var _ = require("./lodash");
 
 // Public utility functions
@@ -1092,8 +1146,8 @@ function applyTransition(selection, g) {
   return selection;
 }
 
-},{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.2";
+},{"./lodash":21}],27:[function(require,module,exports){
+module.exports = "0.4.3-pre";
 
 },{}]},{},[1])(1)
 });
