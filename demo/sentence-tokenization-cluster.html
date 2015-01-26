@@ -69,8 +69,12 @@ g.setNode("12", { label: "example",   class: "type-TK" });
 g.setNode("13", { label: ".",         class: "type-." });
 g.setNode("14", { label: "sentence",  class: "type-TK" });
 g.setNode("15", { label: "Group 1",   class: "type-group" });
+g.setNode("16", { label: "Group 2",   class: "type-group" });
 g.setParent("0", "15");
 g.setParent("1", "15");
+g.setParent("3", "16");
+g.setParent("6", "16");
+g.setParent("8", "16");
 
 g.nodes().forEach(function(v) {
   var node = g.node(v);
