@@ -721,8 +721,8 @@ function addLabel(root, node, cluster) {
     labelSvg.attr("transform",
         "translate(" + (-labelBBox.width / 2) + "," + (-labelBBox.height / 2) + ")");
   } else {
-    labelSvg.attr("transform", "translate(" + (node.paddingLeft + (node.x - node.width / 2)) + "," +
-        (node.paddingTop + (node.y - node.height / 2)) + ")");
+    labelSvg.attr("transform", "translate(" + (node.x - node.width / 2) + "," +
+        (node.y - node.height / 2 - 20) + ")");
   }
 
   return labelSvg;

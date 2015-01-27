@@ -721,8 +721,8 @@ function addLabel(root, node, cluster) {
     labelSvg.attr("transform",
         "translate(" + (-labelBBox.width / 2) + "," + (-labelBBox.height / 2) + ")");
   } else {
-    labelSvg.attr("transform", "translate(" + (node.paddingLeft + (node.x - node.width / 2)) + "," +
-        (node.paddingTop + (node.y - node.height / 2)) + ")");
+    labelSvg.attr("transform", "translate(" + (node.x - node.width / 2) + "," +
+        (node.y - node.height / 2 - 20) + ")");
   }
 
   return labelSvg;
@@ -1475,7 +1475,7 @@ function debugOrdering(g) {
 
 },{"./graphlib":34,"./lodash":37,"./util":56}],34:[function(require,module,exports){
 module.exports=require(9)
-},{"/Users/fytanaka/Sites/dagre-d3/lib/graphlib.js":9,"graphlib":58}],35:[function(require,module,exports){
+},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/graphlib.js":9,"graphlib":58}],35:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graphlib").Graph,
     List = require("./data/list");
@@ -1991,7 +1991,7 @@ function canonicalize(attrs) {
 
 },{"./acyclic":29,"./add-border-segments":30,"./coordinate-system":31,"./graphlib":34,"./lodash":37,"./nesting-graph":38,"./normalize":39,"./order":44,"./parent-dummy-chains":49,"./position":51,"./rank":53,"./util":56}],37:[function(require,module,exports){
 module.exports=require(21)
-},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":21,"lodash":78}],38:[function(require,module,exports){
+},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/lodash.js":21,"lodash":78}],38:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -5162,7 +5162,7 @@ function read(json) {
 
 },{"./graph":73,"./lodash":76}],76:[function(require,module,exports){
 module.exports=require(21)
-},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":21,"lodash":78}],77:[function(require,module,exports){
+},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/lodash.js":21,"lodash":78}],77:[function(require,module,exports){
 module.exports = '1.0.1';
 
 },{}],78:[function(require,module,exports){
