@@ -106,6 +106,7 @@ function createClusters(selection, g) {
         .data(clusters, function(v) { return v; })
         .classed("update", true);
 
+  svgClusters.selectAll("*").remove();
   svgClusters.enter()
     .append("g")
       .attr("class", "cluster")
@@ -1476,7 +1477,7 @@ function debugOrdering(g) {
 
 },{"./graphlib":34,"./lodash":37,"./util":56}],34:[function(require,module,exports){
 module.exports=require(9)
-},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/graphlib.js":9,"graphlib":58}],35:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/graphlib.js":9,"graphlib":58}],35:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graphlib").Graph,
     List = require("./data/list");
@@ -1992,7 +1993,7 @@ function canonicalize(attrs) {
 
 },{"./acyclic":29,"./add-border-segments":30,"./coordinate-system":31,"./graphlib":34,"./lodash":37,"./nesting-graph":38,"./normalize":39,"./order":44,"./parent-dummy-chains":49,"./position":51,"./rank":53,"./util":56}],37:[function(require,module,exports){
 module.exports=require(21)
-},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/lodash.js":21,"lodash":78}],38:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":21,"lodash":78}],38:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -5163,7 +5164,7 @@ function read(json) {
 
 },{"./graph":73,"./lodash":76}],76:[function(require,module,exports){
 module.exports=require(21)
-},{"/Users/ftanaka/Documents/Sites-Local/dagre-d3/lib/lodash.js":21,"lodash":78}],77:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":21,"lodash":78}],77:[function(require,module,exports){
 module.exports = '1.0.1';
 
 },{}],78:[function(require,module,exports){

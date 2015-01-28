@@ -106,6 +106,7 @@ function createClusters(selection, g) {
         .data(clusters, function(v) { return v; })
         .classed("update", true);
 
+  svgClusters.selectAll("*").remove();
   svgClusters.enter()
     .append("g")
       .attr("class", "cluster")
