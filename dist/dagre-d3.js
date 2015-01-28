@@ -110,14 +110,14 @@ function createClusters(selection, g) {
   svgClusters.enter()
     .append("g")
       .attr("class", "cluster")
-      .style("opacity", 0)
-      .append("rect");
+      .style("opacity", 0);
 
   svgClusters.each(function(v) {
     var cluster = g.node(v),
       thisGroup = d3.select(this),
       labelGroup = thisGroup.append("g").attr("class", "label");
       addLabel(labelGroup, cluster, true);
+      svgClusters.append("rect");
   });
 
   util.applyTransition(svgClusters.exit(), g)
