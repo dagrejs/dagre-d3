@@ -101,9 +101,10 @@ var util = require("./util"),
 module.exports = createClusters;
 
 function createClusters(selection, g) {
-  var clusters = g.nodes().filter(function(v) { return util.isSubgraph(g, v); }),
-      svgClusters = selection.selectAll("g.cluster")
-        .data(clusters, function(v) { return v; });
+  var clusters = g.nodes().filter(function(v) { return util.isSubgraph(g, v); });
+  var svgClusters = selection.selectAll("g.cluster")
+        .data(clusters, function(v) { return v; })
+        .classed("update", true);
 
   svgClusters.enter()
     .append("g")
