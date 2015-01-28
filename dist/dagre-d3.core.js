@@ -115,9 +115,8 @@ function createClusters(selection, g) {
   svgClusters.each(function(v) {
     var cluster = g.node(v),
       thisGroup = d3.select(this),
-      labelGroup = thisGroup.append("g").attr("class", "label");
+      labelGroup = thisGroup.append("g").attr("class", "label").append("rect");
       addLabel(labelGroup, cluster, true);
-      svgClusters.append("rect");
   });
 
   util.applyTransition(svgClusters.exit(), g)
