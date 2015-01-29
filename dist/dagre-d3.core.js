@@ -1039,13 +1039,13 @@ function rect(parent, bbox, node) {
   if (typeof node.label === "object" && Array.isArray(node.label)) {
     for (var i = 1; i < node.label.length; i++) {
       var lineShape = parent.append("line");
-      var dividerHeight = (bbox.height - node.paddingTop - node.paddingBottom + 8) /
+      var dividerHeight = (bbox.height - node.paddingTop - node.paddingBottom) /
           node.label.length;
       lineShape
         .attr("x1", -bbox.width / 2)
-        .attr("y1", i * dividerHeight - (bbox.height + 8) / 2 + node.paddingTop)
+        .attr("y1", i * dividerHeight - bbox.height / 2 + node.paddingTop)
         .attr("x2", bbox.width / 2)
-        .attr("y2", i * dividerHeight - (bbox.height + 8) / 2 + node.paddingTop)
+        .attr("y2", i * dividerHeight - bbox.height / 2 + node.paddingTop)
         .attr("stroke", "black");
     }
   }
