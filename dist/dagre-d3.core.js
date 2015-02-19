@@ -207,6 +207,10 @@ function createEdgePaths(selection, g, arrows) {
         })
         .style("fill", "none");
 
+		  if(edge.class){
+			  domEdge.classed(edge.class, true);
+		  }
+
       util.applyTransition(domEdge, g)
         .attr("d", function(e) { return calcPoints(g, e); });
 
@@ -1093,7 +1097,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.2";
+module.exports = "0.4.3-pre";
 
 },{}]},{},[1])(1)
 });
