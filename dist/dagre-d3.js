@@ -207,6 +207,10 @@ function createEdgePaths(selection, g, arrows) {
         })
         .style("fill", "none");
 
+		  if(edge.class){
+			  domEdge.classed(edge.class, true);
+		  }
+
       util.applyTransition(domEdge, g)
         .attr("d", function(e) { return calcPoints(g, e); });
 
@@ -1093,7 +1097,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.2";
+module.exports = "0.4.3-pre";
 
 },{}],27:[function(require,module,exports){
 /*
@@ -1409,7 +1413,7 @@ function debugOrdering(g) {
 
 },{"./graphlib":33,"./lodash":36,"./util":55}],33:[function(require,module,exports){
 module.exports=require(9)
-},{"/Users/cpettitt/projects/dagre-d3/lib/graphlib.js":9,"graphlib":57}],34:[function(require,module,exports){
+},{"/var/www/acquaim/dagre-d3/lib/graphlib.js":9,"graphlib":57}],34:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graphlib").Graph,
     List = require("./data/list");
@@ -1925,7 +1929,7 @@ function canonicalize(attrs) {
 
 },{"./acyclic":28,"./add-border-segments":29,"./coordinate-system":30,"./graphlib":33,"./lodash":36,"./nesting-graph":37,"./normalize":38,"./order":43,"./parent-dummy-chains":48,"./position":50,"./rank":52,"./util":55}],36:[function(require,module,exports){
 module.exports=require(20)
-},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":20,"lodash":77}],37:[function(require,module,exports){
+},{"/var/www/acquaim/dagre-d3/lib/lodash.js":20,"lodash":77}],37:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -5096,7 +5100,7 @@ function read(json) {
 
 },{"./graph":72,"./lodash":75}],75:[function(require,module,exports){
 module.exports=require(20)
-},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":20,"lodash":77}],76:[function(require,module,exports){
+},{"/var/www/acquaim/dagre-d3/lib/lodash.js":20,"lodash":77}],76:[function(require,module,exports){
 module.exports = '1.0.1';
 
 },{}],77:[function(require,module,exports){
