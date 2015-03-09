@@ -633,7 +633,6 @@ function addArrayLabel(root, node) {
   for (var i = 0; i < node.label.length; i++) {
     tspanNode.push(domNode.append("tspan"));
     tspanNode[i]
-        .attr("xml:space", "preserve")
         .attr("dy", i === 0 ? "1em" : "2em")
         .attr("x", "1")
         .attr("text-anchor", "middle")
@@ -746,7 +745,6 @@ function addTextLabel(root, node) {
   for (var i = 0; i < lines.length; i++) {
     domNode
       .append("tspan")
-        .attr("xml:space", "preserve")
         .attr("dy", "1em")
         .attr("x", "1")
         .text(lines[i]);
