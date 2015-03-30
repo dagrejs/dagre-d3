@@ -278,5 +278,16 @@ describe("dagreD3", function() {
       expect(d3.select("#a").classed("a-class")).to.be.true;
       expect(d3.select("#b").classed("b-class")).to.be.true;
     });
+
+    it("can be set for edges", function() {
+      g.setNode("a", { id: "a" });
+      g.setNode("b", { id: "b" });
+      g.setEdge("a", "b", { id: "c", class: function(d) { return d.v + d.w + "-class"; } });
+      g.setEdge("b", "a", { id: "d", class: "d-class" });
+      dagreD3.render()(svg, g);
+
+      expect(d3.select("#c").classed("ab-class")).to.be.true;
+      expect(d3.select("#d").classed("d-class")).to.be.true;
+    });
   });
 });
