@@ -187,13 +187,18 @@ function createEdgePaths(selection, g, arrows) {
   util.applyTransition(svgPaths, g)
     .style("opacity", 1);
 
-  // Save DOM element in the path group, and set ID
+  // Save DOM element in the path group, and set ID and class
   svgPaths.each(function(e) {
+    var domEdge = d3.select(this);
     var edge = g.edge(e);
     edge.elem = this;
+
     if (edge.id) {
-      d3.select(this).attr("id", edge.id);
+      domEdge.attr("id", edge.id);
     }
+
+    util.applyClass(domEdge, edge["class"],
+      (domEdge.classed("update") ? "update " : "") + "edgePath");
   });
 
   svgPaths.selectAll("path.path")
@@ -1093,7 +1098,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.2";
+module.exports = "0.4.3";
 
 },{}],27:[function(require,module,exports){
 /*
