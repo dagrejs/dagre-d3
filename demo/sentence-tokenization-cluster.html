@@ -53,7 +53,7 @@ var g = new dagreD3.graphlib.Graph({multigraph: true, compound: true})
 
 // Here we"re setting nodeclass, which is used by our custom drawNodes function
 // below.
-g.setNode("0",  { label: "TOP",       class: "type-TOP" });
+g.setNode("0",  { label: "T",       class: "type-TOP", subnodes: ["0123", "4567"] });
 g.setNode("1",  { label: "S",         class: "type-S" });
 g.setNode("2",  { label: "NP",        class: "type-NP" });
 g.setNode("3",  { label: "DT",        class: "type-DT" });
@@ -112,6 +112,24 @@ render(d3.select("svg g"), g);
 var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
 svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
 svg.attr("height", g.graph().height + 40);
+
+function eventHandler(e) {
+  console.log(e);
+}
+
+svg.selectAll("g.node").each(function(nodeId) {
+  this.addEventListener('click', function(e) {
+    console.log('NODE: ' + nodeId);
+  }, false); 
+});
+
+svg.selectAll("g.subnodes circle").each(function(nodeId) {
+  this.addEventListener('click', function(e) {
+    e.stopPropagation(); e.preventDefault();
+    console.log('SUBNODE: ' + nodeId);
+  }, false); 
+});
+
 </script>
 
 <script src="demo.js"></script>
