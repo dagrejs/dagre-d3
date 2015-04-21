@@ -53,7 +53,7 @@ var g = new dagreD3.graphlib.Graph({multigraph: true, compound: true})
 
 // Here we"re setting nodeclass, which is used by our custom drawNodes function
 // below.
-g.setNode("0",  { label: "T",       class: "type-TOP", subnodes: ["0123", "4567"] });
+g.setNode("0",  { label: "T",         class: "type-TOP", subnodes: [{id: "0123", label: "01", class: "subnode-01"}, {id: "4567", label: "45", class: "subnode-45"}] });
 g.setNode("1",  { label: "S",         class: "type-S" });
 g.setNode("2",  { label: "NP",        class: "type-NP" });
 g.setNode("3",  { label: "DT",        class: "type-DT" });
@@ -66,7 +66,7 @@ g.setNode("9",  { label: "DT",        class: "type-DT" });
 g.setNode("10", { label: "an",        class: "type-TK" });
 g.setNode("11", { label: "NN",        class: "type-NN" });
 g.setNode("12", { label: "example",   class: "type-TK" });
-g.setNode("13", { label: ".",         class: "type-." });
+g.setNode("13", { label: "MAY THE FORCE BE WITH YOU",         class: "type-.", subnodes: [{id: "3210", label: "32", class: "subnode-32"}, {id: "7654", label: "76", class: "subnode-76"}, {id: "1234", label: "12", class: "subnode-12"}] });
 g.setNode("14", { label: "sentence",  class: "type-TK" });
 g.setNode("15", { label: "Group 1",   class: "type-group" });
 g.setNode("16", { label: "Group 2",   class: "type-group" });
@@ -126,7 +126,7 @@ svg.selectAll("g.node").each(function(nodeId) {
 svg.selectAll("g.subnodes circle").each(function(nodeId) {
   this.addEventListener('click', function(e) {
     e.stopPropagation(); e.preventDefault();
-    console.log('SUBNODE: ' + nodeId);
+    console.log('SUBNODE: ' + nodeId.label);
   }, false); 
 });
 
