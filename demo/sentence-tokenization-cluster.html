@@ -36,6 +36,18 @@ text {
   stroke: #999;
   fill: #fff8f0;
 }
+
+.subnode circle {
+  fill: #eff;
+  stroke: #888;
+  stroke-width: 1px;
+}
+
+.subnode text {
+  font-size: 12px;
+  font-weight: bold;
+  pointer-events: none;
+}
 </style>
 
 <svg id="svg-canvas" width=960 height=600></svg>
@@ -113,17 +125,13 @@ var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
 svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
 svg.attr("height", g.graph().height + 40);
 
-function eventHandler(e) {
-  console.log(e);
-}
-
 svg.selectAll("g.node").each(function(nodeId) {
   this.addEventListener('click', function(e) {
     console.log('NODE: ' + nodeId);
   }, false); 
 });
 
-svg.selectAll("g.subnodes circle").each(function(nodeId) {
+svg.selectAll("g.subnode circle").each(function(nodeId) {
   this.addEventListener('click', function(e) {
     e.stopPropagation(); e.preventDefault();
     console.log('SUBNODE: ' + nodeId.label);
