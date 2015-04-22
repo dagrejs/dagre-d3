@@ -38,17 +38,13 @@ function addSubnodes(root, node) {
   subnodesGroup.selectAll("g")
     .data(node.subnodes)
     .enter().append("g")
-      .attr("class", "subnode")
+      .attr("class", function(d) { return "subnode " + d.class; })
       .each(function(d, i) {
         // Create the circle and text nodes within the subnode group
         var circleDom = d3.select(this).append("circle")
-          .data([d], function(d) {
-            return d.id;
-          })
           .attr("cx", i * 22)
           .attr("cy", "0")
-          .attr("r", "10")
-          .attr("class", d.class);
+          .attr("r", "10");
         var textDom = d3.select(this).append("text")
           .text(d.label)
           .attr("x", i * 22)
@@ -1537,7 +1533,7 @@ function debugOrdering(g) {
 
 },{"./graphlib":35,"./lodash":38,"./util":57}],35:[function(require,module,exports){
 module.exports=require(10)
-},{"/Users/ftanaka/Sites/dagre-d3/lib/graphlib.js":10,"graphlib":59}],36:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/graphlib.js":10,"graphlib":59}],36:[function(require,module,exports){
 var _ = require("./lodash"),
     Graph = require("./graphlib").Graph,
     List = require("./data/list");
@@ -2053,7 +2049,7 @@ function canonicalize(attrs) {
 
 },{"./acyclic":30,"./add-border-segments":31,"./coordinate-system":32,"./graphlib":35,"./lodash":38,"./nesting-graph":39,"./normalize":40,"./order":45,"./parent-dummy-chains":50,"./position":52,"./rank":54,"./util":57}],38:[function(require,module,exports){
 module.exports=require(22)
-},{"/Users/ftanaka/Sites/dagre-d3/lib/lodash.js":22,"lodash":79}],39:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":22,"lodash":79}],39:[function(require,module,exports){
 var _ = require("./lodash"),
     util = require("./util");
 
@@ -5224,7 +5220,7 @@ function read(json) {
 
 },{"./graph":74,"./lodash":77}],77:[function(require,module,exports){
 module.exports=require(22)
-},{"/Users/ftanaka/Sites/dagre-d3/lib/lodash.js":22,"lodash":79}],78:[function(require,module,exports){
+},{"/Users/fytanaka/Sites/dagre-d3/lib/lodash.js":22,"lodash":79}],78:[function(require,module,exports){
 module.exports = '1.0.1';
 
 },{}],79:[function(require,module,exports){
