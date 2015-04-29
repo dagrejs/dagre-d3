@@ -172,6 +172,38 @@ describe("dagreD3", function() {
     });
   });
 
+  describe("SVG labels", function() {
+    it("can be created for a node", function() {
+      link = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+      link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'http://google.com/');
+      link.setAttribute('target', '_blank');
+      link.setAttribute('id', 'a-lab');
+      link.textContent = 'Google';
+
+      g.setNode("a", { labelType: "svg", label: link });
+      dagreD3.render()(svg, g);
+
+      expect(d3.select("#a-lab").empty()).to.be.false;
+      expect(d3.select("#a-lab").text()).equals("Google");
+    });
+
+    it("can be created for an edge", function() {
+      link = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+      link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'http://yahoo.com/');
+      link.setAttribute('target', '_blank');
+      link.setAttribute('id', 'ab-lab');
+      link.textContent = 'Yahoo';
+
+      g.setNode("a", {});
+      g.setNode("b", {});
+      g.setEdge("a", "b", { labelType: "svg", label: link });
+      dagreD3.render()(svg, g);
+
+      expect(d3.select("#ab-lab").empty()).to.be.false;
+      expect(d3.select("#ab-lab").text()).equals("Yahoo");
+    });
+  });
+
   describe("breaks label lines", function() {
     it("on '\\n'", function() {
       g.setNode("a", { id: "a", label: "multi\nline" });
