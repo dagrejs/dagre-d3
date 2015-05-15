@@ -1296,7 +1296,7 @@ function addBorderSegments(g) {
 }
 
 function addBorderNode(g, prop, prefix, sg, sgNode, rank) {
-  var label = { width: 0, height: 0, rank: rank },
+  var label = { width: 0, height: 0, rank: rank, borderType: prop },
       prev = sgNode[prop][rank - 1],
       curr = util.addDummyNode(g, "border", label, prefix);
   sgNode[prop][rank] = curr;
@@ -3150,20 +3150,21 @@ function horizontalCompaction(g, layering, root, align, reverseSep) {
   }
   _.each(blockG.nodes(), pass1);
 
+  var borderType = reverseSep ? "borderLeft" : "borderRight";
   function pass2(v) {
     if (visited[v] !== 2) {
       visited[v]++;
+      var node = g.node(v);
       var min = _.reduce(blockG.outEdges(v), function(min, e) {
         pass2(e.w);
         return Math.min(min, xs[e.w] - blockG.edge(e));
       }, Number.POSITIVE_INFINITY);
-      if (min !== Number.POSITIVE_INFINITY) {
+      if (min !== Number.POSITIVE_INFINITY && node.borderType !== borderType) {
         xs[v] = Math.max(xs[v], min);
       }
     }
   }
   _.each(blockG.nodes(), pass2);
-
 
   // Assign x coordinates to all nodes
   _.each(align, function(v) {
@@ -4031,7 +4032,7 @@ function notime(name, fn) {
 }
 
 },{"./graphlib":35,"./lodash":38}],58:[function(require,module,exports){
-module.exports = "0.7.1";
+module.exports = "0.7.2";
 
 },{}],59:[function(require,module,exports){
 /**
@@ -4817,6 +4818,8 @@ Graph.prototype.setParent = function(v, parent) {
   if (_.isUndefined(parent)) {
     parent = GRAPH_NODE;
   } else {
+    // Coerce parent to string
+    parent += "";
     for (var ancestor = parent;
          !_.isUndefined(ancestor);
          ancestor = this.parent(ancestor)) {
@@ -5162,9 +5165,24 @@ function read(json) {
 }
 
 },{"./graph":74,"./lodash":77}],77:[function(require,module,exports){
-module.exports=require(21)
-},{"/Users/cpettitt/projects/dagre-d3/lib/lodash.js":21,"lodash":79}],78:[function(require,module,exports){
-module.exports = '1.0.1';
+/* global window */
+
+var lodash;
+
+if (typeof require === "function") {
+  try {
+    lodash = require("lodash");
+  } catch (e) {}
+}
+
+if (!lodash) {
+  lodash = window._;
+}
+
+module.exports = lodash;
+
+},{"lodash":79}],78:[function(require,module,exports){
+module.exports = '1.0.3';
 
 },{}],79:[function(require,module,exports){
 (function (global){
