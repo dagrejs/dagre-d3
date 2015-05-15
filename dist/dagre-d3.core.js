@@ -30,7 +30,7 @@ module.exports =  {
   version: require("./lib/version")
 };
 
-},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":23,"./lib/util":25,"./lib/version":26}],2:[function(require,module,exports){
+},{"./lib/dagre":8,"./lib/graphlib":9,"./lib/intersect":10,"./lib/render":25,"./lib/util":27,"./lib/version":28}],2:[function(require,module,exports){
 var util = require("./util");
 
 module.exports = {
@@ -94,8 +94,9 @@ function undirected(parent, id, edge, type) {
   util.applyStyle(path, edge[type + "Style"]);
 }
 
-},{"./util":25}],3:[function(require,module,exports){
-var util = require("./util");
+},{"./util":27}],3:[function(require,module,exports){
+var util = require("./util"),
+    addLabel = require("./label/add-label");
 
 module.exports = createClusters;
 
@@ -116,20 +117,15 @@ function createClusters(selection, g) {
   util.applyTransition(svgClusters, g)
     .style("opacity", 1);
 
-  util.applyTransition(svgClusters.selectAll("rect"), g)
-    .attr("width", function(v) { return g.node(v).width; })
-    .attr("height", function(v) { return g.node(v).height; })
-    .attr("x", function(v) {
-      var node = g.node(v);
-      return node.x - node.width / 2;
-    })
-    .attr("y", function(v) {
-      var node = g.node(v);
-      return node.y - node.height / 2;
-    });
+  svgClusters.each(function(v) {
+    var node = g.node(v),
+        thisGroup = d3.select(this),
+        labelGroup = thisGroup.append("g").attr("class", "label");
+    addLabel(labelGroup, node, node.clusterLabelPos);
+  });
 }
 
-},{"./util":25}],4:[function(require,module,exports){
+},{"./label/add-label":18,"./util":27}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -166,7 +162,7 @@ function createEdgeLabels(selection, g) {
   return svgEdgeLabels;
 }
 
-},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],5:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":21,"./util":27}],5:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -298,7 +294,7 @@ function exit(svgPaths, g) {
     });
 }
 
-},{"./d3":7,"./intersect/intersect-node":14,"./lodash":20,"./util":25}],6:[function(require,module,exports){
+},{"./d3":7,"./intersect/intersect-node":14,"./lodash":21,"./util":27}],6:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -358,7 +354,7 @@ function createNodes(selection, g, shapes) {
   return svgNodes;
 }
 
-},{"./d3":7,"./label/add-label":18,"./lodash":20,"./util":25}],7:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./lodash":21,"./util":27}],7:[function(require,module,exports){
 // Stub to get D3 either via NPM or from the global object
 module.exports = window.d3;
 
@@ -656,32 +652,60 @@ function addHtmlLabel(root, node) {
   return fo;
 }
 
-},{"../util":25}],18:[function(require,module,exports){
+},{"../util":27}],18:[function(require,module,exports){
 var addTextLabel = require("./add-text-label"),
-    addHtmlLabel = require("./add-html-label");
+    addHtmlLabel = require("./add-html-label"),
+    addSVGLabel  = require("./add-svg-label");
 
 module.exports = addLabel;
 
-function addLabel(root, node) {
+function addLabel(root, node, location) {
   var label = node.label;
   var labelSvg = root.append("g");
 
   // Allow the label to be a string, a function that returns a DOM element, or
   // a DOM element itself.
-  if (typeof label !== "string" || node.labelType === "html") {
+  if (node.labelType === "svg") {
+    addSVGLabel(labelSvg, node);
+  } else if (typeof label !== "string" || node.labelType === "html") {
     addHtmlLabel(labelSvg, node);
   } else {
     addTextLabel(labelSvg, node);
   }
 
   var labelBBox = labelSvg.node().getBBox();
+  switch(location) {
+    case "top":
+      y = (-node.height / 2);
+      break;
+    case "bottom":
+      y = (node.height / 2) - labelBBox.height;
+      break;
+    default:
+      y = (-labelBBox.height / 2);
+  }
   labelSvg.attr("transform",
-                "translate(" + (-labelBBox.width / 2) + "," + (-labelBBox.height / 2) + ")");
+                "translate(" + (-labelBBox.width / 2) + "," + y + ")");
 
   return labelSvg;
 }
 
-},{"./add-html-label":17,"./add-text-label":19}],19:[function(require,module,exports){
+},{"./add-html-label":17,"./add-svg-label":19,"./add-text-label":20}],19:[function(require,module,exports){
+var util = require("../util");
+
+module.exports = addSVGLabel;
+
+function addSVGLabel(root, node) {
+  var domNode = root;
+
+  domNode.node().appendChild(node.label);
+
+  util.applyStyle(domNode, node.labelStyle);
+
+  return domNode;
+}
+
+},{"../util":27}],20:[function(require,module,exports){
 var util = require("../util");
 
 module.exports = addTextLabel;
@@ -728,7 +752,7 @@ function processEscapeSequences(text) {
   return newText;
 }
 
-},{"../util":25}],20:[function(require,module,exports){
+},{"../util":27}],21:[function(require,module,exports){
 /* global window */
 
 var lodash;
@@ -745,7 +769,43 @@ if (!lodash) {
 
 module.exports = lodash;
 
-},{"lodash":undefined}],21:[function(require,module,exports){
+},{"lodash":undefined}],22:[function(require,module,exports){
+"use strict";
+
+var util = require("./util"),
+    d3 = require("./d3");
+
+module.exports = positionClusters;
+
+function positionClusters(selection, g) {
+  var created = selection.filter(function() { return !d3.select(this).classed("update"); });
+
+  function translate(v) {
+    var node = g.node(v);
+    return "translate(" + node.x + "," + node.y + ")";
+  }
+
+  created.attr("transform", translate);
+
+  util.applyTransition(selection, g)
+      .style("opacity", 1)
+      .attr("transform", translate);
+
+  util.applyTransition(created.selectAll("rect"), g)
+      .attr("width", function(v) { return g.node(v).width; })
+      .attr("height", function(v) { return g.node(v).height; })
+      .attr("x", function(v) {
+        var node = g.node(v);
+        return -node.width / 2;
+      })
+      .attr("y", function(v) {
+        var node = g.node(v);
+        return -node.height / 2;
+      });
+
+}
+
+},{"./d3":7,"./util":27}],23:[function(require,module,exports){
 "use strict";
 
 var util = require("./util"),
@@ -769,7 +829,7 @@ function positionEdgeLabels(selection, g) {
     .attr("transform", translate);
 }
 
-},{"./d3":7,"./lodash":20,"./util":25}],22:[function(require,module,exports){
+},{"./d3":7,"./lodash":21,"./util":27}],24:[function(require,module,exports){
 "use strict";
 
 var util = require("./util"),
@@ -792,7 +852,7 @@ function positionNodes(selection, g) {
     .attr("transform", translate);
 }
 
-},{"./d3":7,"./util":25}],23:[function(require,module,exports){
+},{"./d3":7,"./util":27}],25:[function(require,module,exports){
 var _ = require("./lodash"),
     layout = require("./dagre").layout;
 
@@ -806,6 +866,7 @@ function render() {
       createEdgePaths = require("./create-edge-paths"),
       positionNodes = require("./position-nodes"),
       positionEdgeLabels = require("./position-edge-labels"),
+      positionClusters = require("./position-clusters"),
       shapes = require("./shapes"),
       arrows = require("./arrows");
 
@@ -824,6 +885,7 @@ function render() {
     positionEdgeLabels(edgeLabels, g);
     createEdgePaths(edgePathsGroup, g, arrows);
     createClusters(clustersGroup, g);
+    positionClusters(clustersGroup.selectAll("g.cluster"), g);
 
     postProcessGraph(g);
   };
@@ -958,7 +1020,7 @@ function createOrSelectGroup(root, name) {
   return selection;
 }
 
-},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":20,"./position-edge-labels":21,"./position-nodes":22,"./shapes":24}],24:[function(require,module,exports){
+},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":21,"./position-clusters":22,"./position-edge-labels":23,"./position-nodes":24,"./shapes":26}],26:[function(require,module,exports){
 "use strict";
 
 var intersectRect = require("./intersect/intersect-rect"),
@@ -1041,7 +1103,7 @@ function diamond(parent, bbox, node) {
   return shapeSvg;
 }
 
-},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-polygon":15,"./intersect/intersect-rect":16}],25:[function(require,module,exports){
+},{"./intersect/intersect-circle":11,"./intersect/intersect-ellipse":12,"./intersect/intersect-polygon":15,"./intersect/intersect-rect":16}],27:[function(require,module,exports){
 var _ = require("./lodash");
 
 // Public utility functions
@@ -1097,8 +1159,8 @@ function applyTransition(selection, g) {
   return selection;
 }
 
-},{"./lodash":20}],26:[function(require,module,exports){
-module.exports = "0.4.3";
+},{"./lodash":21}],28:[function(require,module,exports){
+module.exports = "0.4.4";
 
 },{}]},{},[1])(1)
 });
