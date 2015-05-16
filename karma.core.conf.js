@@ -21,7 +21,7 @@ module.exports = function(config) {
       'node_modules/d3/d3.js',
       'node_modules/graphlib/dist/graphlib.core.js',
       'node_modules/dagre/dist/dagre.core.js',
-      'build/dagre-d3.core.js',
+      'dist/dagre-d3.core.js',
 
       'node_modules/chai/chai.js',
       'test/bundle-test.js'
@@ -36,7 +36,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'build/dagre-d3.core.js': 'coverage'
+      'dist/dagre-d3.core.js': 'coverage'
     },
 
 
@@ -46,12 +46,15 @@ module.exports = function(config) {
     reporters: ['progress', 'coverage'],
 
     coverageReporter: {
-      type: 'html',
-      dir: 'build/cov'
+      dir: 'build/cov',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ]
     },
 
     // web server port
-    port: 9876,
+    port: 9877,
 
 
     // enable / disable colors in the output (reporters and logs)

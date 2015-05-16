@@ -1,0 +1,26 @@
+{
+  "name": "${pkg.name}",
+  "version": "${pkg.version}",
+  "main": [
+    "dist/${pkg.name}.core.js"
+  ],
+  "ignore": [
+    ".*",
+    "README.md",
+    "CHANGELOG.md",
+    "Makefile",
+    "browser.js",
+    "build/**",
+    "dist/${pkg.name}.js",
+    "dist/${pkg.name}.min.js",
+    "dist/${pkg.name}.min.js.map",
+    "dist/demo/**",
+    "index.js",
+    "karma*",
+    "lib/**",
+    "package.json",
+    "src/**",
+    "test/**"
+  ],
+  "dependencies": ${ JSON.stringify(pkg.dependencies, null, 2) }
+}

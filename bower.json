@@ -1,9 +1,8 @@
 {
   "name": "dagre-d3",
-  "version": "0.4.4",
+  "version": "0.4.5-pre",
   "main": [
-    "dist/dagre-d3.core.js",
-    "dist/dagre-d3.core.min.js"
+    "dist/dagre-d3.core.js"
   ],
   "ignore": [
     ".*",
@@ -25,6 +24,7 @@
     "d3": "^3.3.8",
     "dagre": "^0.7.2",
     "graphlib": "^1.0.3",
+    "gulp-jshint": "^1.10.0",
     "lodash": "^2.4.1"
   }
 }

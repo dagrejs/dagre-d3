@@ -16,7 +16,7 @@ function htmlFile(file) { return file.match(/.*\.html/); }
 
 var remaining =  {};
 ls("./demo", htmlFile).forEach(function(f) { remaining[f] = true; });
-ls("./build/demo", htmlFile).forEach(function(f) { remaining[f] = true; });
+ls("./build/dist/demo", htmlFile).forEach(function(f) { remaining[f] = true; });
 var testCount = Object.keys(remaining).length;
 var failures = [];
 

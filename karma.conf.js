@@ -19,7 +19,7 @@ module.exports = function(config) {
 
       'node_modules/lodash/lodash.js',
       'node_modules/d3/d3.js',
-      'build/dagre-d3.js',
+      'dist/dagre-d3.js',
 
       'node_modules/chai/chai.js',
       'test/bundle-test.js'
