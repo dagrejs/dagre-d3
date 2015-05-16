@@ -23,14 +23,13 @@
     "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-changed": "^1.2.1",
-    "gulp-if": "^1.2.5",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-shell": "^0.4.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.4",
-    "jscs": "^1.7.3",
     "jshint": "^2.5.6",
     "jshint-stylish": "^1.0.2",
     "karma": "^0.12.24",
@@ -48,7 +47,6 @@
     "uglify-js": "^2.4.15",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0",
     "watchify": "^3.2.1"
   },
   "repository": {
