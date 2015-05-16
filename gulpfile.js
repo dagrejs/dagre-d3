@@ -57,10 +57,7 @@ gulp.task("js:watch", function() {
 });
 
 gulp.task("js:test", ["js:build"], function(cb) {
-    karma.start({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, cb);
+    karmaSingleRun(__dirname + "/karma.conf.js", cb);
 });
 
 gulp.task("js:test:watch", ["js:build"], function(cb) {
@@ -81,17 +78,20 @@ gulp.task("core-js:build", function() {
 });
 
 gulp.task("core-js:test", ["core-js:build"], function(cb) {
-    karma.start({
-        configFile: __dirname + "/karma.core.conf.js",
-        singleRun: true
-    }, cb);
+    karmaSingleRun(__dirname + "/karma.core.conf.js", cb);
 });
 
-gulp.task("build", ["demo:build", "js:build", "js:test", "core-js:build", "core-js:test", "demo:test"], function() {
+gulp.task("version:build", function() {
     var pkg = readPackageJson();
     fs.writeFileSync("lib/version.js", generateVersionJs(pkg));
+});
+
+gulp.task("bower:build", function() {
+    var pkg = readPackageJson();
     fs.writeFileSync("bower.json", generateBowerJson(pkg));
 });
+
+gulp.task("build", ["demo:build", "js:build", "js:test", "core-js:build", "core-js:test", "demo:test"]);
 
 gulp.task("watch", ["demo:watch", "js:watch", "js:test:watch"]);
 
@@ -108,7 +108,7 @@ gulp.task("serve", ["watch"], function() {
     });
 });
 
-gulp.task("dist", ["build"], function() {
+gulp.task("dist", ["version:build", "bower:build", "build"], function() {
     return gulp.src(BUILD_DIST_DIR + "/**/*")
         .pipe(gulp.dest(DIST_DIR));
 });
@@ -123,6 +123,19 @@ gulp.task("clean", function(cb) {
 });
 
 gulp.task("default", ["build"]);
+
+function karmaSingleRun(conf, cb) {
+    var args = {
+        configFile: conf,
+        singleRun: true
+    };
+
+    if (process.env.BROWSERS) {
+        args.browsers = process.env.BROWSERS.split(",");
+    }
+
+    karma.start(args, cb);
+}
 
 function makeJsBundleTask(watch) {
     return makeBundleTask("./index.js", "dagre-d3.js", watch, {
