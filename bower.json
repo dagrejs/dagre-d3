@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "main": [
     "dist/dagre-d3.core.js"
   ],
@@ -26,7 +26,6 @@
     "d3": "^3.3.8",
     "dagre": "^0.7.2",
     "graphlib": "^1.0.3",
-    "gulp-jshint": "^1.10.0",
     "lodash": "^2.4.1"
   }
 }
