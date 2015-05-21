@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.4.6-pre",
+  "version": "0.4.8-pre",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
   "keywords": [
@@ -13,7 +13,6 @@
     "d3": "^3.3.8",
     "dagre": "^0.7.2",
     "graphlib": "^1.0.3",
-    "gulp-jshint": "^1.10.0",
     "lodash": "^2.4.1"
   },
   "devDependencies": {
@@ -23,6 +22,7 @@
     "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-changed": "^1.2.1",
+    "gulp-jshint": "^1.10.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-shell": "^0.4.1",
