@@ -11,9 +11,9 @@
   ],
   "dependencies": {
     "d3": "^3.3.8",
-    "dagre": "^0.7.2",
-    "graphlib": "^1.0.3",
-    "lodash": "^2.4.1"
+    "dagre": "^0.7.3",
+    "graphlib": "^1.0.5",
+    "lodash": "^3.10.0"
   },
   "devDependencies": {
     "browser-sync": "^2.7.1",
@@ -32,12 +32,12 @@
     "gulp-watch": "^4.2.4",
     "jshint": "^2.5.6",
     "jshint-stylish": "^1.0.2",
-    "karma": "^0.12.24",
-    "karma-chrome-launcher": "^0.1.5",
-    "karma-coverage": "^0.2.6",
-    "karma-firefox-launcher": "^0.1.3",
-    "karma-mocha": "^0.1.9",
-    "karma-phantomjs-launcher": "^0.1.4",
+    "karma": "^0.12.37",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.4.2",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0",
     "karma-safari-launcher": "^0.1.1",
     "merge-stream": "^0.1.7",
     "mocha": "^1.21.5",
