@@ -246,12 +246,11 @@
     inner.call(render, g);
 
     // Zoom and scale to fit
-    var zoomScale = zoom.scale();
     var graphWidth = g.graph().width + 80;
     var graphHeight = g.graph().height + 40;
     var width = parseInt(svg.style("width").replace(/px/, ""));
     var height = parseInt(svg.style("height").replace(/px/, ""));
-    zoomScale = Math.min(width / graphWidth, height / graphHeight);
+    var zoomScale = Math.min(width / graphWidth, height / graphHeight);
     var translate = [(width/2) - ((graphWidth*zoomScale)/2), (height/2) - ((graphHeight*zoomScale)/2)];
     zoom.translate(translate);
     zoom.scale(zoomScale);
