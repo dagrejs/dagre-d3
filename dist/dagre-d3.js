@@ -218,7 +218,7 @@ function createEdgePaths(selection, g, arrows) {
 
       var domEdge = d3.select(this)
         .attr("marker-end", function() {
-          return "url(#" + edge.arrowheadId + ")";
+          return "url(" + location.href + "#" + edge.arrowheadId + ")";
         })
         .style("fill", "none");
 

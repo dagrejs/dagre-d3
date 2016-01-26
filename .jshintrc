@@ -6,5 +6,8 @@
     "trailing": true,
     "laxbreak": true,
     "node": true,
-    "expr": true
+    "expr": true,
+    "globals": {
+        "location": false
+    }
 }
