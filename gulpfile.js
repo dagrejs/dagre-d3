@@ -27,7 +27,7 @@ var BUILD_DIR = "build";
 var BUILD_DIST_DIR = "build/dist";
 var DIST_DIR = "dist";
 var DEMO_SRC = "demo/**/*";
-var DEMO_BUILD = BUILD_DIST_DIR + "/demo"; 
+var DEMO_BUILD = BUILD_DIST_DIR + "/demo";
 
 gulp.task("demo:build", function() {
     return gulp.src(DEMO_SRC)
