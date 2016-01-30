@@ -27,6 +27,13 @@ text {
   fill: none;
   stroke-width: 1.5px;
 }
+
+.arrowhead {
+ stroke: blue;
+ fill: blue;
+ stroke-width: 1.5px;
+}
+
 </style>
 
 <svg id="svg" width=960 height=600></svg>
@@ -51,6 +58,8 @@ g.setNode("C", { labelStyle: "font-size: 2em" });
 
 g.setNode("D", {});
 
+g.setNode("E", {});
+
 // Make the edge from "A" to "B" red, thick, and dashed
 g.setEdge("A", "B", {
   style: "stroke: #f66; stroke-width: 3px; stroke-dasharray: 5, 5;",
@@ -68,6 +77,14 @@ g.setEdge("C", "B", {
 g.setEdge("A", "D", {
   label: "line interpolation different",
   lineInterpolate: 'basis' 
+});
+
+g.setEdge("E", "D", {});
+
+// Make the arrowhead blue
+g.setEdge("A", "E", {
+  label: "Arrowhead class",
+  arrowheadClass: 'arrowhead'
 });
 
 // Create the renderer
