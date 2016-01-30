@@ -21,7 +21,7 @@ module.exports = function(config) {
       'node_modules/d3/d3.js',
       'node_modules/graphlib/dist/graphlib.core.js',
       'node_modules/dagre/dist/dagre.core.js',
-      'dist/dagre-d3.core.js',
+      'build/dist/dagre-d3.core.js',
 
       'node_modules/chai/chai.js',
       'test/bundle-test.js'
