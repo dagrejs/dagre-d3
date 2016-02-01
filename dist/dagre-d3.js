@@ -299,7 +299,7 @@ function createLine(edge, points) {
 
 function getCoords(elem) {
   var bbox = elem.getBBox(),
-      matrix = elem.getTransformToElement(elem.ownerSVGElement)
+      matrix = elem.ownerSVGElement.getScreenCTM()
         .translate(bbox.width / 2, bbox.height / 2);
   return { x: matrix.e, y: matrix.f };
 }
