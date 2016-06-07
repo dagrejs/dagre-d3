@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.4.17",
+  "version": "0.4.18-pre",
   "main": [
     "dist/dagre-d3.core.js"
   ],
