@@ -117,8 +117,7 @@ var dagred3Story = function(svgelement, graphType, interframetime) {
 	this.svg = d3.select(svgelement);
   this.inner = this.svg.append("g");
 	this.svg.call(d3.zoom().on("zoom", (function() {
-		this.inner.attr("transform", "translate(" + d3.event.translate + ")" +
-		                                 "scale(" + d3.event.scale + ")")
+		this.inner.attr("transform", d3.event.transform)
   }).bind(this)));
 	
 	this.t = 0;
