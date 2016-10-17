@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <title>Graph Storyboard. Add and Prune Dependencies Algorithm</title>
 
-<script src="http://d3js.org/d3.v3.js"></script>
+<script src="http://d3js.org/d3.v4.js"></script>
 <script src="../build/dist/dagre-d3.js"></script>
 
 <style id="css">
@@ -116,7 +116,7 @@ var dagred3Story = function(svgelement, graphType, interframetime) {
 	}
 	this.svg = d3.select(svgelement);
   this.inner = this.svg.append("g");
-	this.svg.call(d3.behavior.zoom().on("zoom", (function() {
+	this.svg.call(d3.zoom().on("zoom", (function() {
 		this.inner.attr("transform", "translate(" + d3.event.translate + ")" +
 		                                 "scale(" + d3.event.scale + ")")
   }).bind(this)));
