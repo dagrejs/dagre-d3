@@ -196,8 +196,7 @@
   var svg = d3.select("svg"),
       inner = svg.select("g"),
       zoom = d3.zoom().on("zoom", function() {
-        inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                                    "scale(" + d3.event.scale + ")");
+        inner.attr("transform", d3.event.transform);
       });
   svg.call(zoom);
 
@@ -251,10 +250,9 @@
     var width = parseInt(svg.style("width").replace(/px/, ""));
     var height = parseInt(svg.style("height").replace(/px/, ""));
     var zoomScale = Math.min(width / graphWidth, height / graphHeight);
-    var translate = [(width/2) - ((graphWidth*zoomScale)/2), (height/2) - ((graphHeight*zoomScale)/2)];
-    zoom.translate(translate);
-    zoom.scale(zoomScale);
-    zoom.event(isUpdate ? svg.transition().duration(500) : d3.select("svg"));
+    var zoomer = isUpdate ? svg.transition().duration(500) : d3.select("svg");
+    
+    zoomer.call(zoom.transform,  d3.zoomIdentity.translate(((width/2) - (graphWidth*zoomScale)/2), ((height/2) - (graphHeight*zoomScale)/2)).scale(zoomScale));
   }
 
   // Do some mock queue status updates

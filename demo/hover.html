@@ -167,10 +167,10 @@ var svg = d3.select("svg"),
     inner = svg.append("g");
 
 // Set up zoom support
-var zoom = d3.zoom().on("zoom", function() {
-    inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                                "scale(" + d3.event.scale + ")");
-  });
+var zoom = d3.zoom()
+    .on("zoom", function() {
+      inner.attr("transform", d3.event.transform);
+    });
 svg.call(zoom);
 
 // Simple function to style the tooltip for the given node.
@@ -187,10 +187,8 @@ inner.selectAll("g.node")
 
 // Center the graph
 var initialScale = 0.75;
-zoom
-  .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
-  .scale(initialScale)
-  .event(svg);
+svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
+
 svg.attr('height', g.graph().height * initialScale + 40);
 </script>
 
