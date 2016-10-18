@@ -91,9 +91,9 @@ gulp.task("bower:build", function() {
     fs.writeFileSync("bower.json", generateBowerJson(pkg));
 });
 
-gulp.task("build", ["demo:build", "js:build", "js:test", "core-js:build", "core-js:test", "demo:test"]);
+gulp.task("build", ["demo:build", "js:build", "core-js:build"]);
 
-gulp.task("watch", ["demo:watch", "js:watch", "js:test:watch"]);
+gulp.task("watch", ["demo:watch", "js:watch"]);
 
 gulp.task("serve", ["watch"], function() {
     browserSync.init({

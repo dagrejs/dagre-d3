@@ -12,7 +12,7 @@
   "dependencies": {
     "d3": "^4.2.7",
     "dagre": "^0.7.3",
-    "graphlib": "^1.0.7",
+    "graphlib": "^2.1.1",
     "lodash": "^4.16.4"
   },
   "devDependencies": {
