@@ -21,6 +21,7 @@
  * THE SOFTWARE.
  */
 module.exports =  {
+  lodash: require("./lib/lodash"),
   graphlib: require("./lib/graphlib"),
   dagre: require("./lib/dagre"),
   intersect: require("./lib/intersect"),
