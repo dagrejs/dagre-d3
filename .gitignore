@@ -6,3 +6,4 @@
 *.ipr
 .vscode
 yarn.lock
+.DS_Store
