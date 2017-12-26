@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Prints the current version from the specified package-file to stdout or
  * fails with an error if either the version cannot be determined or it is
