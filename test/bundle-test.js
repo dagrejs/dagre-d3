@@ -211,8 +211,8 @@ describe("dagreD3", function() {
 
       var text = d3.select("#a text");
       expect(text.empty()).to.be.false;
-      expect(d3.select(text.selectAll("tspan")[0][0]).text()).equals("multi");
-      expect(d3.select(text.selectAll("tspan")[0][1]).text()).equals("line");
+      expect(d3.select(text.selectAll("tspan").nodes()[0]).text()).equals("multi");
+      expect(d3.select(text.selectAll("tspan").nodes()[1]).text()).equals("line");
     });
 
     it("on '\\\\n'", function() {
@@ -221,8 +221,8 @@ describe("dagreD3", function() {
 
       var text = d3.select("#a text");
       expect(text.empty()).to.be.false;
-      expect(d3.select(text.selectAll("tspan")[0][0]).text()).equals("multi");
-      expect(d3.select(text.selectAll("tspan")[0][1]).text()).equals("line");
+      expect(d3.select(text.selectAll("tspan").nodes()[0]).text()).equals("multi");
+      expect(d3.select(text.selectAll("tspan").nodes()[1]).text()).equals("line");
     });
   });
 

@@ -140,7 +140,7 @@ function karmaSingleRun(conf, cb) {
 function makeJsBundleTask(watch) {
     return makeBundleTask("./index.js", "dagre-d3.js", watch, {
         standalone: "dagreD3",
-        external: ["node_modules/d3/index.js", "node_modules/d3/d3.js"],
+        external: ["node_modules/d3/index.js", "node_modules/d3/build/d3.js"],
         debug: true
     });
 }
