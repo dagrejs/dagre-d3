@@ -8,56 +8,57 @@ bail() {
 }
 
 # Initial config
-PROJECT=dagre-d3
+PROJECT=$1
 PROJECT_ROOT=`pwd`
-DOC_DIR=/tmp/dagre-d3-doc
-DIST_DIR=dist
+PAGES_DIR=/tmp/$PROJECT-pages
+DIST_DIR=$2
 
 # Check version. Is this a release? If not abort
-VERSION=$(node src/release/check-version.js)
+VERSION=$(./src/release/check-version.js)
+SHORT_VERSION=$(echo $VERSION | cut -f1 -d-)
 
 echo Attemping to publish version: $VERSION
 
 # Preflight checks
-[ -z "`git tag -l v$VERSION`"] || bail "Version already published. Skipping publish."
-[ "`git rev-parse HEAD`" = "`git rev-parse master`" ] || bail "ERROR: You must release from the master branch"
+[ -n "$PROJECT" ] || bail "No project name was specified."
+[ -n "$DIST_DIR" ] || bail "No dist dir was specified."
+[ -z "`git tag -l v$VERSION`" ] || bail "Version already published. Skipping publish."
+[ "`git rev-parse HEAD`" = "`git rev-parse master`" ] || [ -n "$PRE_RELEASE" ] || bail "ERROR: You must release from the master branch"
 [ -z "`git status --porcelain`" ] || bail "ERROR: Dirty index on working tree. Use git status to check"
 
-# Pull remote repos
-rm -rf $DOC_DIR
-git clone git@github.com:cpettitt/cpettitt.github.com.git $DOC_DIR
+# Publish to pages
+rm -rf $PAGES_DIR
+git clone git@github.com:dagrejs/dagrejs.github.io.git $PAGES_DIR
 
-# Publish docs
-echo Preparing to publish docs
-cd $DOC_DIR
-mkdir -p project/$PROJECT
-TARGET=project/$PROJECT/latest
-git rm -r $TARGET || true
-cp -r $PROJECT_ROOT/$DIST_DIR $TARGET
-git add $TARGET
+TMP_TARGET=$PAGES_DIR/project/$PROJECT/latest
+rm -rf $TMP_TARGET
+mkdir -p $TMP_TARGET
+cp -r $DIST_DIR/*.js $TMP_TARGET
 
-TARGET=project/$PROJECT/v$VERSION
-cp -r $PROJECT_ROOT/$DIST_DIR $TARGET
-git add $TARGET
+TMP_TARGET=$PAGES_DIR/project/$PROJECT/v$VERSION
+rm -rf $TMP_TARGET
+mkdir -p $TMP_TARGET
+cp -r $DIST_DIR/*.js $TMP_TARGET
 
-git commit -m "Publish docs for $PROJECT v$VERSION"
-git push origin
-
+cd $PAGES_DIR/project/$PROJECT
+git add -A
+git commit -m "Publishing $PROJECT v$VERSION"
+git push -f origin master
 cd $PROJECT_ROOT
-echo Done with docs
+echo "Published $PROJECT to pages"
 
 # Publish tag
 git tag v$VERSION
 git push origin
 git push origin v$VERSION
-echo Published dagre-d3 v$VERSION
+echo Published $PROJECT v$VERSION
 
 # Publish to npm
-npm publish
+npm publish --access=public
 echo Published to npm
 
 # Update patch level version + commit
-node src/release/bump-version.js
+./src/release/bump-version.js
 make lib/version.js
 git commit package.json lib/version.js -m "Bump version and set as pre-release"
 git push origin

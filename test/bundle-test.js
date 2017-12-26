@@ -98,8 +98,8 @@ describe("dagreD3", function() {
     g.setNode("a", { id: "a", width: 1000, height: 2000, padding: 0 });
     dagreD3.render()(svg, g);
 
-    expect(d3.select("#a").node().getBBox().width).to.equal(1000);
-    expect(d3.select("#a").node().getBBox().height).to.equal(2000);
+    expect(Math.round(d3.select("#a").node().getBBox().width)).to.equal(1000);
+    expect(Math.round(d3.select("#a").node().getBBox().height)).to.equal(2000);
   });
 
   it("does not grow node dimensions when re-rendering", function() {
