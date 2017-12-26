@@ -7,8 +7,6 @@ actual rendering using [D3](http://d3js.org).
 For more details, including examples and configuration options, please see our
 [wiki](https://github.com/dagrejs/dagre-d3/wiki).
 
-**This project is not being actively developed or maintained.**
-
 ## License
 
 dagre-d3 is licensed under the terms of the MIT License. See the LICENSE file
