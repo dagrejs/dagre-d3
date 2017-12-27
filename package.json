@@ -1,6 +1,6 @@
 {
   "name": "@dagrejs/dagre-d3",
-  "version": "0.5.3",
+  "version": "0.5.4-pre",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
   "keywords": [
