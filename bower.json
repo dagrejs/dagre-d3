@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.5.0",
+  "version": "0.5.1-pre",
   "main": [
     "dist/dagre-d3.core.js"
   ],
@@ -10,11 +10,8 @@
     "CHANGELOG.md",
     "Makefile",
     "browser.js",
-    "build/**",
     "dist/dagre-d3.js",
     "dist/dagre-d3.min.js",
-    "dist/dagre-d3.min.js.map",
-    "dist/demo/**",
     "index.js",
     "karma*",
     "lib/**",

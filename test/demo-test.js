@@ -14,9 +14,10 @@ var reset = "\033[0m";
 
 function htmlFile(file) { return file.match(/.*\.html/); }
 
+fs.changeWorkingDirectory("./build/dist/demo");
+
 var remaining =  {};
-ls("./demo", htmlFile).forEach(function(f) { remaining[f] = true; });
-ls("./build/dist/demo", htmlFile).forEach(function(f) { remaining[f] = true; });
+ls(".", htmlFile).forEach(function(f) { remaining[f] = true; });
 var testCount = Object.keys(remaining).length;
 var failures = [];
 

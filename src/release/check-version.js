@@ -16,9 +16,10 @@ if (!("version" in packageJson)) {
   bail("ERROR: Could not find version in package.json");
 }
 
-var ver = semver.parse(packageJson.version);
+var ver = semver.parse(packageJson.version),
+    preRelease = process.env.PRE_RELEASE;
 
-if (ver.prerelease.length > 0) {
+if (ver.prerelease.length > 0 && !preRelease) {
   bail("ERROR: version is a pre-release: " + ver);
 }
 
