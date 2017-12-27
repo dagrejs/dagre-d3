@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Bumps the minor version and sets the prelease tag.
  */
