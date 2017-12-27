@@ -1192,7 +1192,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.5.2";
+module.exports = "0.5.3";
 
 },{}]},{},[1])(1)
 });
