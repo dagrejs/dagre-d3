@@ -33,12 +33,12 @@ git clone git@github.com:dagrejs/dagrejs.github.io.git $PAGES_DIR
 TMP_TARGET=$PAGES_DIR/project/$PROJECT/latest
 rm -rf $TMP_TARGET
 mkdir -p $TMP_TARGET
-cp -r $DIST_DIR/*.js $TMP_TARGET
+cp -r $DIST_DIR/* $TMP_TARGET
 
 TMP_TARGET=$PAGES_DIR/project/$PROJECT/v$VERSION
 rm -rf $TMP_TARGET
 mkdir -p $TMP_TARGET
-cp -r $DIST_DIR/*.js $TMP_TARGET
+cp -r $DIST_DIR/* $TMP_TARGET
 
 cd $PAGES_DIR/project/$PROJECT
 git add -A
