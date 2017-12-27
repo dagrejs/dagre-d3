@@ -4,7 +4,7 @@
 <title>Dagre D3 Demo: TCP State Diagram</title>
 
 <link rel="stylesheet" href="demo.css">
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
 <script src="../build/dist/dagre-d3.js"></script>
 
 <style id="css">
@@ -81,9 +81,8 @@ var svg = d3.select("svg"),
     inner = svg.select("g");
 
 // Set up zoom support
-var zoom = d3.behavior.zoom().on("zoom", function() {
-      inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                                  "scale(" + d3.event.scale + ")");
+var zoom = d3.zoom().on("zoom", function() {
+      inner.attr("transform", d3.event.transform);
     });
 svg.call(zoom);
 
@@ -95,10 +94,8 @@ render(inner, g);
 
 // Center the graph
 var initialScale = 0.75;
-zoom
-  .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
-  .scale(initialScale)
-  .event(svg);
+svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
+
 svg.attr('height', g.graph().height * initialScale + 40);
 </script>
 

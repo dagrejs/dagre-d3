@@ -18,7 +18,7 @@ module.exports = function(config) {
       { pattern: 'test/*.css', included: false },
 
       'node_modules/lodash/index.js',
-      'node_modules/d3/d3.js',
+      'node_modules/d3/build/d3.js',
       'build/dist/dagre-d3.js',
 
       'node_modules/chai/chai.js',
