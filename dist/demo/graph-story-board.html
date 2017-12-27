@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <title>Graph Storyboard. Add and Prune Dependencies Algorithm</title>
 
-<script src="http://d3js.org/d3.v3.js"></script>
+<script src="http://d3js.org/d3.v4.js"></script>
 <script src="../dagre-d3.js"></script>
 
 <style id="css">
@@ -116,9 +116,8 @@ var dagred3Story = function(svgelement, graphType, interframetime) {
 	}
 	this.svg = d3.select(svgelement);
   this.inner = this.svg.append("g");
-	this.svg.call(d3.behavior.zoom().on("zoom", (function() {
-		this.inner.attr("transform", "translate(" + d3.event.translate + ")" +
-		                                 "scale(" + d3.event.scale + ")")
+	this.svg.call(d3.zoom().on("zoom", (function() {
+		this.inner.attr("transform", d3.event.transform)
   }).bind(this)));
 	
 	this.t = 0;
@@ -144,12 +143,12 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 					break;
 				case 'AddCoherenceEdge':
 					this.g.setEdge(x[1], x[2], {
-						lineInterpolate: 'basis' 
+						lineInterpolate: d3.curveBasis 
 					});
 					break;
 				case 'AddDependencyEdge':
 					this.g.setEdge(x[1], x[2], {
-						lineInterpolate: 'basis'
+						lineInterpolate: d3.curveBasis
 						,label: 'added'
 						,labeloffset: 5
 						,labelpos: 'l'
@@ -158,7 +157,7 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 				case 'MakeRedundantEdge':
 					this.g.setEdge(x[1], x[2], {
 						style: "stroke: #aaa;   stroke-dasharray: 5, 10;" 
-						,lineInterpolate: 'basis'
+						,lineInterpolate: d3.curveBasis
 						,arrowheadStyle: "fill: #aaa"
 						,labelpos: 'c'
 						,label: 'pruned'
