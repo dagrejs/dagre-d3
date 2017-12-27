@@ -10,10 +10,10 @@
     "renderer"
   ],
   "dependencies": {
-    "d3": "^3.3.8",
-    "dagre": "^0.7.3",
-    "graphlib": "^1.0.5",
-    "lodash": "^3.10.0"
+    "d3": "^4.6.0",
+    "dagre": "^0.7.4",
+    "graphlib": "^2.1.1",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "browser-sync": "^2.7.1",
@@ -49,7 +49,7 @@
     "uglify-js": "^2.4.15",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.1"
+    "watchify": "^3.9.0"
   },
   "repository": {
     "type": "git",
