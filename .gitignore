@@ -1,6 +1,7 @@
 /bower_components
 /build
 /node_modules
+.vscode
 .idea
 *.iml
 *.ipr
