@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "d3": "^4.12.2",
-    "dagre": "^0.7.3",
+    "@dagrejs/dagre": "^0.7.3",
     "graphlib": "^1.0.5",
     "lodash": "^3.10.0"
   },

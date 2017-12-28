@@ -20,7 +20,7 @@ module.exports = function(config) {
       'node_modules/lodash/index.js',
       'node_modules/d3/build/d3.js',
       'node_modules/graphlib/dist/graphlib.core.js',
-      'node_modules/dagre/dist/dagre.core.js',
+      'node_modules/@dagrejs/dagre/dist/dagre.core.js',
       'build/dist/dagre-d3.core.js',
 
       'node_modules/chai/chai.js',
