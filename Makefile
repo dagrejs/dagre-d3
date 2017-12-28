@@ -27,12 +27,9 @@ BUILD_FILES = $(addprefix $(BUILD_DIR)/dist/, \
 
 DIRS = $(BUILD_DIR) $(BUILD_DIR)/dist $(BUILD_DIR)/dist/demo
 
-.PHONY: all bench clean browser-test demo-test test dist
+.PHONY: all clean browser-test demo-test test dist
 
 all: test
-
-bench: test
-	@src/bench.js
 
 lib/version.js: package.json
 	@src/release/make-version.js > $@
