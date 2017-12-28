@@ -2,7 +2,10 @@
   "name": "dagre-d3",
   "version": "0.5.3",
   "main": [
-    "dist/dagre-d3.core.js"
+    "dist/dagre-d3.core.js",
+    "dist/dagre-d3.core.min.js",
+    "dist/dagre-d3.js",
+    "dist/dagre-d3.min.js"
   ],
   "ignore": [
     ".*",
@@ -10,8 +13,6 @@
     "CHANGELOG.md",
     "Makefile",
     "browser.js",
-    "dist/dagre-d3.js",
-    "dist/dagre-d3.min.js",
     "index.js",
     "karma*",
     "lib/**",
