@@ -1,5 +1,6 @@
 MOD = dagre-d3
 
+NODE = node
 NPM = npm
 BROWSERIFY = ./node_modules/browserify/bin/cmd.js
 ISTANBUL = ./node_modules/istanbul/lib/cli.js
@@ -37,7 +38,7 @@ lib/version.js: package.json
 $(DIRS):
 	@mkdir -p $@
 
-test: browser-test demo-test
+test: browser-test demo-test node-test
 
 browser-test: $(BUILD_FILES)
 	$(KARMA) start --single-run $(KARMA_OPTS)
@@ -45,6 +46,9 @@ browser-test: $(BUILD_FILES)
 
 demo-test: test/demo-test.js | $(BUILD_FILES)
 	$(PHANTOMJS) $<
+
+node-test: test/node-test.js | $(BUILD_FILES)
+	$(NODE) $<
 
 bower.json: package.json src/release/make-bower.json.js
 	@src/release/make-bower.json.js > $@
