@@ -1,5 +1,5 @@
 {
-  "name": "@dagrejs/dagre-d3",
+  "name": "dagre-d3",
   "version": "0.5.4-pre",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "d3": "^4.12.2",
-    "@dagrejs/dagre": "^0.7.3",
+    "dagre": "^0.7.3",
     "graphlib": "^1.0.5",
     "lodash": "^3.10.0"
   },
