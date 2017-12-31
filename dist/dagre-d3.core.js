@@ -390,9 +390,25 @@ function createNodes(selection, g, shapes) {
 
 },{"./d3":7,"./label/add-label":18,"./lodash":21,"./util":27}],7:[function(require,module,exports){
 // Stub to get D3 either via NPM or from the global object
-module.exports = window.d3;
+var d3;
 
-},{}],8:[function(require,module,exports){
+if (!d3) {
+  if (require) {
+    try {
+      d3 = require("d3");
+    }
+    catch (e) {
+    }
+  }
+}
+
+if (!d3) {
+  d3 = window.d3;
+}
+
+module.exports = d3;
+
+},{"d3":undefined}],8:[function(require,module,exports){
 /* global window */
 
 var dagre;
@@ -883,6 +899,7 @@ function positionNodes(selection, g) {
 
 },{"./d3":7,"./util":27}],25:[function(require,module,exports){
 var _ = require("./lodash"),
+    d3 = require("./d3"),
     layout = require("./dagre").layout;
 
 module.exports = render;
@@ -1052,7 +1069,7 @@ function createOrSelectGroup(root, name) {
   return selection;
 }
 
-},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./dagre":8,"./lodash":21,"./position-clusters":22,"./position-edge-labels":23,"./position-nodes":24,"./shapes":26}],26:[function(require,module,exports){
+},{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./d3":7,"./dagre":8,"./lodash":21,"./position-clusters":22,"./position-edge-labels":23,"./position-nodes":24,"./shapes":26}],26:[function(require,module,exports){
 "use strict";
 
 var intersectRect = require("./intersect/intersect-rect"),
@@ -1192,7 +1209,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.5.3";
+module.exports = "0.5.4";
 
 },{}]},{},[1])(1)
 });
