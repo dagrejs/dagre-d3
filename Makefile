@@ -53,13 +53,13 @@ node-test: test/node-test.js | $(BUILD_FILES)
 bower.json: package.json src/release/make-bower.json.js
 	@src/release/make-bower.json.js > $@
 
-$(BUILD_DIR)/dist/$(MOD).js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist
+$(BUILD_DIR)/dist/$(MOD).js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist node_modules
 	@$(BROWSERIFY) $< > $@ -s dagreD3
 
 $(BUILD_DIR)/dist/$(MOD).min.js: $(BUILD_DIR)/dist/$(MOD).js | $(BUILD_DIR)/dist
 	@$(UGLIFY) $< --comments '@license' --source-map --output $@
 
-$(BUILD_DIR)/dist/$(MOD).core.js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist
+$(BUILD_DIR)/dist/$(MOD).core.js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist node_modules
 	@$(BROWSERIFY) $< > $@ --no-bundle-external -s dagreD3
 
 $(BUILD_DIR)/dist/$(MOD).core.min.js: $(BUILD_DIR)/dist/$(MOD).core.js | $(BUILD_DIR)/dist

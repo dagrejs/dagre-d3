@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "main": [
     "dist/dagre-d3.core.js"
   ],
@@ -21,8 +21,8 @@
   ],
   "dependencies": {
     "d3": "^4.12.2",
-    "dagre": "^0.7.3",
-    "graphlib": "^1.0.5",
-    "lodash": "^3.10.0"
+    "dagre": "^0.8.1",
+    "graphlib": "^2.1.5",
+    "lodash": "^4.17.4"
   }
 }
