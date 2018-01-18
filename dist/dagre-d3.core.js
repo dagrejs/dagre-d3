@@ -105,6 +105,7 @@ function undirected(parent, id, edge, type) {
 
 },{"./util":27}],3:[function(require,module,exports){
 var util = require("./util"),
+    d3 = require("./d3"),
     addLabel = require("./label/add-label");
 
 module.exports = createClusters;
@@ -150,7 +151,7 @@ function createClusters(selection, g) {
   return svgClusters;
 }
 
-},{"./label/add-label":18,"./util":27}],4:[function(require,module,exports){
+},{"./d3":7,"./label/add-label":18,"./util":27}],4:[function(require,module,exports){
 "use strict";
 
 var _ = require("./lodash"),
@@ -275,7 +276,7 @@ function createLine(edge, points) {
     .x(function(d) { return d.x; })
     .y(function(d) { return d.y; });
   
-  line.curve(edge.lineCurve);
+  line.curve(edge.curve);
 
   return line(points);
 }
@@ -990,7 +991,7 @@ var NODE_DEFAULT_ATTRS = {
 
 var EDGE_DEFAULT_ATTRS = {
   arrowhead: "normal",
-  lineCurve: d3.curveLinear
+  curve: d3.curveLinear
 };
 
 function preProcessGraph(g) {
@@ -1209,7 +1210,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.0";
+module.exports = "0.6.1";
 
 },{}]},{},[1])(1)
 });
