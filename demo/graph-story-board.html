@@ -143,12 +143,12 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 					break;
 				case 'AddCoherenceEdge':
 					this.g.setEdge(x[1], x[2], {
-						lineInterpolate: d3.curveBasis 
+						curve: d3.curveBasis 
 					});
 					break;
 				case 'AddDependencyEdge':
 					this.g.setEdge(x[1], x[2], {
-						lineInterpolate: d3.curveBasis
+						curve: d3.curveBasis
 						,label: 'added'
 						,labeloffset: 5
 						,labelpos: 'l'
@@ -157,7 +157,7 @@ dagred3Story.prototype.animateFrame = function(RenderAfter, Frame) {
 				case 'MakeRedundantEdge':
 					this.g.setEdge(x[1], x[2], {
 						style: "stroke: #aaa;   stroke-dasharray: 5, 10;" 
-						,lineInterpolate: d3.curveBasis
+						,curve: d3.curveBasis
 						,arrowheadStyle: "fill: #aaa"
 						,labelpos: 'c'
 						,label: 'pruned'
