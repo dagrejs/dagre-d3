@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.dagreD3 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.dagreD3 = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
  * @license
  * Copyright (c) 2012-2013 Chris Pettitt
@@ -144,7 +144,15 @@ function createClusters(selection, g) {
     util.applyStyle(domCluster, node.style);
   });
 
-  util.applyTransition(svgClusters.exit(), g)
+  var exitSelection;
+
+  if (svgClusters.exit) {
+    exitSelection = svgClusters.exit();
+  } else {
+    exitSelection = svgClusters.selectAll(null); // empty selection
+  }
+
+  util.applyTransition(exitSelection, g)
     .style("opacity", 0)
     .remove();
 
@@ -166,17 +174,19 @@ function createEdgeLabels(selection, g) {
     .data(g.edges(), function(e) { return util.edgeToId(e); })
     .classed("update", true);
 
-  svgEdgeLabels.selectAll("*").remove();
+  svgEdgeLabels.exit().remove();
   svgEdgeLabels.enter()
     .append("g")
       .classed("edgeLabel", true)
       .style("opacity", 0);
 
   svgEdgeLabels = selection.selectAll("g.edgeLabel");
-  
+
   svgEdgeLabels.each(function(e) {
+    var root = d3.select(this);
+    root.select('.label').remove();
     var edge = g.edge(e),
-        label = addLabel(d3.select(this), g.edge(e), 0, 0).classed("label", true),
+        label = addLabel(root, g.edge(e), 0, 0).classed("label", true),
         bbox = label.node().getBBox();
 
     if (edge.labelId) { label.attr("id", edge.labelId); }
@@ -184,7 +194,15 @@ function createEdgeLabels(selection, g) {
     if (!_.has(edge, "height")) { edge.height = bbox.height; }
   });
 
-  util.applyTransition(svgEdgeLabels.exit(), g)
+  var exitSelection;
+
+  if (svgEdgeLabels.exit) {
+    exitSelection = svgEdgeLabels.exit();
+  } else {
+    exitSelection = svgEdgeLabels.selectAll(null); // empty selection
+  }
+
+  util.applyTransition(exitSelection, g)
     .style("opacity", 0)
     .remove();
 
@@ -201,15 +219,14 @@ var _ = require("./lodash"),
 module.exports = createEdgePaths;
 
 function createEdgePaths(selection, g, arrows) {
-  var svgPaths = selection.selectAll("g.edgePath")
+  var previousPaths = selection.selectAll("g.edgePath")
     .data(g.edges(), function(e) { return util.edgeToId(e); })
     .classed("update", true);
 
-  enter(svgPaths, g);
-  exit(svgPaths, g);
+  var newPaths = enter(previousPaths, g);
+  exit(previousPaths, g);
 
-  svgPaths = selection.selectAll("g.edgePath");
-
+  var svgPaths = previousPaths.merge(newPaths);
   util.applyTransition(svgPaths, g)
     .style("opacity", 1);
 
@@ -272,11 +289,11 @@ function calcPoints(g, e) {
 }
 
 function createLine(edge, points) {
-  var line = d3.line()
+  var line = (d3.line || d3.svg.line)()
     .x(function(d) { return d.x; })
     .y(function(d) { return d.y; });
   
-  line.curve(edge.curve);
+  (line.curve || line.interpolate)(edge.curve);
 
   return line(points);
 }
@@ -304,6 +321,7 @@ function enter(svgPaths, g) {
       return createLine(edge, points);
     });
   svgPathsEnter.append("defs");
+  return svgPathsEnter;
 }
 
 function exit(svgPaths, g) {
@@ -311,18 +329,6 @@ function exit(svgPaths, g) {
   util.applyTransition(svgPathExit, g)
     .style("opacity", 0)
     .remove();
-
-  util.applyTransition(svgPathExit.select("path.path"), g)
-    .attr("d", function(e) {
-      var source = g.node(e.v);
-
-      if (source) {
-        var points = _.range(this.getTotalLength()).map(function() { return source; });
-        return createLine({}, points);
-      } else {
-        return d3.select(this).attr("d");
-      }
-    });
 }
 
 },{"./d3":7,"./intersect/intersect-node":14,"./lodash":21,"./util":27}],6:[function(require,module,exports){
@@ -341,7 +347,7 @@ function createNodes(selection, g, shapes) {
     .data(simpleNodes, function(v) { return v; })
     .classed("update", true);
 
-  svgNodes.selectAll("*").remove();
+  svgNodes.exit().remove();
 
   svgNodes.enter()
     .append("g")
@@ -355,6 +361,8 @@ function createNodes(selection, g, shapes) {
         thisGroup = d3.select(this);
     util.applyClass(thisGroup, node["class"],
       (thisGroup.classed("update") ? "update " : "") + "node");
+
+    thisGroup.select("g.label").remove();
     var labelGroup = thisGroup.append("g").attr("class", "label"),
         labelDom = addLabel(labelGroup, node),
         shape = shapes[node.shape],
@@ -374,7 +382,9 @@ function createNodes(selection, g, shapes) {
       ((node.paddingLeft - node.paddingRight) / 2) + "," +
       ((node.paddingTop - node.paddingBottom) / 2) + ")");
 
-    var shapeSvg = shape(d3.select(this), bbox, node);
+    var root = d3.select(this);
+    root.select(".label-container").remove();
+    var shapeSvg = shape(root, bbox, node).classed("label-container", true);
     util.applyStyle(shapeSvg, node.style);
 
     var shapeBBox = shapeSvg.node().getBBox();
@@ -382,7 +392,15 @@ function createNodes(selection, g, shapes) {
     node.height = shapeBBox.height;
   });
 
-  util.applyTransition(svgNodes.exit(), g)
+  var exitSelection;
+
+  if (svgNodes.exit) {
+    exitSelection = svgNodes.exit();
+  } else {
+    exitSelection = svgNodes.selectAll(null); // empty selection
+  }
+
+  util.applyTransition(exitSelection, g)
     .style("opacity", 0)
     .remove();
 
@@ -920,8 +938,6 @@ function render() {
   var fn = function(svg, g) {
     preProcessGraph(g);
 
-    svg.selectAll("*").remove();
-
     var outputGroup = createOrSelectGroup(svg, "output"),
         clustersGroup = createOrSelectGroup(outputGroup, "clusters"),
         edgePathsGroup = createOrSelectGroup(outputGroup, "edgePaths"),
@@ -1210,7 +1226,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.1";
+module.exports = "0.6.2-pre";
 
 },{}]},{},[1])(1)
 });
