@@ -1226,7 +1226,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.2-pre";
+module.exports = "0.6.2";
 
 },{}]},{},[1])(1)
 });
