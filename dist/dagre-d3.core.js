@@ -823,7 +823,16 @@ var lodash;
 
 if (require) {
   try {
-    lodash = require("lodash");
+    lodash = {
+      defaults: require("lodash/defaults"),
+      each: require("lodash/each"),
+      isFunction: require("lodash/isFunction"),
+      isPlainObject: require("lodash/isPlainObject"),
+      pick: require("lodash/pick"),
+      has: require("lodash/has"),
+      range: require("lodash/range"),
+      uniqueId: require("lodash/uniqueId")
+    };
   } catch (e) {}
 }
 
@@ -833,7 +842,7 @@ if (!lodash) {
 
 module.exports = lodash;
 
-},{"lodash":undefined}],22:[function(require,module,exports){
+},{"lodash/defaults":undefined,"lodash/each":undefined,"lodash/has":undefined,"lodash/isFunction":undefined,"lodash/isPlainObject":undefined,"lodash/pick":undefined,"lodash/range":undefined,"lodash/uniqueId":undefined}],22:[function(require,module,exports){
 "use strict";
 
 var util = require("./util"),
@@ -1226,7 +1235,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.2";
+module.exports = "0.6.3";
 
 },{}]},{},[1])(1)
 });
