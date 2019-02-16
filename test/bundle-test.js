@@ -5,8 +5,8 @@ d3.select("body").append("link")
   .attr("href", "/base/test/bundle-test.css");
 
 describe("dagreD3", function() {
-  var svg,
-      g;
+  var svg;
+  var g;
 
   beforeEach(function() {
     svg = d3.select("body").append("svg");

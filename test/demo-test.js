@@ -1,11 +1,11 @@
 // A *very* simple test runner to ensure that the demos work as expected.
-var webpage = require("webpage"),
-    system = require("system"),
-    stdout = system.stdout,
-    stderr = system.stderr,
-    // Too bad this replaces the more function fs module from nodejs...
-    fs = require("fs"),
-    start = new Date();
+var webpage = require("webpage");
+var system = require("system");
+var stdout = system.stdout;
+var stderr = system.stderr;
+// Too bad this replaces the more function fs module from nodejs...
+var fs = require("fs");
+var start = new Date();
 
 var red = "\033[31m";
 var green = "\033[32m";
