@@ -16,14 +16,14 @@
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.7",
     "browserify": "^16.2.3",
     "chai": "^4.1.2",
     "del": "^3.0.0",
     "eslint": "^5.13.0",
     "jshint": "^2.9.6",
     "jshint-stylish": "^2.2.1",
-    "karma": "^3.0.0",
+    "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-firefox-launcher": "^1.1.0",
@@ -32,7 +32,7 @@
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
     "merge-stream": "^1.0.1",
-    "mocha": "^4.1.0",
+    "mocha": "^6.1.4",
     "phantomjs-prebuilt": "^2.1.16",
     "pretty-hrtime": "^1.0.3",
     "requirejs": "^2.3.5",
@@ -40,7 +40,7 @@
     "uglify-js": "^3.3.4",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.0"
+    "watchify": "^3.11.1"
   },
   "repository": {
     "type": "git",
