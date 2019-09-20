@@ -13,7 +13,7 @@
     "d3": "^4.12.2",
     "dagre": "^0.8.4",
     "graphlib": "^2.1.7",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "browser-sync": "^2.26.7",
