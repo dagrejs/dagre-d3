@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.6.4-pre",
+  "version": "0.6.4",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
   "keywords": [
@@ -10,9 +10,9 @@
     "renderer"
   ],
   "dependencies": {
-    "d3": "^5.12",
-    "dagre": "^0.8.4",
-    "graphlib": "^2.1.7",
+    "d3": "^5.14",
+    "dagre": "^0.8.5",
+    "graphlib": "^2.1.8",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

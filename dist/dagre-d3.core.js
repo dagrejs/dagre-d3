@@ -104,26 +104,25 @@ function undirected(parent, id, edge, type) {
 }
 
 },{"./util":27}],3:[function(require,module,exports){
-var util = require("./util"),
-    d3 = require("./d3"),
-    addLabel = require("./label/add-label");
+var util = require("./util");
+var d3 = require("./d3");
+var addLabel = require("./label/add-label");
 
 module.exports = createClusters;
 
 function createClusters(selection, g) {
-  var clusters = g.nodes().filter(function(v) { return util.isSubgraph(g, v); }),
-      svgClusters = selection.selectAll("g.cluster")
-        .data(clusters, function(v) { return v; });
+  var clusters = g.nodes().filter(function(v) { return util.isSubgraph(g, v); });
+  var svgClusters = selection.selectAll("g.cluster")
+    .data(clusters, function(v) { return v; });
 
   svgClusters.selectAll("*").remove();
-  svgClusters.enter()
-    .append("g")
-      .attr("class", "cluster")
-      .attr("id",function(v){
-          var node = g.node(v);
-          return node.id;
-      })
-      .style("opacity", 0);
+  svgClusters.enter().append("g")
+    .attr("class", "cluster")
+    .attr("id",function(v){
+      var node = g.node(v);
+      return node.id;
+    })
+    .style("opacity", 0);
   
   svgClusters = selection.selectAll("g.cluster");
 
@@ -131,8 +130,8 @@ function createClusters(selection, g) {
     .style("opacity", 1);
 
   svgClusters.each(function(v) {
-    var node = g.node(v),
-        thisGroup = d3.select(this);
+    var node = g.node(v);
+    var thisGroup = d3.select(this);
     d3.select(this).append("rect");
     var labelGroup = thisGroup.append("g").attr("class", "label");
     addLabel(labelGroup, node, node.clusterLabelPos);
@@ -162,10 +161,10 @@ function createClusters(selection, g) {
 },{"./d3":7,"./label/add-label":18,"./util":27}],4:[function(require,module,exports){
 "use strict";
 
-var _ = require("./lodash"),
-    addLabel = require("./label/add-label"),
-    util = require("./util"),
-    d3 = require("./d3");
+var _ = require("./lodash");
+var addLabel = require("./label/add-label");
+var util = require("./util");
+var d3 = require("./d3");
 
 module.exports = createEdgeLabels;
 
@@ -175,19 +174,18 @@ function createEdgeLabels(selection, g) {
     .classed("update", true);
 
   svgEdgeLabels.exit().remove();
-  svgEdgeLabels.enter()
-    .append("g")
-      .classed("edgeLabel", true)
-      .style("opacity", 0);
+  svgEdgeLabels.enter().append("g")
+    .classed("edgeLabel", true)
+    .style("opacity", 0);
 
   svgEdgeLabels = selection.selectAll("g.edgeLabel");
 
   svgEdgeLabels.each(function(e) {
     var root = d3.select(this);
-    root.select('.label').remove();
-    var edge = g.edge(e),
-        label = addLabel(root, g.edge(e), 0, 0).classed("label", true),
-        bbox = label.node().getBBox();
+    root.select(".label").remove();
+    var edge = g.edge(e);
+    var label = addLabel(root, g.edge(e), 0, 0).classed("label", true);
+    var bbox = label.node().getBBox();
 
     if (edge.labelId) { label.attr("id", edge.labelId); }
     if (!_.has(edge, "width")) { edge.width = bbox.width; }
@@ -212,10 +210,10 @@ function createEdgeLabels(selection, g) {
 },{"./d3":7,"./label/add-label":18,"./lodash":21,"./util":27}],5:[function(require,module,exports){
 "use strict";
 
-var _ = require("./lodash"),
-    intersectNode = require("./intersect/intersect-node"),
-    util = require("./util"),
-    d3 = require("./d3");
+var _ = require("./lodash");
+var intersectNode = require("./intersect/intersect-node");
+var util = require("./util");
+var d3 = require("./d3");
 module.exports = createEdgePaths;
 
 function createEdgePaths(selection, g, arrows) {
@@ -226,7 +224,7 @@ function createEdgePaths(selection, g, arrows) {
   var newPaths = enter(previousPaths, g);
   exit(previousPaths, g);
 
-  var svgPaths = previousPaths.merge(newPaths);
+  var svgPaths = previousPaths.merge !== undefined ? previousPaths.merge(newPaths) : previousPaths;
   util.applyTransition(svgPaths, g)
     .style("opacity", 1);
 
@@ -251,7 +249,7 @@ function createEdgePaths(selection, g, arrows) {
 
       var domEdge = d3.select(this)
         .attr("marker-end", function() {
-            return "url(" + makeFragmentRef(location.href, edge.arrowheadId) + ")";
+          return "url(" + makeFragmentRef(location.href, edge.arrowheadId) + ")";
         })
         .style("fill", "none");
 
@@ -264,8 +262,8 @@ function createEdgePaths(selection, g, arrows) {
   svgPaths.selectAll("defs *").remove();
   svgPaths.selectAll("defs")
     .each(function(e) {
-      var edge = g.edge(e),
-          arrowhead = arrows[edge.arrowhead];
+      var edge = g.edge(e);
+      var arrowhead = arrows[edge.arrowhead];
       arrowhead(d3.select(this), edge.arrowheadId, edge, "arrowhead");
     });
 
@@ -278,10 +276,10 @@ function makeFragmentRef(url, fragmentId) {
 }
 
 function calcPoints(g, e) {
-  var edge = g.edge(e),
-      tail = g.node(e.v),
-      head = g.node(e.w),
-      points = edge.points.slice(1, edge.points.length - 1);
+  var edge = g.edge(e);
+  var tail = g.node(e.v);
+  var head = g.node(e.w);
+  var points = edge.points.slice(1, edge.points.length - 1);
   points.unshift(intersectNode(tail, points[0]));
   points.push(intersectNode(head, points[points.length - 1]));
 
@@ -299,25 +297,24 @@ function createLine(edge, points) {
 }
 
 function getCoords(elem) {
-  var bbox = elem.getBBox(),
-      matrix = elem.ownerSVGElement.getScreenCTM()
-        .inverse()
-        .multiply(elem.getScreenCTM())
-        .translate(bbox.width / 2, bbox.height / 2);
+  var bbox = elem.getBBox();
+  var matrix = elem.ownerSVGElement.getScreenCTM()
+    .inverse()
+    .multiply(elem.getScreenCTM())
+    .translate(bbox.width / 2, bbox.height / 2);
   return { x: matrix.e, y: matrix.f };
 }
 
 function enter(svgPaths, g) {
-  var svgPathsEnter = svgPaths.enter()
-    .append("g")
-      .attr("class", "edgePath")
-      .style("opacity", 0);
+  var svgPathsEnter = svgPaths.enter().append("g")
+    .attr("class", "edgePath")
+    .style("opacity", 0);
   svgPathsEnter.append("path")
     .attr("class", "path")
     .attr("d", function(e) {
-      var edge = g.edge(e),
-          sourceElem = g.node(e.v).elem,
-          points = _.range(edge.points.length).map(function() { return getCoords(sourceElem); });
+      var edge = g.edge(e);
+      var sourceElem = g.node(e.v).elem;
+      var points = _.range(edge.points.length).map(function() { return getCoords(sourceElem); });
       return createLine(edge, points);
     });
   svgPathsEnter.append("defs");
@@ -334,10 +331,10 @@ function exit(svgPaths, g) {
 },{"./d3":7,"./intersect/intersect-node":14,"./lodash":21,"./util":27}],6:[function(require,module,exports){
 "use strict";
 
-var _ = require("./lodash"),
-    addLabel = require("./label/add-label"),
-    util = require("./util"),
-    d3 = require("./d3");
+var _ = require("./lodash");
+var addLabel = require("./label/add-label");
+var util = require("./util");
+var d3 = require("./d3");
 
 module.exports = createNodes;
 
@@ -349,24 +346,23 @@ function createNodes(selection, g, shapes) {
 
   svgNodes.exit().remove();
 
-  svgNodes.enter()
-    .append("g")
-      .attr("class", "node")
-      .style("opacity", 0);
+  svgNodes.enter().append("g")
+    .attr("class", "node")
+    .style("opacity", 0);
 
   svgNodes = selection.selectAll("g.node"); 
 
   svgNodes.each(function(v) {
-    var node = g.node(v),
-        thisGroup = d3.select(this);
+    var node = g.node(v);
+    var thisGroup = d3.select(this);
     util.applyClass(thisGroup, node["class"],
       (thisGroup.classed("update") ? "update " : "") + "node");
 
     thisGroup.select("g.label").remove();
-    var labelGroup = thisGroup.append("g").attr("class", "label"),
-        labelDom = addLabel(labelGroup, node),
-        shape = shapes[node.shape],
-        bbox = _.pick(labelDom.node().getBBox(), "width", "height");
+    var labelGroup = thisGroup.append("g").attr("class", "label");
+    var labelDom = addLabel(labelGroup, node);
+    var shape = shapes[node.shape];
+    var bbox = _.pick(labelDom.node().getBBox(), "width", "height");
 
     node.elem = this;
 
@@ -412,11 +408,12 @@ function createNodes(selection, g, shapes) {
 var d3;
 
 if (!d3) {
-  if (require) {
+  if (typeof require === "function") {
     try {
       d3 = require("d3");
     }
     catch (e) {
+      // continue regardless of error
     }
   }
 }
@@ -432,10 +429,12 @@ module.exports = d3;
 
 var dagre;
 
-if (require) {
+if (typeof require === "function") {
   try {
     dagre = require("dagre");
-  } catch (e) {}
+  } catch (e) {
+    // continue regardless of error
+  }
 }
 
 if (!dagre) {
@@ -449,10 +448,13 @@ module.exports = dagre;
 
 var graphlib;
 
-if (require) {
+if (typeof require === "function") {
   try {
     graphlib = require("graphlib");
-  } catch (e) {}
+  }
+  catch (e) {
+    // continue regardless of error
+  }
 }
 
 if (!graphlib) {
@@ -586,6 +588,8 @@ function intersectNode(node, point) {
 }
 
 },{}],15:[function(require,module,exports){
+/* eslint "no-console": off */
+
 var intersectLine = require("./intersect-line");
 
 module.exports = intersectPolygon;
@@ -600,8 +604,8 @@ function intersectPolygon(node, polyPoints, point) {
 
   var intersections = [];
 
-  var minX = Number.POSITIVE_INFINITY,
-      minY = Number.POSITIVE_INFINITY;
+  var minX = Number.POSITIVE_INFINITY;
+  var minY = Number.POSITIVE_INFINITY;
   polyPoints.forEach(function(entry) {
     minX = Math.min(minX, entry.x);
     minY = Math.min(minY, entry.y);
@@ -628,13 +632,13 @@ function intersectPolygon(node, polyPoints, point) {
   if (intersections.length > 1) {
     // More intersections, find the one nearest to edge end point
     intersections.sort(function(p, q) {
-      var pdx = p.x - point.x,
-          pdy = p.y - point.y,
-          distp = Math.sqrt(pdx * pdx + pdy * pdy),
+      var pdx = p.x - point.x;
+      var pdy = p.y - point.y;
+      var distp = Math.sqrt(pdx * pdx + pdy * pdy);
 
-          qdx = q.x - point.x,
-          qdy = q.y - point.y,
-          distq = Math.sqrt(qdx * qdx + qdy * qdy);
+      var qdx = q.x - point.x;
+      var qdy = q.y - point.y;
+      var distq = Math.sqrt(qdx * qdx + qdy * qdy);
 
       return (distp < distq) ? -1 : (distp === distq ? 0 : 1);
     });
@@ -684,7 +688,7 @@ module.exports = addHtmlLabel;
 function addHtmlLabel(root, node) {
   var fo = root
     .append("foreignObject")
-      .attr("width", "100000");
+    .attr("width", "100000");
 
   var div = fo
     .append("xhtml:div");
@@ -692,14 +696,14 @@ function addHtmlLabel(root, node) {
 
   var label = node.label;
   switch(typeof label) {
-    case "function":
-      div.insert(label);
-      break;
-    case "object":
-      // Currently we assume this is a DOM object.
-      div.insert(function() { return label; });
-      break;
-    default: div.html(label);
+  case "function":
+    div.insert(label);
+    break;
+  case "object":
+    // Currently we assume this is a DOM object.
+    div.insert(function() { return label; });
+    break;
+  default: div.html(label);
   }
 
   util.applyStyle(div, node.labelStyle);
@@ -716,9 +720,9 @@ function addHtmlLabel(root, node) {
 }
 
 },{"../util":27}],18:[function(require,module,exports){
-var addTextLabel = require("./add-text-label"),
-    addHtmlLabel = require("./add-html-label"),
-    addSVGLabel  = require("./add-svg-label");
+var addTextLabel = require("./add-text-label");
+var addHtmlLabel = require("./add-html-label");
+var addSVGLabel  = require("./add-svg-label");
 
 module.exports = addLabel;
 
@@ -739,17 +743,18 @@ function addLabel(root, node, location) {
   var labelBBox = labelSvg.node().getBBox();
   var y;
   switch(location) {
-    case "top":
-      y = (-node.height / 2);
-      break;
-    case "bottom":
-      y = (node.height / 2) - labelBBox.height;
-      break;
-    default:
-      y = (-labelBBox.height / 2);
+  case "top":
+    y = (-node.height / 2);
+    break;
+  case "bottom":
+    y = (node.height / 2) - labelBBox.height;
+    break;
+  default:
+    y = (-labelBBox.height / 2);
   }
-  labelSvg.attr("transform",
-                "translate(" + (-labelBBox.width / 2) + "," + y + ")");
+  labelSvg.attr(
+    "transform",
+    "translate(" + (-labelBBox.width / 2) + "," + y + ")");
 
   return labelSvg;
 }
@@ -782,12 +787,11 @@ function addTextLabel(root, node) {
 
   var lines = processEscapeSequences(node.label).split("\n");
   for (var i = 0; i < lines.length; i++) {
-    domNode
-      .append("tspan")
-        .attr("xml:space", "preserve")
-        .attr("dy", "1em")
-        .attr("x", "1")
-        .text(lines[i]);
+    domNode.append("tspan")
+      .attr("xml:space", "preserve")
+      .attr("dy", "1em")
+      .attr("x", "1")
+      .text(lines[i]);
   }
 
   util.applyStyle(domNode, node.labelStyle);
@@ -796,15 +800,15 @@ function addTextLabel(root, node) {
 }
 
 function processEscapeSequences(text) {
-  var newText = "",
-      escaped = false,
-      ch;
+  var newText = "";
+  var escaped = false;
+  var ch;
   for (var i = 0; i < text.length; ++i) {
     ch = text[i];
     if (escaped) {
       switch(ch) {
-        case "n": newText += "\n"; break;
-        default: newText += ch;
+      case "n": newText += "\n"; break;
+      default: newText += ch;
       }
       escaped = false;
     } else if (ch === "\\") {
@@ -821,7 +825,7 @@ function processEscapeSequences(text) {
 
 var lodash;
 
-if (require) {
+if (typeof require === "function") {
   try {
     lodash = {
       defaults: require("lodash/defaults"),
@@ -833,7 +837,10 @@ if (require) {
       range: require("lodash/range"),
       uniqueId: require("lodash/uniqueId")
     };
-  } catch (e) {}
+  }
+  catch (e) {
+    // continue regardless of error
+  }
 }
 
 if (!lodash) {
@@ -845,8 +852,8 @@ module.exports = lodash;
 },{"lodash/defaults":undefined,"lodash/each":undefined,"lodash/has":undefined,"lodash/isFunction":undefined,"lodash/isPlainObject":undefined,"lodash/pick":undefined,"lodash/range":undefined,"lodash/uniqueId":undefined}],22:[function(require,module,exports){
 "use strict";
 
-var util = require("./util"),
-    d3 = require("./d3");
+var util = require("./util");
+var d3 = require("./d3");
 
 module.exports = positionClusters;
 
@@ -861,29 +868,28 @@ function positionClusters(selection, g) {
   created.attr("transform", translate);
 
   util.applyTransition(selection, g)
-      .style("opacity", 1)
-      .attr("transform", translate);
+    .style("opacity", 1)
+    .attr("transform", translate);
 
   util.applyTransition(created.selectAll("rect"), g)
-      .attr("width", function(v) { return g.node(v).width; })
-      .attr("height", function(v) { return g.node(v).height; })
-      .attr("x", function(v) {
-        var node = g.node(v);
-        return -node.width / 2;
-      })
-      .attr("y", function(v) {
-        var node = g.node(v);
-        return -node.height / 2;
-      });
-
+    .attr("width", function(v) { return g.node(v).width; })
+    .attr("height", function(v) { return g.node(v).height; })
+    .attr("x", function(v) {
+      var node = g.node(v);
+      return -node.width / 2;
+    })
+    .attr("y", function(v) {
+      var node = g.node(v);
+      return -node.height / 2;
+    });
 }
 
 },{"./d3":7,"./util":27}],23:[function(require,module,exports){
 "use strict";
 
-var util = require("./util"),
-    d3 = require("./d3"),
-    _ = require("./lodash");
+var util = require("./util");
+var d3 = require("./d3");
+var _ = require("./lodash");
 
 module.exports = positionEdgeLabels;
 
@@ -905,8 +911,8 @@ function positionEdgeLabels(selection, g) {
 },{"./d3":7,"./lodash":21,"./util":27}],24:[function(require,module,exports){
 "use strict";
 
-var util = require("./util"),
-    d3 = require("./d3");
+var util = require("./util");
+var d3 = require("./d3");
 
 module.exports = positionNodes;
 
@@ -926,32 +932,32 @@ function positionNodes(selection, g) {
 }
 
 },{"./d3":7,"./util":27}],25:[function(require,module,exports){
-var _ = require("./lodash"),
-    d3 = require("./d3"),
-    layout = require("./dagre").layout;
+var _ = require("./lodash");
+var d3 = require("./d3");
+var layout = require("./dagre").layout;
 
 module.exports = render;
 
 // This design is based on http://bost.ocks.org/mike/chart/.
 function render() {
-  var createNodes = require("./create-nodes"),
-      createClusters = require("./create-clusters"),
-      createEdgeLabels = require("./create-edge-labels"),
-      createEdgePaths = require("./create-edge-paths"),
-      positionNodes = require("./position-nodes"),
-      positionEdgeLabels = require("./position-edge-labels"),
-      positionClusters = require("./position-clusters"),
-      shapes = require("./shapes"),
-      arrows = require("./arrows");
+  var createNodes = require("./create-nodes");
+  var createClusters = require("./create-clusters");
+  var createEdgeLabels = require("./create-edge-labels");
+  var createEdgePaths = require("./create-edge-paths");
+  var positionNodes = require("./position-nodes");
+  var positionEdgeLabels = require("./position-edge-labels");
+  var positionClusters = require("./position-clusters");
+  var shapes = require("./shapes");
+  var arrows = require("./arrows");
 
   var fn = function(svg, g) {
     preProcessGraph(g);
 
-    var outputGroup = createOrSelectGroup(svg, "output"),
-        clustersGroup = createOrSelectGroup(outputGroup, "clusters"),
-        edgePathsGroup = createOrSelectGroup(outputGroup, "edgePaths"),
-        edgeLabels = createEdgeLabels(createOrSelectGroup(outputGroup, "edgeLabels"), g),
-        nodes = createNodes(createOrSelectGroup(outputGroup, "nodes"), g, shapes);
+    var outputGroup = createOrSelectGroup(svg, "output");
+    var clustersGroup = createOrSelectGroup(outputGroup, "clusters");
+    var edgePathsGroup = createOrSelectGroup(outputGroup, "edgePaths");
+    var edgeLabels = createEdgeLabels(createOrSelectGroup(outputGroup, "edgeLabels"), g);
+    var nodes = createNodes(createOrSelectGroup(outputGroup, "nodes"), g, shapes);
 
     layout(g);
 
@@ -1098,10 +1104,10 @@ function createOrSelectGroup(root, name) {
 },{"./arrows":2,"./create-clusters":3,"./create-edge-labels":4,"./create-edge-paths":5,"./create-nodes":6,"./d3":7,"./dagre":8,"./lodash":21,"./position-clusters":22,"./position-edge-labels":23,"./position-nodes":24,"./shapes":26}],26:[function(require,module,exports){
 "use strict";
 
-var intersectRect = require("./intersect/intersect-rect"),
-    intersectEllipse = require("./intersect/intersect-ellipse"),
-    intersectCircle = require("./intersect/intersect-circle"),
-    intersectPolygon = require("./intersect/intersect-polygon");
+var intersectRect = require("./intersect/intersect-rect");
+var intersectEllipse = require("./intersect/intersect-ellipse");
+var intersectCircle = require("./intersect/intersect-circle");
+var intersectPolygon = require("./intersect/intersect-polygon");
 
 module.exports = {
   rect: rect,
@@ -1112,12 +1118,12 @@ module.exports = {
 
 function rect(parent, bbox, node) {
   var shapeSvg = parent.insert("rect", ":first-child")
-        .attr("rx", node.rx)
-        .attr("ry", node.ry)
-        .attr("x", -bbox.width / 2)
-        .attr("y", -bbox.height / 2)
-        .attr("width", bbox.width)
-        .attr("height", bbox.height);
+    .attr("rx", node.rx)
+    .attr("ry", node.ry)
+    .attr("x", -bbox.width / 2)
+    .attr("y", -bbox.height / 2)
+    .attr("width", bbox.width)
+    .attr("height", bbox.height);
 
   node.intersect = function(point) {
     return intersectRect(node, point);
@@ -1127,13 +1133,13 @@ function rect(parent, bbox, node) {
 }
 
 function ellipse(parent, bbox, node) {
-  var rx = bbox.width / 2,
-      ry = bbox.height / 2,
-      shapeSvg = parent.insert("ellipse", ":first-child")
-        .attr("x", -bbox.width / 2)
-        .attr("y", -bbox.height / 2)
-        .attr("rx", rx)
-        .attr("ry", ry);
+  var rx = bbox.width / 2;
+  var ry = bbox.height / 2;
+  var shapeSvg = parent.insert("ellipse", ":first-child")
+    .attr("x", -bbox.width / 2)
+    .attr("y", -bbox.height / 2)
+    .attr("rx", rx)
+    .attr("ry", ry);
 
   node.intersect = function(point) {
     return intersectEllipse(node, rx, ry, point);
@@ -1143,11 +1149,11 @@ function ellipse(parent, bbox, node) {
 }
 
 function circle(parent, bbox, node) {
-  var r = Math.max(bbox.width, bbox.height) / 2,
-      shapeSvg = parent.insert("circle", ":first-child")
-        .attr("x", -bbox.width / 2)
-        .attr("y", -bbox.height / 2)
-        .attr("r", r);
+  var r = Math.max(bbox.width, bbox.height) / 2;
+  var shapeSvg = parent.insert("circle", ":first-child")
+    .attr("x", -bbox.width / 2)
+    .attr("y", -bbox.height / 2)
+    .attr("r", r);
 
   node.intersect = function(point) {
     return intersectCircle(node, r, point);
@@ -1160,16 +1166,16 @@ function circle(parent, bbox, node) {
 // the function to calculate the diamond shape from:
 // http://mathforum.org/kb/message.jspa?messageID=3750236
 function diamond(parent, bbox, node) {
-  var w = (bbox.width * Math.SQRT2) / 2,
-      h = (bbox.height * Math.SQRT2) / 2,
-      points = [
-        { x:  0, y: -h },
-        { x: -w, y:  0 },
-        { x:  0, y:  h },
-        { x:  w, y:  0 }
-      ],
-      shapeSvg = parent.insert("polygon", ":first-child")
-        .attr("points", points.map(function(p) { return p.x + "," + p.y; }).join(" "));
+  var w = (bbox.width * Math.SQRT2) / 2;
+  var h = (bbox.height * Math.SQRT2) / 2;
+  var points = [
+    { x:  0, y: -h },
+    { x: -w, y:  0 },
+    { x:  0, y:  h },
+    { x:  w, y:  0 }
+  ];
+  var shapeSvg = parent.insert("polygon", ":first-child")
+    .attr("points", points.map(function(p) { return p.x + "," + p.y; }).join(" "));
 
   node.intersect = function(p) {
     return intersectPolygon(node, points, p);
@@ -1235,7 +1241,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.3";
+module.exports = "0.6.4";
 
 },{}]},{},[1])(1)
 });
