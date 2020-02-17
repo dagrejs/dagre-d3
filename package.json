@@ -55,5 +55,6 @@
     "type": "git",
     "url": "https://github.com/dagrejs/dagre-d3.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "dist/dagre-d3.core.min.js"
 }
