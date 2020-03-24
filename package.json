@@ -35,7 +35,7 @@
     "mocha": "^6.1.4",
     "phantomjs-prebuilt": "^2.1.16",
     "pretty-hrtime": "^1.0.3",
-    "requirejs": "^2.3.5",
+    "requirejs": "^2.3.6",
     "semver": "^5.4.1",
     "uglify-js": "^3.3.4",
     "vinyl-buffer": "^1.0.1",
