@@ -16,7 +16,7 @@
     "lodash": "4.17.19"
   },
   "devDependencies": {
-    "browser-sync": "2.26.7",
+    "browser-sync": "2.26.13",
     "browserify": "16.5.1",
     "chai": "4.2.0",
     "del": "5.1.0",
