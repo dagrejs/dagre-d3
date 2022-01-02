@@ -1244,7 +1244,7 @@ function applyTransition(selection, g) {
 }
 
 },{"./lodash":21}],28:[function(require,module,exports){
-module.exports = "0.6.5-pre";
+module.exports = "0.6.6-pre";
 
 },{}],29:[function(require,module,exports){
 // https://d3js.org/d3-array/ v1.2.4 Copyright 2018 Mike Bostock
@@ -20851,6 +20851,7 @@ function debugOrdering(g) {
 }
 
 },{"./graphlib":67,"./lodash":70,"./util":89}],67:[function(require,module,exports){
+// eslint-disable-next-line no-redeclare
 /* global window */
 
 var graphlib;
@@ -21384,6 +21385,7 @@ function canonicalize(attrs) {
 }
 
 },{"./acyclic":62,"./add-border-segments":63,"./coordinate-system":64,"./graphlib":67,"./lodash":70,"./nesting-graph":71,"./normalize":72,"./order":77,"./parent-dummy-chains":82,"./position":84,"./rank":86,"./util":89}],70:[function(require,module,exports){
+// eslint-disable-next-line no-redeclare
 /* global window */
 
 var lodash;
@@ -23490,7 +23492,7 @@ function notime(name, fn) {
 }
 
 },{"./graphlib":67,"./lodash":70}],90:[function(require,module,exports){
-module.exports = "0.8.5";
+module.exports = "0.8.6-pre";
 
 },{}],91:[function(require,module,exports){
 /**
