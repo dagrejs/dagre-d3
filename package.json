@@ -10,7 +10,7 @@
     "renderer"
   ],
   "dependencies": {
-    "d3": "5.16",
+    "d3": "7.7",
     "dagre": "0.8.5",
     "graphlib": "2.1.8",
     "lodash": "4.17.21"
