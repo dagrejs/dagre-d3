@@ -14,7 +14,7 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v
+    - uses: actions/checkout@v2
     - uses: browser-actions/setup-firefox@latest
 
     - name: Use Node.js ${{ matrix.node-version }}
