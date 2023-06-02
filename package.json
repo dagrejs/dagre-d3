@@ -3,6 +3,22 @@
   "version": "0.6.5-pre",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
+  "license": "MIT"
+  "main": "index.js",
+  "scripts": {
+    "lint": "make lint",
+    "test": "make test"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "dist/",
+    "lib/"
+  ],
+  "engines": {
+    "node": ">17.0.0"
+  },
+  "types": "index.d.ts",
   "keywords": [
     "graph",
     "dagre",
@@ -46,5 +62,4 @@
     "type": "git",
     "url": "https://github.com/dagrejs/dagre-d3.git"
   },
-  "license": "MIT"
 }
