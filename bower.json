@@ -2,7 +2,7 @@
   "name": "dagre-d3",
   "version": "0.6.4",
   "main": [
-    "dist/dagre-d3.core.js"
+    "dist/dagre-d3.js"
   ],
   "ignore": [
     ".*",
@@ -20,9 +20,9 @@
     "test/**"
   ],
   "dependencies": {
-    "d3": "^5.14",
+    "d3": "^7.8.5",
     "@dagrejs/dagre": "1.0.2",
-    "g@dagrejs/raphlib": "2.1.13",
+    "@dagrejs/graphlib": "2.1.13",
     "lodash": "^4.17.15"
   }
 }

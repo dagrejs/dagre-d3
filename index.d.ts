@@ -1,4 +1,4 @@
-// Type definitions for dagre-d3.core.js 0.6
+// Type definitions for dagre-d3.js 0.6
 // Project: https://github.com/dagrejs/dagre-d3
 // Definitions by: Matthew Simmons <https://github.com/simmonmt>
 //                 Mark Wong Siang Kai <https://github.com/markwongsk>
