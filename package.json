@@ -1,8 +1,24 @@
 {
-  "name": "dagre-d3",
+  "name": "@dagrejs/dagre-d3",
   "version": "0.6.5-pre",
   "description": "A D3-based renderer for Dagre",
   "author": "Chris Pettitt <chris@samsarin.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "lint": "make lint",
+    "test": "make test"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "dist/",
+    "lib/"
+  ],
+  "engines": {
+    "node": ">17.0.0"
+  },
+  "types": "index.d.ts",
   "keywords": [
     "graph",
     "dagre",
@@ -10,9 +26,9 @@
     "renderer"
   ],
   "dependencies": {
-    "d3": "5.16",
-    "dagre": "0.8.5",
-    "graphlib": "2.1.8",
+    "d3": "^5.16",
+    "@dagrejs/dagre": "1.0.2",
+    "@dagrejs/graphlib": "2.1.13",
     "lodash": "4.17.21"
   },
   "devDependencies": {
@@ -20,10 +36,10 @@
     "browserify": "17.0.0",
     "chai": "4.3.6",
     "del": "6.0.0",
-    "eslint": "8.15.0",
+    "eslint": "8.35.0",
     "jshint": "2.13.4",
     "jshint-stylish": "2.2.1",
-    "karma": "6.3.19",
+    "karma": "6.4.1",
     "karma-chrome-launcher": "3.1.1",
     "karma-coverage": "2.2.0",
     "karma-firefox-launcher": "2.1.2",
@@ -36,7 +52,7 @@
     "phantomjs-prebuilt": "2.1.16",
     "pretty-hrtime": "1.0.3",
     "requirejs": "2.3.6",
-    "semver": "7.3.7",
+    "semver": "7.5.4",
     "uglify-js": "3.15.4",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.0",
@@ -45,6 +61,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/dagrejs/dagre-d3.git"
-  },
-  "license": "MIT"
+  }
 }

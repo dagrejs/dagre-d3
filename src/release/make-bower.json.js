@@ -9,7 +9,7 @@ var packageName = packageNameParts[packageNameParts.length - 1];
 var template = {
   name: packageName,
   version: packageJson.version,
-  main: ["dist/" + packageName + ".core.js"],
+  main: ["dist/" + packageName + ".js"],
   ignore: [
     ".*",
     "README.md",

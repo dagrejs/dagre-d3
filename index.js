@@ -21,8 +21,9 @@
  * THE SOFTWARE.
  */
 module.exports =  {
-  graphlib: require("./lib/graphlib"),
-  dagre: require("./lib/dagre"),
+  graphlib: require("@dagrejs/graphlib"),
+  dagre: require("@dagrejs/dagre"),
+
   intersect: require("./lib/intersect"),
   render: require("./lib/render"),
   util: require("./lib/util"),
