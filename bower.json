@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.6.4",
+  "version": "0.6.5-pre",
   "main": [
     "dist/dagre-d3.js"
   ],
@@ -23,6 +23,6 @@
     "d3": "^7.8.5",
     "@dagrejs/dagre": "1.0.2",
     "@dagrejs/graphlib": "2.1.13",
-    "lodash": "^4.17.15"
+    "lodash": "4.17.21"
   }
 }

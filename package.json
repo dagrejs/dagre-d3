@@ -26,7 +26,7 @@
     "renderer"
   ],
   "dependencies": {
-    "d3": "^7.8.5",
+    "d3": "^5.16",
     "@dagrejs/dagre": "1.0.2",
     "@dagrejs/graphlib": "2.1.13",
     "lodash": "4.17.21"
