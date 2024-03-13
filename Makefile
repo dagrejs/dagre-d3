@@ -23,6 +23,7 @@ DEMO_FILES = $(shell find demo -type f)
 SRC_FILES = index.js lib/version.js $(shell find lib -type f -name '*.js')
 BUILD_FILES = $(addprefix $(BUILD_DIR)/dist/, \
 		$(MOD).js $(MOD).min.js \
+		$(MOD).core.js $(MOD).core.min.js \
 		$(DEMO_FILES))
 
 DIRS = $(BUILD_DIR) $(BUILD_DIR)/dist $(BUILD_DIR)/dist/demo
@@ -44,6 +45,7 @@ test: browser-test demo-test node-test
 
 browser-test: $(BUILD_FILES)
 	$(KARMA) start --single-run $(KARMA_OPTS)
+	$(KARMA) start karma.core.conf.js --single-run $(KARMA_OPTS)
 
 demo-test: test/demo-test.js | $(BUILD_FILES)
 	echo $(PHANTOMJS) $<
@@ -59,6 +61,12 @@ $(BUILD_DIR)/dist/$(MOD).js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist node_modu
 	@$(BROWSERIFY) $< > $@ -s dagreD3
 
 $(BUILD_DIR)/dist/$(MOD).min.js: $(BUILD_DIR)/dist/$(MOD).js | $(BUILD_DIR)/dist
+	@$(UGLIFY) $< --comments '@license' --source-map --output $@
+
+$(BUILD_DIR)/dist/$(MOD).core.js: index.js $(SRC_FILES) | $(BUILD_DIR)/dist node_modules
+	@$(BROWSERIFY) $< > $@ --no-bundle-external -s dagreD3
+
+$(BUILD_DIR)/dist/$(MOD).core.min.js: $(BUILD_DIR)/dist/$(MOD).core.js | $(BUILD_DIR)/dist
 	@$(UGLIFY) $< --comments '@license' --source-map --output $@
 
 $(BUILD_DIR)/dist/demo/%: demo/% | $(BUILD_DIR)/dist/demo
