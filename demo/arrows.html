@@ -48,6 +48,27 @@ var g = new dagreD3.graphlib.Graph().setGraph({});
   });
 });
 
+// Reverse direction (arrowtail)
+["normal", "vee"].forEach(function(arrowtail) {
+  g.setNode(arrowtail + "3", { label: " " });
+  g.setNode(arrowtail + "4", { label: " " });
+  g.setEdge(arrowtail + "3", arrowtail + "4", {
+    arrowhead: "undirected",
+    arrowtail: arrowtail,
+    label: arrowtail + " (arrowtail)"
+  });
+});
+ // Arrowhead in the middle (arrowmid)
+["normal", "vee"].forEach(function(arrowmid) {
+  g.setNode(arrowmid + "5", { label: " " });
+  g.setNode(arrowmid + "6", { label: " " });
+  g.setEdge(arrowmid + "5", arrowmid + "6", {
+    arrowhead: "undirected",
+    arrowmid: arrowmid,
+    label: arrowmid + " (arrowmid)"
+  });
+});
+
 var svg = d3.select("svg"),
     inner = svg.select("g");
 
